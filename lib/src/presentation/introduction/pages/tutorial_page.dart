@@ -15,7 +15,8 @@ class TutorialPage extends StatelessWidget {
       body: const Center(
         child: Text(_title),
       ),
-      bottomSheet: SizedBox(
+      bottomSheet: Container(
+        color: Theme.of(context).backgroundColor,
         width: double.infinity,
         height: 64,
         child: Center(

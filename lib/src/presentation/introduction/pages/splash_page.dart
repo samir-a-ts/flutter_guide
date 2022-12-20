@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/src/core/router/app_router.gr.dart';
@@ -20,7 +18,7 @@ class _SplashPageState extends State<SplashPage> {
       const Duration(seconds: 3),
       () {
         AutoRouter.of(context).replace(
-          Random().nextBool() ? const TutorialRoute() : const PlacesListRoute(),
+          const TutorialRoute(),
         );
       },
     );
