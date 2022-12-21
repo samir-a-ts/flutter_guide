@@ -47,12 +47,12 @@ class AppTheme extends ThemeExtension<AppTheme> {
 }
 
 const _textTheme = TextTheme(
-  titleLarge: TextStyle(fontSize: 32, height: 36),
-  titleMedium: TextStyle(fontSize: 24, height: 29),
-  titleSmall: TextStyle(fontSize: 18, height: 24),
-  bodyMedium: TextStyle(fontSize: 16, height: 20),
-  labelMedium: TextStyle(fontSize: 14, height: 18),
-  labelSmall: TextStyle(fontSize: 12, height: 16),
+  titleLarge: TextStyle(fontSize: 32),
+  titleMedium: TextStyle(fontSize: 24),
+  titleSmall: TextStyle(fontSize: 18),
+  bodyMedium: TextStyle(fontSize: 16),
+  labelMedium: TextStyle(fontSize: 14),
+  labelSmall: TextStyle(fontSize: 12),
 );
 
 const _appTheme = AppTheme(
@@ -71,6 +71,7 @@ final lightTheme = ThemeData(
   colorScheme: const ColorScheme.dark(
     primaryContainer: Color(0xFF252849),
     secondaryContainer: Color(0xFF3B3E5B),
+    onPrimary: Color(0xFFFFFFFF),
   ),
   extensions: const [_appTheme],
 );
@@ -85,6 +86,7 @@ final darkTheme = ThemeData(
   colorScheme: const ColorScheme.dark(
     primaryContainer: Color(0xFF21222C),
     secondaryContainer: Color(0xFF3B3E5B),
+    onPrimary: Color(0xFFFFFFFF),
   ),
   extensions: [
     _appTheme.copyWith(

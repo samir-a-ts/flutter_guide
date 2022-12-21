@@ -21,5 +21,20 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ru';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{};
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "letsGo": MessageLookupByLibrary.simpleMessage("На старт"),
+        "skip": MessageLookupByLibrary.simpleMessage("Пропустить"),
+        "tutorialSubitle1": MessageLookupByLibrary.simpleMessage(
+            "Ищи новые локации и сохраняй самые любимые."),
+        "tutorialSubitle2": MessageLookupByLibrary.simpleMessage(
+            "Достигай цели максимально быстро и комфортно."),
+        "tutorialSubitle3": MessageLookupByLibrary.simpleMessage(
+            "Делись самыми интересными и помоги нам стать лучше!"),
+        "tutorialTitle1": MessageLookupByLibrary.simpleMessage(
+            "Добро пожаловать в Путеводитель"),
+        "tutorialTitle2": MessageLookupByLibrary.simpleMessage(
+            "Построй маршрут и отправляйся в путь"),
+        "tutorialTitle3": MessageLookupByLibrary.simpleMessage(
+            "Добавляй места, которые нашёл сам")
+      };
 }
