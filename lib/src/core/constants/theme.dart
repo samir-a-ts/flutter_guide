@@ -1,31 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AppTheme extends ThemeExtension<AppTheme> {
-  final Color mainColor;
-
-  final Color secondaryColor;
-
   final Color thirdColor;
 
-  final Color inactiveColor;
-
-  final Color greenColor;
-
   final Color yellowColor;
-
-  final Color errorOrDeleteColor;
 
   final Color additionalColor;
 
   const AppTheme({
-    required this.greenColor,
     required this.additionalColor,
-    required this.mainColor,
-    required this.secondaryColor,
     required this.thirdColor,
-    required this.inactiveColor,
     required this.yellowColor,
-    required this.errorOrDeleteColor,
   });
 
   @override
@@ -38,37 +23,21 @@ class AppTheme extends ThemeExtension<AppTheme> {
     }
 
     return AppTheme(
-      mainColor: Color.lerp(mainColor, other.mainColor, t)!,
-      greenColor: Color.lerp(greenColor, other.greenColor, t)!,
       additionalColor: Color.lerp(additionalColor, other.additionalColor, t)!,
-      secondaryColor: Color.lerp(additionalColor, other.additionalColor, t)!,
       thirdColor: Color.lerp(thirdColor, other.thirdColor, t)!,
-      inactiveColor: Color.lerp(inactiveColor, other.inactiveColor, t)!,
-      errorOrDeleteColor:
-          Color.lerp(errorOrDeleteColor, other.errorOrDeleteColor, t)!,
       yellowColor: Color.lerp(yellowColor, other.yellowColor, t)!,
     );
   }
 
   @override
   AppTheme copyWith({
-    Color? mainColor,
-    Color? secondaryColor,
     Color? thirdColor,
-    Color? inactiveColor,
-    Color? greenColor,
     Color? yellowColor,
-    Color? errorOrDeleteColor,
     Color? additionalColor,
   }) {
     return AppTheme(
-      mainColor: mainColor ?? this.mainColor,
-      secondaryColor: secondaryColor ?? this.secondaryColor,
       thirdColor: thirdColor ?? this.thirdColor,
-      inactiveColor: inactiveColor ?? this.inactiveColor,
-      greenColor: greenColor ?? this.greenColor,
       yellowColor: yellowColor ?? this.yellowColor,
-      errorOrDeleteColor: errorOrDeleteColor ?? this.errorOrDeleteColor,
       additionalColor: additionalColor ?? this.additionalColor,
     );
   }
@@ -87,20 +56,22 @@ const _textTheme = TextTheme(
 );
 
 const _appTheme = AppTheme(
-  greenColor: Color(0xFF4CAF50),
   additionalColor: Color(0xFFF5F5F5),
-  mainColor: Color(0xFF252849),
-  secondaryColor: Color(0xFF3B3E5B),
   thirdColor: Color(0xFF7C7E92),
-  inactiveColor: Color.fromRGBO(124, 126, 146, 0.56),
   yellowColor: Color(0xFFFCDD3D),
-  errorOrDeleteColor: Color(0xFFEF4343),
 );
 
 final lightTheme = ThemeData(
   textTheme: _textTheme,
   backgroundColor: const Color(0xFFFFFFFF),
   scaffoldBackgroundColor: const Color(0xFFFFFFFF),
+  primaryColor: const Color(0xFF4CAF50),
+  errorColor: const Color(0xFFEF4343),
+  disabledColor: const Color.fromRGBO(124, 126, 146, 0.56),
+  colorScheme: const ColorScheme.dark(
+    primaryContainer: Color(0xFF252849),
+    secondaryContainer: Color(0xFF3B3E5B),
+  ),
   extensions: const [_appTheme],
 );
 
@@ -108,13 +79,25 @@ final darkTheme = ThemeData(
   textTheme: _textTheme.apply(bodyColor: Colors.white),
   backgroundColor: const Color(0xFF21222C),
   scaffoldBackgroundColor: const Color(0xFF21222C),
+  primaryColor: const Color(0xFF6ADA6F),
+  errorColor: const Color(0xFFEF4343),
+  disabledColor: const Color.fromRGBO(124, 126, 146, 0.56),
+  colorScheme: const ColorScheme.dark(
+    primaryContainer: Color(0xFF21222C),
+    secondaryContainer: Color(0xFF3B3E5B),
+  ),
   extensions: [
     _appTheme.copyWith(
-      greenColor: const Color(0xFF6ADA6F),
       additionalColor: const Color(0xFF1A1A20),
-      mainColor: const Color(0xFF21222C),
       yellowColor: const Color(0xFFFCDD3D),
-      errorOrDeleteColor: const Color(0xFFEF4343),
     ),
   ],
 );
+
+abstract class ThemeHelper {
+  static Color mainColor(BuildContext context) =>
+      Theme.of(context).colorScheme.primaryContainer;
+
+  static Color secondaryColor(BuildContext context) =>
+      Theme.of(context).colorScheme.secondaryContainer;
+}
