@@ -9,14 +9,18 @@ environment:
   sdk: '>=2.18.5 <3.0.0'
 
 dependencies:
-  auto_route: ^5.0.4
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  auto_route: ^5.0.4
+  intl: ^0.17.0
 
 dev_dependencies:
   auto_route_generator: ^5.0.3
   build_runner: ^2.3.3
   flutter_lints: ^2.0.0
+  intl_utils: ^2.8.1
 
 flutter:
 
@@ -35,3 +39,9 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+flutter_intl:
+  enabled: true
+  class_name: AppTranslations
+  main_locale: ru
+  arb_dir: lib/src/core/translations/arb
+  output_dir: lib/src/core/translations/generated
