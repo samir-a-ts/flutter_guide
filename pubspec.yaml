@@ -12,18 +12,24 @@ dependencies:
   auto_route: ^5.0.4
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_screenutil: ^5.6.0
+  flutter_svg: ^1.1.6
+  intl: ^0.17.0
 
 dev_dependencies:
   auto_route_generator: ^5.0.3
   build_runner: ^2.3.3
   flutter_lints: ^2.0.0
+  intl_utils: ^2.8.1
 
 flutter:
 
   uses-material-design: true
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/
+    - assets/images/
   # fonts:
   #   - family: Schyler
   #     fonts:
@@ -35,3 +41,9 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+flutter_intl:
+  enabled: true
+  class_name: AppTranslations
+  main_locale: ru
+  arb_dir: lib/src/core/translations/arb
+  output_dir: lib/src/core/translations/generated

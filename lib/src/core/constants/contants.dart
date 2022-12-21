@@ -1,3 +1,1 @@
-abstract class AppConstants {
-  static const appName = "Путеводитель";
-}
+const kAppName = "Путеводитель";
