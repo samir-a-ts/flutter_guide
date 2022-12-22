@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_guide/src/presentation/core/gap.dart';
 
 class AppBottomButton extends StatelessWidget {
-  final void Function() onTap;
+  final VoidCallback onTap;
 
   final String text;
 
@@ -21,7 +21,6 @@ class AppBottomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      behavior: HitTestBehavior.deferToChild,
       onTap: onTap,
       child: Container(
         width: double.infinity,
