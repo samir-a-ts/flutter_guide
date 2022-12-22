@@ -23,7 +23,7 @@ class TutorialPage extends StatelessWidget {
 }
 
 class AppBarTralingButton extends StatelessWidget {
-  final void Function() onTap;
+  final VoidCallback onTap;
 
   const AppBarTralingButton({
     super.key,
@@ -35,7 +35,6 @@ class AppBarTralingButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0, top: 18),
       child: GestureDetector(
-        behavior: HitTestBehavior.deferToChild,
         onTap: onTap,
         child: Text(
           AppTranslations.of(context).skip,
@@ -63,6 +62,27 @@ class _TabData {
   });
 }
 
+class _TutorialTabController extends ChangeNotifier {
+  final int length;
+
+  _TutorialTabController({
+    required this.length,
+    int? initial,
+  }) {
+    value = initial ?? 0;
+  }
+
+  int value = 0;
+
+  set index(int newValue) {
+    if (newValue < 0 || newValue > length || value == newValue) return;
+
+    value = newValue;
+
+    notifyListeners();
+  }
+}
+
 class _TutorialPageBody extends StatefulWidget {
   const _TutorialPageBody();
 
@@ -70,17 +90,16 @@ class _TutorialPageBody extends StatefulWidget {
   State<_TutorialPageBody> createState() => _TutorialPageBodyState();
 }
 
-class _TutorialPageBodyState extends State<_TutorialPageBody>
-    with SingleTickerProviderStateMixin {
-  final _tabs = <_TabData>[];
+class _TutorialPageBodyState extends State<_TutorialPageBody> {
+  var _tabs = <_TabData>[];
 
-  late final TabController _controller;
+  late final _TutorialTabController _controller;
 
   @override
   void didChangeDependencies() {
     final translation = AppTranslations.of(context);
 
-    _tabs.addAll([
+    _tabs = [
       _TabData(
         title: translation.tutorialTitle1,
         description: translation.tutorialSubitle1,
@@ -96,7 +115,7 @@ class _TutorialPageBodyState extends State<_TutorialPageBody>
         description: translation.tutorialSubitle3,
         assetsPath: "assets/images/tutorial_page_3.svg",
       ),
-    ]);
+    ];
 
     super.didChangeDependencies();
   }
@@ -105,10 +124,8 @@ class _TutorialPageBodyState extends State<_TutorialPageBody>
   void initState() {
     super.initState();
 
-    _controller = TabController(
+    _controller = _TutorialTabController(
       length: 3,
-      initialIndex: 0,
-      vsync: this,
     );
   }
 
@@ -128,14 +145,10 @@ class _TutorialPageBodyState extends State<_TutorialPageBody>
     return NotificationListener(
       onNotification: (notification) {
         if (notification is UserScrollNotification) {
-          try {
-            if (notification.direction == ScrollDirection.forward) {
-              _controller.index -= 1;
-            } else if (notification.direction == ScrollDirection.reverse) {
-              _controller.index += 1;
-            }
-          } catch (e) {
-            /// Ignore errors
+          if (notification.direction == ScrollDirection.forward) {
+            _controller.index = _controller.value - 1;
+          } else if (notification.direction == ScrollDirection.reverse) {
+            _controller.index = _controller.value + 1;
           }
         }
 
@@ -143,23 +156,25 @@ class _TutorialPageBodyState extends State<_TutorialPageBody>
       },
       child: Stack(
         children: [
-          TabBarView(
-            controller: _controller,
-            children: _tabs
-                .map(
-                  (e) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 52),
-                    child: Center(
-                      child: _TabWidget(tabData: e),
+          DefaultTabController(
+            length: _tabs.length,
+            child: TabBarView(
+              children: _tabs
+                  .map(
+                    (e) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 52),
+                      child: Center(
+                        child: _TabWidget(tabData: e),
+                      ),
                     ),
-                  ),
-                )
-                .toList(),
+                  )
+                  .toList(),
+            ),
           ),
           AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
-              if (_controller.index != _tabs.length - 1) {
+              if (_controller.value != _tabs.length - 1) {
                 return Align(
                   alignment: Alignment.topRight,
                   child: AppBarTralingButton(
@@ -190,7 +205,7 @@ class _TutorialPageBodyState extends State<_TutorialPageBody>
                 alignment: const Alignment(0, .7),
                 child: AppTabView(
                   length: _tabs.length,
-                  currentIndex: _controller.index,
+                  currentIndex: _controller.value,
                 ),
               );
             },
