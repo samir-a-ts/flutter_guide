@@ -49,6 +49,86 @@ class AppTranslations {
   static AppTranslations? maybeOf(BuildContext context) {
     return Localizations.of<AppTranslations>(context, AppTranslations);
   }
+
+  /// `Пропустить`
+  String get skip {
+    return Intl.message(
+      'Пропустить',
+      name: 'skip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `На старт`
+  String get letsGo {
+    return Intl.message(
+      'На старт',
+      name: 'letsGo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Добро пожаловать в Путеводитель`
+  String get tutorialTitle1 {
+    return Intl.message(
+      'Добро пожаловать в Путеводитель',
+      name: 'tutorialTitle1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ищи новые локации и сохраняй самые любимые.`
+  String get tutorialSubitle1 {
+    return Intl.message(
+      'Ищи новые локации и сохраняй самые любимые.',
+      name: 'tutorialSubitle1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Построй маршрут и отправляйся в путь`
+  String get tutorialTitle2 {
+    return Intl.message(
+      'Построй маршрут и отправляйся в путь',
+      name: 'tutorialTitle2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Достигай цели максимально быстро и комфортно.`
+  String get tutorialSubitle2 {
+    return Intl.message(
+      'Достигай цели максимально быстро и комфортно.',
+      name: 'tutorialSubitle2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Добавляй места, которые нашёл сам`
+  String get tutorialTitle3 {
+    return Intl.message(
+      'Добавляй места, которые нашёл сам',
+      name: 'tutorialTitle3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Делись самыми интересными и помоги нам стать лучше!`
+  String get tutorialSubitle3 {
+    return Intl.message(
+      'Делись самыми интересными и помоги нам стать лучше!',
+      name: 'tutorialSubitle3',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppTranslations> {
