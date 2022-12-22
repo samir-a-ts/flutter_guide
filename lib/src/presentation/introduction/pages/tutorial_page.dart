@@ -36,9 +36,7 @@ class AppBarTralingButton extends StatelessWidget {
       padding: const EdgeInsets.only(right: 16.0, top: 18),
       child: GestureDetector(
         behavior: HitTestBehavior.deferToChild,
-        onTap: () {
-          AutoRouter.of(context).replace(const PlacesListRoute());
-        },
+        onTap: onTap,
         child: Text(
           AppTranslations.of(context).skip,
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
