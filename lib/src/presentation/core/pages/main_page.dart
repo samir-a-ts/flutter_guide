@@ -54,18 +54,43 @@ class _MainBottomNavigation extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List<Widget>.generate(
           4,
-          (index) => InkWell(
+          (index) => _MainNavigationBarTile(
             onTap: () => onTabSelect(index),
-            child: SizedBox(
-              width: size.width / _tabs.length,
-              height: 56,
-              child: Center(
-                child: SvgPicture.asset(
-                  "assets/images/${_tabs[index]}${index == selected ? "_filled" : ""}.svg",
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-              ),
-            ),
+            width: size.width / _tabs.length,
+            height: 56,
+            iconPath:
+                "assets/images/${_tabs[index]}${index == selected ? "_filled" : ""}.svg",
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MainNavigationBarTile extends StatelessWidget {
+  final String iconPath;
+  final double width;
+  final double height;
+  final VoidCallback onTap;
+
+  const _MainNavigationBarTile({
+    required this.iconPath,
+    required this.width,
+    required this.height,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: SizedBox(
+        width: width,
+        height: height,
+        child: Center(
+          child: SvgPicture.asset(
+            iconPath,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
       ),

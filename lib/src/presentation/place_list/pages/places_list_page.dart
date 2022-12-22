@@ -9,11 +9,13 @@ class PlacesListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AutoRouter(
-      builder: (context, content) => const Scaffold(
-        body: Center(
-          child: Text(_text),
-        ),
-      ),
+      builder: (context, content) {
+        return const Scaffold(
+          body: Center(
+            child: Text(_text),
+          ),
+        );
+      },
     );
   }
 }
