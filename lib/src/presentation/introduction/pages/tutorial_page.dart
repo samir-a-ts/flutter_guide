@@ -1,10 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_guide/src/core/constants/theme.dart';
 import 'package:flutter_guide/src/core/router/app_router.gr.dart';
 import 'package:flutter_guide/src/core/translations/generated/l10n.dart';
 import 'package:flutter_guide/src/presentation/core/gap.dart';
 import 'package:flutter_guide/src/presentation/core/widgets/app_bottom_button.dart';
+import 'package:flutter_guide/src/presentation/introduction/widgets/app_tab_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class TutorialPage extends StatelessWidget {
@@ -20,8 +22,13 @@ class TutorialPage extends StatelessWidget {
   }
 }
 
-class _SkipButton extends StatelessWidget {
-  const _SkipButton();
+class AppBarTralingButton extends StatelessWidget {
+  final void Function() onTap;
+
+  const AppBarTralingButton({
+    super.key,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +109,7 @@ class _TutorialPageBodyState extends State<_TutorialPageBody>
 
     _controller = TabController(
       length: 3,
+      initialIndex: 0,
       vsync: this,
     );
   }
@@ -113,49 +121,84 @@ class _TutorialPageBodyState extends State<_TutorialPageBody>
     super.dispose();
   }
 
+  void _skip() => AutoRouter.of(context).replace(
+        const PlacesListRoute(),
+      );
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            if (_controller.previousIndex == 2) {
-              return const Align(
-                alignment: Alignment.topRight,
-                child: _SkipButton(),
-              );
+    return NotificationListener(
+      onNotification: (notification) {
+        if (notification is UserScrollNotification) {
+          try {
+            if (notification.direction == ScrollDirection.forward) {
+              _controller.index -= 1;
+            } else if (notification.direction == ScrollDirection.reverse) {
+              _controller.index += 1;
             }
+          } catch (e) {
+            /// Ignore errors
+          }
+        }
 
-            return Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: AppButtomButton(
-                  onTap: () {},
-                  text: AppTranslations.of(context).letsGo,
-                ),
-              ),
-            );
-          },
-        ),
-        TabBarView(
-          controller: _controller,
-          children: _tabs
-              .map(
-                (e) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 52),
-                  child: Center(
-                    child: _TabWidget(tabData: e),
+        return true;
+      },
+      child: Stack(
+        children: [
+          TabBarView(
+            controller: _controller,
+            children: _tabs
+                .map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 52),
+                    child: Center(
+                      child: _TabWidget(tabData: e),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              if (_controller.index != _tabs.length - 1) {
+                return Align(
+                  alignment: Alignment.topRight,
+                  child: AppBarTralingButton(
+                    onTap: _skip,
+                  ),
+                );
+              }
+
+              return Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: AppBottomButton(
+                    onTap: _skip,
+                    text: AppTranslations.of(context).letsGo,
                   ),
                 ),
-              )
-              .toList(),
-        ),
-      ],
+              );
+            },
+          ),
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Align(
+                alignment: const Alignment(0, .7),
+                child: AppTabView(
+                  length: _tabs.length,
+                  currentIndex: _controller.index,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -175,13 +218,14 @@ class _TabWidget extends StatelessWidget {
         SvgPicture.asset(
           tabData.assetsPath,
           height: 98,
+          color: Theme.of(context).colorScheme.onPrimary,
         ),
         const Gap(dimension: 40),
         Text(
           tabData.title,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.w700,
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
           textAlign: TextAlign.center,
         ),

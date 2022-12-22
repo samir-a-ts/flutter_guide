@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/src/presentation/core/gap.dart';
 
-class AppButtomButton extends StatelessWidget {
+class AppBottomButton extends StatelessWidget {
   final void Function() onTap;
 
   final String text;
@@ -10,7 +10,7 @@ class AppButtomButton extends StatelessWidget {
 
   final Color? color;
 
-  const AppButtomButton({
+  const AppBottomButton({
     super.key,
     required this.onTap,
     required this.text,

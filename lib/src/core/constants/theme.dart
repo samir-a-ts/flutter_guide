@@ -71,7 +71,7 @@ final lightTheme = ThemeData(
   colorScheme: const ColorScheme.dark(
     primaryContainer: Color(0xFF252849),
     secondaryContainer: Color(0xFF3B3E5B),
-    onPrimary: Color(0xFFFFFFFF),
+    onPrimary: Color(0xFF000000),
   ),
   extensions: const [_appTheme],
 );
