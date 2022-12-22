@@ -15,7 +15,7 @@ class MainPage extends StatelessWidget {
         FavouriteRoute(),
         SettingsRoute(),
       ],
-      builder: (context, child, animation) => Container(),
+      builder: (context, child, animation) => child,
       bottomNavigationBuilder: (context, tabsRouter) => _MainBottomNavigation(
         onTabSelect: (value) => tabsRouter.setActiveIndex(value),
         selected: tabsRouter.activeIndex,
