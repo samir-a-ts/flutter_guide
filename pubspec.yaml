@@ -1,31 +1,47 @@
 name: flutter_guide
 description: Training project
-
+version: 1.0.0+1
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+dependencies:
+  flutter:
+    sdk: flutter
+  # Rest API interaction
+  dio: ^4.0.6
+  # DI
+  provider: ^6.0.5
+  # State managment tool
+  elementary: ^1.5.0
+  # UI
+  flutter_svg: ^1.1.6
+  flutter_screenutil: ^5.6.0 
+  # Logger
+  logger: ^1.1.0
+  surf_logger: ^1.1.0
+  # Navigation
+  auto_route: ^5.0.4
+  # Localization
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.17.0
+  
+dev_dependencies:
+  # Tests
+  flutter_test:
+    sdk: flutter
+  elementary_test: ^1.1.2
+  # Code generation
+  build_runner: ^2.3.0
+  auto_route_generator: ^5.0.2
+  intl_utils: ^2.7.0
+  # Linter rules
+  surf_lint_rules: ^1.5.0
+  dart_code_metrics: ^4.19.2
 
 environment:
   sdk: '>=2.18.5 <3.0.0'
 
-dependencies:
-  auto_route: ^5.0.4
-  flutter:
-    sdk: flutter
-  flutter_localizations:
-    sdk: flutter
-  flutter_screenutil: ^5.6.0
-  flutter_svg: ^1.1.6
-  intl: ^0.17.0
-
-dev_dependencies:
-  auto_route_generator: ^5.0.3
-  build_runner: ^2.3.3
-  flutter_lints: ^2.0.0
-  intl_utils: ^2.8.1
-
 flutter:
-
   uses-material-design: true
   assets:
     - assets/
@@ -45,5 +61,5 @@ flutter_intl:
   enabled: true
   class_name: AppTranslations
   main_locale: ru
-  arb_dir: lib/src/core/translations/arb
-  output_dir: lib/src/core/translations/generated
+  arb_dir: lib/features/translations/service/arb
+  output_dir: lib/features/translations/service/generated

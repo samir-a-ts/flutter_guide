@@ -7,12 +7,10 @@ import 'package:flutter_guide/runner.dart';
 
 void main() {
   Environment.init(
-    buildType: BuildType.debug,
+    buildType: BuildType.release,
     config: AppConfig(
       url: Url.baseUrl,
-      debugOptions: DebugOptions(
-        debugShowCheckedModeBanner: true,
-      ),
+      debugOptions: DebugOptions(),
     ),
   );
 
