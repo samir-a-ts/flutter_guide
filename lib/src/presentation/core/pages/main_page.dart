@@ -33,7 +33,7 @@ class _MainBottomNavigation extends StatelessWidget {
     required this.onTabSelect,
   });
 
-  static const _tabs = ["places", "map", "favourite", "settings"];
+  final _tabs = const ["places", "map", "favourite", "settings"];
 
   @override
   Widget build(BuildContext context) {
