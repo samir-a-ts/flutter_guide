@@ -19,7 +19,10 @@ class TutorialPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: SafeArea(
-        child: _TutorialPageBody(),
+        child: DefaultTabController(
+          length: 3,
+          child: _TutorialPageBody(),
+        ),
       ),
     );
   }
@@ -45,7 +48,7 @@ class _TutorialTabController extends ChangeNotifier {
   int get index => _value;
 
   set index(int newValue) {
-    if (newValue < 0 || newValue > length || _value == newValue) return;
+    if (newValue < 0 || newValue >= length || _value == newValue) return;
 
     _value = newValue;
 
@@ -124,6 +127,9 @@ class _TutorialPageBodyState extends State<_TutorialPageBody> {
             _controller.index = _controller.index - 1;
           } else if (notification.direction == ScrollDirection.reverse) {
             _controller.index = _controller.index + 1;
+          } else if (notification.direction == ScrollDirection.idle &&
+              _controller.index != DefaultTabController.of(context)!.index) {
+            _controller.index = DefaultTabController.of(context)!.index;
           }
         }
 
@@ -131,20 +137,17 @@ class _TutorialPageBodyState extends State<_TutorialPageBody> {
       },
       child: Stack(
         children: [
-          DefaultTabController(
-            length: _tabs.length,
-            child: TabBarView(
-              children: _tabs
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 52),
-                      child: Center(
-                        child: _TabWidget(tabData: e),
-                      ),
+          TabBarView(
+            children: _tabs
+                .map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 52),
+                    child: Center(
+                      child: _TabWidget(tabData: e),
                     ),
-                  )
-                  .toList(),
-            ),
+                  ),
+                )
+                .toList(),
           ),
           AnimatedBuilder(
             animation: _controller,

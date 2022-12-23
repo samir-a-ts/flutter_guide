@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/assets/strings/contants.dart';
+import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/config/app_config.dart';
 import 'package:flutter_guide/config/environment/environment.dart';
 import 'package:flutter_guide/features/app/di/app_scope.dart';
@@ -61,6 +62,10 @@ class _AppWidgetState extends State<AppWidget> {
           routeInformationParser: _scope.router.defaultRouteParser(),
           routerDelegate: _scope.router.delegate(),
           routeInformationProvider: _scope.router.routeInfoProvider(),
+
+          /// Theming
+          theme: lightTheme,
+          darkTheme: darkTheme,
         ),
       ),
     );
