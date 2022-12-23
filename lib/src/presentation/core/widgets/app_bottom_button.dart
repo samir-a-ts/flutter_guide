@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_guide/src/presentation/core/gap.dart';
+import 'package:flutter_guide/src/presentation/core/widgets/gap.dart';
 
 class AppBottomButton extends StatelessWidget {
   final VoidCallback onTap;

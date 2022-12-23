@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_guide/src/core/constants/theme.dart';
 import 'package:flutter_guide/src/core/router/app_router.gr.dart';
 import 'package:flutter_guide/src/core/translations/generated/l10n.dart';
-import 'package:flutter_guide/src/presentation/core/gap.dart';
+import 'package:flutter_guide/src/presentation/core/widgets/gap.dart';
 import 'package:flutter_guide/src/presentation/core/widgets/app_bottom_button.dart';
 import 'package:flutter_guide/src/presentation/introduction/widgets/app_tab_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -137,7 +137,7 @@ class _TutorialPageBodyState extends State<_TutorialPageBody> {
   }
 
   void _skip() => AutoRouter.of(context).replace(
-        const PlacesListRoute(),
+        const MainRoute(),
       );
 
   @override
