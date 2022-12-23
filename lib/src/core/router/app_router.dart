@@ -49,7 +49,6 @@ abstract class _AppRoutes {
     AutoRoute(
       path: "/${_AppRoutes.tutorial}",
       page: TutorialPage,
-      guards: [],
     ),
     AutoRoute(
       path: "/${_AppRoutes.mainScreen}",
@@ -82,7 +81,6 @@ abstract class _AppRoutes {
               ],
             ),
           ],
-          initial: true,
         ),
         AutoRoute(
           path: _AppRoutes.map,
