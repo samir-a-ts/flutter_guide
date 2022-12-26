@@ -2,12 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
+import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/features/app/core/widgets/app_bottom_button.dart';
 import 'package:flutter_guide/features/introduction/widgets/app_bar_trailing_button.dart';
 import 'package:flutter_guide/features/introduction/widgets/app_tab_view.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
-import 'package:flutter_guide/util/widgets/gap.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 /// Tutorial page:

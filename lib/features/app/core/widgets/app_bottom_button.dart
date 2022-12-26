@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_guide/util/widgets/gap.dart';
+import 'package:flutter_guide/common/widgets/gap.dart';
 
 /// Large primary-colored bottom button.
 class AppBottomButton extends StatelessWidget {
