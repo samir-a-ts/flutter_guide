@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Additional colors in the
-/// palete of the design.
+/// pallette of the design.
 class AppTheme extends ThemeExtension<AppTheme> {
   /// Third color.
   final Color thirdColor;
@@ -49,7 +49,7 @@ class AppTheme extends ThemeExtension<AppTheme> {
   }
 
   /// To quickly access additional
-  /// colors of pallete without writing
+  /// colors of pallette without writing
   /// it via [Theme]
   static AppTheme of(BuildContext context) =>
       Theme.of(context).extension<AppTheme>()!;

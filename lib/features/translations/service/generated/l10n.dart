@@ -81,10 +81,10 @@ class AppTranslations {
   }
 
   /// `Ищи новые локации и сохраняй самые любимые.`
-  String get tutorialSubitle1 {
+  String get tutorialSubtitle1 {
     return Intl.message(
       'Ищи новые локации и сохраняй самые любимые.',
-      name: 'tutorialSubitle1',
+      name: 'tutorialSubtitle1',
       desc: '',
       args: [],
     );
@@ -101,10 +101,10 @@ class AppTranslations {
   }
 
   /// `Достигай цели максимально быстро и комфортно.`
-  String get tutorialSubitle2 {
+  String get tutorialSubtitle2 {
     return Intl.message(
       'Достигай цели максимально быстро и комфортно.',
-      name: 'tutorialSubitle2',
+      name: 'tutorialSubtitle2',
       desc: '',
       args: [],
     );
@@ -121,10 +121,10 @@ class AppTranslations {
   }
 
   /// `Делись самыми интересными и помоги нам стать лучше!`
-  String get tutorialSubitle3 {
+  String get tutorialSubtitle3 {
     return Intl.message(
       'Делись самыми интересными и помоги нам стать лучше!',
-      name: 'tutorialSubitle3',
+      name: 'tutorialSubtitle3',
       desc: '',
       args: [],
     );

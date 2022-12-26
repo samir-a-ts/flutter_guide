@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-/// Favourite page.
-class FavouritePage extends StatelessWidget {
+/// Favorite page.
+class FavoritePage extends StatelessWidget {
   /// Initialization.
-  const FavouritePage({super.key});
+  const FavoritePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Favourites'),
+        child: Text('Favorites'),
       ),
     );
   }

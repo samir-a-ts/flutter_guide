@@ -17,8 +17,8 @@ abstract class AppRoutes {
   /// Map page.
   static const map = 'map';
 
-  /// Favourite page.
-  static const favourite = 'favourite';
+  /// Favorite page.
+  static const favorite = 'favorite';
 
   /// Settings page.
   static const settings = 'settings';

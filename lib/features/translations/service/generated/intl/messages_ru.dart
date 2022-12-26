@@ -24,11 +24,11 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "letsGo": MessageLookupByLibrary.simpleMessage("На старт"),
         "skip": MessageLookupByLibrary.simpleMessage("Пропустить"),
-        "tutorialSubitle1": MessageLookupByLibrary.simpleMessage(
+        "tutorialSubtitle1": MessageLookupByLibrary.simpleMessage(
             "Ищи новые локации и сохраняй самые любимые."),
-        "tutorialSubitle2": MessageLookupByLibrary.simpleMessage(
+        "tutorialSubtitle2": MessageLookupByLibrary.simpleMessage(
             "Достигай цели максимально быстро и комфортно."),
-        "tutorialSubitle3": MessageLookupByLibrary.simpleMessage(
+        "tutorialSubtitle3": MessageLookupByLibrary.simpleMessage(
             "Делись самыми интересными и помоги нам стать лучше!"),
         "tutorialTitle1": MessageLookupByLibrary.simpleMessage(
             "Добро пожаловать в Путеводитель"),

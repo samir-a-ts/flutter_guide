@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_guide/assets/strings/contants.dart';
+import 'package:flutter_guide/assets/strings/constants.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/config/app_config.dart';
 import 'package:flutter_guide/config/environment/environment.dart';
 import 'package:flutter_guide/features/app/di/app_scope.dart';
-import 'package:flutter_guide/features/common/di_scope/di_scope.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
+import 'package:flutter_guide/util/di_scope/di_scope.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

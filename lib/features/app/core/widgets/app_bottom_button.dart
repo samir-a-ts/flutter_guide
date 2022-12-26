@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_guide/features/app/core/widgets/gap.dart';
+import 'package:flutter_guide/util/widgets/gap.dart';
 
 /// Large primary-colored bottom button.
 class AppBottomButton extends StatelessWidget {
-  /// What happenes on tap.
+  /// What happens on tap.
   final VoidCallback onTap;
 
   /// What is written in the center of
@@ -19,7 +19,7 @@ class AppBottomButton extends StatelessWidget {
   /// specify it here.
   final Color? color;
 
-  /// Initializaion
+  /// Initialization
   const AppBottomButton({
     required this.onTap,
     required this.text,

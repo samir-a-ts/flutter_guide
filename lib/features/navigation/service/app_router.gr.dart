@@ -15,7 +15,7 @@ import 'package:auto_route/auto_route.dart' as _i12;
 import 'package:flutter/material.dart' as _i13;
 
 import '../../app/core/pages/main_page.dart' as _i3;
-import '../../favourite/screens/favourite/widget/favourite_page.dart' as _i6;
+import '../../favorite/screens/favorite/widget/favorite_page.dart' as _i6;
 import '../../introduction/screens/splash/widget/splash_page.dart' as _i1;
 import '../../introduction/screens/tutorial/widget/tutorial_page.dart' as _i2;
 import '../../map/screens/map/widget/map_page.dart' as _i5;
@@ -64,10 +64,10 @@ class AppRouter extends _i12.RootStackRouter {
         child: const _i5.MapPage(),
       );
     },
-    FavouriteRoute.name: (routeData) {
+    FavoriteRoute.name: (routeData) {
       return _i12.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const _i6.FavouritePage(),
+        child: const _i6.FavoritePage(),
       );
     },
     SettingsRoute.name: (routeData) {
@@ -162,8 +162,8 @@ class AppRouter extends _i12.RootStackRouter {
               parent: MainRoute.name,
             ),
             _i12.RouteConfig(
-              FavouriteRoute.name,
-              path: 'favourite',
+              FavoriteRoute.name,
+              path: 'favorite',
               parent: MainRoute.name,
             ),
             _i12.RouteConfig(
@@ -239,15 +239,15 @@ class MapRoute extends _i12.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i6.FavouritePage]
-class FavouriteRoute extends _i12.PageRouteInfo<void> {
-  const FavouriteRoute()
+/// [_i6.FavoritePage]
+class FavoriteRoute extends _i12.PageRouteInfo<void> {
+  const FavoriteRoute()
       : super(
-          FavouriteRoute.name,
-          path: 'favourite',
+          FavoriteRoute.name,
+          path: 'favorite',
         );
 
-  static const String name = 'FavouriteRoute';
+  static const String name = 'FavoriteRoute';
 }
 
 /// generated route for

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/features/app/core/widgets/app_bottom_button.dart';
-import 'package:flutter_guide/features/app/core/widgets/gap.dart';
 import 'package:flutter_guide/features/introduction/widgets/app_bar_trailing_button.dart';
 import 'package:flutter_guide/features/introduction/widgets/app_tab_view.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
+import 'package:flutter_guide/util/widgets/gap.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 /// Tutorial page:
@@ -84,17 +84,17 @@ class _TutorialPageBodyState extends State<_TutorialPageBody> {
     _tabs = [
       _TabData(
         title: translation.tutorialTitle1,
-        description: translation.tutorialSubitle1,
+        description: translation.tutorialSubtitle1,
         assetsPath: 'assets/images/tutorial_page_1.svg',
       ),
       _TabData(
         title: translation.tutorialTitle2,
-        description: translation.tutorialSubitle2,
+        description: translation.tutorialSubtitle2,
         assetsPath: 'assets/images/tutorial_page_2.svg',
       ),
       _TabData(
         title: translation.tutorialTitle3,
-        description: translation.tutorialSubitle3,
+        description: translation.tutorialSubtitle3,
         assetsPath: 'assets/images/tutorial_page_3.svg',
       ),
     ];
@@ -155,7 +155,7 @@ class _TutorialPageBodyState extends State<_TutorialPageBody> {
               if (_controller.index != _tabs.length - 1) {
                 return Align(
                   alignment: Alignment.topRight,
-                  child: AppBarTralingButton(
+                  child: AppBarTrailingButton(
                     onTap: _skip,
                   ),
                 );

@@ -3,13 +3,13 @@ import 'package:flutter_guide/features/translations/service/generated/l10n.dart'
 
 /// Tappable colored text
 /// on the right of [AppBar]
-class AppBarTralingButton extends StatelessWidget {
+class AppBarTrailingButton extends StatelessWidget {
   /// What happens when user
   /// clicks this text
   final VoidCallback onTap;
 
   /// Initialization.
-  const AppBarTralingButton({
+  const AppBarTrailingButton({
     required this.onTap,
     super.key,
   });

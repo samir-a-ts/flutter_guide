@@ -14,7 +14,7 @@ class MainPage extends StatelessWidget {
       routes: const [
         PlacesListRoute(),
         MapRoute(),
-        FavouriteRoute(),
+        FavoriteRoute(),
         SettingsRoute(),
       ],
       builder: (context, child, animation) => child,
@@ -37,7 +37,7 @@ class _MainBottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const tabs = ['places', 'map', 'favourite', 'settings'];
+    const tabs = ['places', 'map', 'favorite', 'settings'];
 
     final size = MediaQuery.of(context).size;
 
