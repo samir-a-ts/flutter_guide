@@ -104,12 +104,14 @@ class PlacesListPageWidgetModel
     } on Exception catch (e) {
       _placesListState.error(e, previousData);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Some error occurred!'),
-          backgroundColor: Theme.of(context).errorColor,
-        ),
-      );
+      if (previousData.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Some error occurred!'),
+            backgroundColor: Theme.of(context).errorColor,
+          ),
+        );
+      }
     }
 
     _placesLoaded.accept(_placesListState.value!.data!.isNotEmpty);
