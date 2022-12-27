@@ -22,8 +22,22 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "cafe": MessageLookupByLibrary.simpleMessage("кафе"),
+        "error": MessageLookupByLibrary.simpleMessage("Ошибка"),
+        "hotel": MessageLookupByLibrary.simpleMessage("отель"),
         "letsGo": MessageLookupByLibrary.simpleMessage("На старт"),
+        "monument": MessageLookupByLibrary.simpleMessage("монумент"),
+        "museum": MessageLookupByLibrary.simpleMessage("музей"),
+        "newPlace": MessageLookupByLibrary.simpleMessage("Новое место"),
+        "other": MessageLookupByLibrary.simpleMessage("другое"),
+        "park": MessageLookupByLibrary.simpleMessage("парк"),
+        "placesListTitle":
+            MessageLookupByLibrary.simpleMessage("Список интересных мест"),
+        "restaurant": MessageLookupByLibrary.simpleMessage("ресторан"),
+        "search": MessageLookupByLibrary.simpleMessage("Поиск"),
         "skip": MessageLookupByLibrary.simpleMessage("Пропустить"),
+        "temple": MessageLookupByLibrary.simpleMessage("храм"),
+        "theatre": MessageLookupByLibrary.simpleMessage("театр"),
         "tutorialSubtitle1": MessageLookupByLibrary.simpleMessage(
             "Ищи новые локации и сохраняй самые любимые."),
         "tutorialSubtitle2": MessageLookupByLibrary.simpleMessage(

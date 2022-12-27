@@ -129,6 +129,136 @@ class AppTranslations {
       args: [],
     );
   }
+
+  /// `Список интересных мест`
+  String get placesListTitle {
+    return Intl.message(
+      'Список интересных мест',
+      name: 'placesListTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Поиск`
+  String get search {
+    return Intl.message(
+      'Поиск',
+      name: 'search',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `кафе`
+  String get cafe {
+    return Intl.message(
+      'кафе',
+      name: 'cafe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ресторан`
+  String get restaurant {
+    return Intl.message(
+      'ресторан',
+      name: 'restaurant',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `музей`
+  String get museum {
+    return Intl.message(
+      'музей',
+      name: 'museum',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `монумент`
+  String get monument {
+    return Intl.message(
+      'монумент',
+      name: 'monument',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `храм`
+  String get temple {
+    return Intl.message(
+      'храм',
+      name: 'temple',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `парк`
+  String get park {
+    return Intl.message(
+      'парк',
+      name: 'park',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `театр`
+  String get theatre {
+    return Intl.message(
+      'театр',
+      name: 'theatre',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `отель`
+  String get hotel {
+    return Intl.message(
+      'отель',
+      name: 'hotel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `другое`
+  String get other {
+    return Intl.message(
+      'другое',
+      name: 'other',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ошибка`
+  String get error {
+    return Intl.message(
+      'Ошибка',
+      name: 'error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Новое место`
+  String get newPlace {
+    return Intl.message(
+      'Новое место',
+      name: 'newPlace',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppTranslations> {

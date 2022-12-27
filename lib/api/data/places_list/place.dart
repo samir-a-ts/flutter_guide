@@ -47,8 +47,8 @@ class PlaceDto {
   /// and creates new one.
   PlaceDto.fromMap(Map<String, dynamic> map)
       : id = map['id'] as int,
-        latitude = map['latitude'] as double,
-        longitude = map['longitude'] as double,
+        latitude = map['lat'] as double,
+        longitude = map['lng'] as double,
         name = map['name'] as String,
         urls = List<String>.from(map['urls'] as List),
         placeType = map['placeType'] as String,

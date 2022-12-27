@@ -1,7 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_guide/features/app/di/app_scope.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
+import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 /// Main page after splash and tutorial.
 class MainPage extends StatelessWidget {
@@ -10,17 +13,26 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AutoTabsScaffold(
-      routes: const [
-        PlacesListRoute(),
-        MapRoute(),
-        FavoriteRoute(),
-        SettingsRoute(),
+    return MultiProvider(
+      providers: [
+        Provider<IPlacesListScope>(
+          create: (context) => PlacesListScope(
+            Provider.of<IAppScope>(context, listen: false).dio,
+          ),
+        ),
       ],
-      builder: (context, child, animation) => child,
-      bottomNavigationBuilder: (context, tabsRouter) => _MainBottomNavigation(
-        onTabSelect: (value) => tabsRouter.setActiveIndex(value),
-        selected: tabsRouter.activeIndex,
+      child: AutoTabsScaffold(
+        routes: const [
+          PlacesListRoute(),
+          MapRoute(),
+          FavoriteRoute(),
+          SettingsRoute(),
+        ],
+        builder: (context, child, animation) => child,
+        bottomNavigationBuilder: (context, tabsRouter) => _MainBottomNavigation(
+          onTabSelect: (value) => tabsRouter.setActiveIndex(value),
+          selected: tabsRouter.activeIndex,
+        ),
       ),
     );
   }
