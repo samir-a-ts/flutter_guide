@@ -1,5 +1,6 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
 import 'package:flutter_guide/features/places_list/domain/entity/place.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/model/places_list_page_model.dart';
@@ -102,6 +103,13 @@ class PlacesListPageWidgetModel
       _page++;
     } on Exception catch (e) {
       _placesListState.error(e, previousData);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Some error occurred!'),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
     }
 
     _placesLoaded.accept(_placesListState.value!.data!.isNotEmpty);

@@ -74,18 +74,17 @@ class PlacesListPage extends ElementaryWidget<IPlacesListPageWidgetModel> {
               },
               errorBuilder: (context, e, data) {
                 if (data!.isNotEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(e.toString()),
-                    ),
-                  );
-
                   return _PlacesList(places: data);
                 }
 
-                return Center(
-                  child: AppError(
-                    message: e.toString(),
+                return const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 150,
+                    child: Center(
+                      child: AppError(
+                        message: 'Some mistake happened...',
+                      ),
+                    ),
                   ),
                 );
               },
