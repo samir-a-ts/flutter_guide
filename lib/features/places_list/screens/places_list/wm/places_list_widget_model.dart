@@ -104,7 +104,7 @@ class PlacesListPageWidgetModel
       _placesListState.error(e, previousData);
     }
 
-    _placesLoaded.accept(previousData.isNotEmpty);
+    _placesLoaded.accept(_placesListState.value!.data!.isNotEmpty);
 
     _placesReloaded.accept(false);
   }
