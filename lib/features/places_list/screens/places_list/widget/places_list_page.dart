@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:elementary/elementary.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,55 +47,52 @@ class PlacesListPage extends ElementaryWidget<IPlacesListPageWidgetModel> {
           horizontal: 16,
           vertical: 4,
         ),
-        child: SwipeRefresh(
-          SwipeRefreshStyle.adaptive,
-          scrollController: wm.scrollController,
-          onRefresh: wm.refresh,
-          stateStream: wm.refreshStream,
-          childrenDelegate: SliverChildListDelegate(
-            [
-              const Gap(dimension: 12),
-              EntityStateNotifierBuilder(
-                listenableEntityState: wm.placesListState,
-                loadingBuilder: (context, data) {
-                  if (data?.isNotEmpty ?? false) {
-                    return _PlacesList(places: data!);
-                  }
+        child: EntityStateNotifierBuilder(
+          listenableEntityState: wm.placesListState,
+          loadingBuilder: (context, data) {
+            if (data?.isNotEmpty ?? false) {
+              return _PlacesList(
+                places: data!,
+                controller: wm.scrollController,
+                onRefresh: wm.refresh,
+                refreshStream: wm.refreshStream,
+                arePlacesReloading: wm.arePlacesReloading,
+              );
+            }
 
-                  return const SizedBox(
-                    height: 88,
-                    child: Center(
-                      child: AppProgressIndicator(),
-                    ),
-                  );
-                },
-                errorBuilder: (context, e, data) {
-                  if (data!.isNotEmpty) {
-                    return _PlacesList(places: data);
-                  }
+            return const SizedBox(
+              height: 88,
+              child: Center(
+                child: AppProgressIndicator(),
+              ),
+            );
+          },
+          errorBuilder: (context, e, data) {
+            if (data!.isNotEmpty) {
+              return _PlacesList(
+                places: data,
+                controller: wm.scrollController,
+                onRefresh: wm.refresh,
+                refreshStream: wm.refreshStream,
+                arePlacesReloading: wm.arePlacesReloading,
+              );
+            }
 
-                  return const SizedBox(
-                    height: 150,
-                    child: Center(
-                      child: AppError(
-                        message: 'Something wrong...',
-                      ),
-                    ),
-                  );
-                },
-                builder: (context, data) => _PlacesList(places: data!),
+            return const SizedBox(
+              height: 150,
+              child: Center(
+                child: AppError(
+                  message: 'Something wrong...',
+                ),
               ),
-              StateNotifierBuilder(
-                listenableState: wm.arePlacesReloading,
-                builder: (context, value) => value!
-                    ? const SizedBox(
-                        height: 100,
-                        width: double.infinity,
-                        child: AppProgressIndicator(),
-                      )
-                    : const SizedBox(),
-              ),
-            ],
+            );
+          },
+          builder: (context, data) => _PlacesList(
+            places: data!,
+            controller: wm.scrollController,
+            onRefresh: wm.refresh,
+            refreshStream: wm.refreshStream,
+            arePlacesReloading: wm.arePlacesReloading,
           ),
         ),
       ),
@@ -147,21 +142,51 @@ class _FloatingActionButton extends StatelessWidget {
 class _PlacesList extends StatelessWidget {
   final Iterable<Place> places;
 
-  const _PlacesList({required this.places});
+  final ScrollController controller;
+
+  final Future<void> Function() onRefresh;
+
+  final Stream<SwipeRefreshState> refreshStream;
+
+  final ListenableState<bool> arePlacesReloading;
+
+  const _PlacesList({
+    required this.places,
+    required this.controller,
+    required this.onRefresh,
+    required this.refreshStream,
+    required this.arePlacesReloading,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ListView.custom(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+    return SwipeRefresh(
+      SwipeRefreshStyle.adaptive,
+      scrollController: controller,
+      onRefresh: onRefresh,
+      stateStream: refreshStream,
+      initState: SwipeRefreshState.hidden,
+      indicatorColor: Theme.of(context).primaryColor,
       childrenDelegate: SliverChildListDelegate(
-        places
-            .map<Widget>(
-              (e) => _PlaceCard(
-                place: e,
-              ),
-            )
-            .toList(),
+        [
+          ...places
+              .map<Widget>(
+                (e) => _PlaceCard(
+                  place: e,
+                ),
+              )
+              .toList(),
+          StateNotifierBuilder(
+            listenableState: arePlacesReloading,
+            builder: (context, value) => value!
+                ? const SizedBox(
+                    height: 100,
+                    width: double.infinity,
+                    child: AppProgressIndicator(),
+                  )
+                : const SizedBox(),
+          ),
+        ],
       ),
     );
   }
