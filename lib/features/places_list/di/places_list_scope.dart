@@ -20,6 +20,6 @@ class PlacesListScope extends IPlacesListScope {
         PlacesListApi(_dio),
       );
 
-  /// Initialization.
+  /// Constructor for [PlacesListScope].
   PlacesListScope(this._dio);
 }

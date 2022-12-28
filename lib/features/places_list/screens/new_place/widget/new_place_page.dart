@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// New place page.
 class NewPlacePage extends StatelessWidget {
-  /// Initialization.
+  /// Constructor for [NewPlacePage].
   const NewPlacePage({super.key});
 
   @override

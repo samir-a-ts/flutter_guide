@@ -1,18 +1,22 @@
+import 'dart:async';
+
 import 'package:elementary/elementary.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/common/widgets/app_bar.dart';
 import 'package:flutter_guide/common/widgets/app_error.dart';
 import 'package:flutter_guide/common/widgets/app_progress_indicator.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
-import 'package:flutter_guide/features/places_list/domain/entity/place.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/wm/places_list_widget_model.dart';
 import 'package:flutter_guide/features/places_list/widgets/places_list_text_field.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
+import 'package:swipe_refresh/swipe_refresh.dart';
 
 /// Places list page.
 class PlacesListPage extends ElementaryWidget<IPlacesListPageWidgetModel> {
-  /// Initialization.
+  /// Constructor for [PlacesListPage].
   const PlacesListPage({super.key})
       : super(
           placesListPageWmFactory,
@@ -23,9 +27,19 @@ class PlacesListPage extends ElementaryWidget<IPlacesListPageWidgetModel> {
     return Scaffold(
       appBar: MainAppBar(
         title: wm.appBarTitle,
+        bottom: const PreferredSize(
+          preferredSize: Size(double.infinity, 40),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: PlacesListTextField(
+              enabled: false,
+              trailing: Icon(Icons.filter),
+            ),
+          ),
+        ),
       ),
       floatingActionButton: StateNotifierBuilder(
-        listenableState: wm.arePlacesLoaded,
+        listenableState: wm.arePlacesLoading,
         builder: (context, value) =>
             value! ? const _FloatingActionButton() : const SizedBox(),
       ),
@@ -35,67 +49,47 @@ class PlacesListPage extends ElementaryWidget<IPlacesListPageWidgetModel> {
           horizontal: 16,
           vertical: 4,
         ),
-        child: CustomScrollView(
-          controller: wm.scrollController,
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 6,
-                ),
-                child: PlacesListTextField(
-                  enabled: false,
-                  trailing: const Icon(Icons.filter),
-                  onTapTrailing: () {
-                    // ignore: avoid_print
-                    print('test');
-                  },
-                ),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: Gap(dimension: 12),
-            ),
-            EntityStateNotifierBuilder(
-              listenableEntityState: wm.placesListState,
-              loadingBuilder: (context, data) {
-                if (data?.isNotEmpty ?? false) {
-                  return _PlacesList(places: data!);
-                }
+        child: SwipeRefresh(
+          SwipeRefreshStyle.adaptive,
+          scrollController: wm.scrollController,
+          onRefresh: wm.refresh,
+          stateStream: wm.refreshStream,
+          childrenDelegate: SliverChildListDelegate(
+            [
+              const Gap(dimension: 12),
+              EntityStateNotifierBuilder(
+                listenableEntityState: wm.placesListState,
+                loadingBuilder: (context, data) {
+                  if (data?.isNotEmpty ?? false) {
+                    return _PlacesList(places: data!);
+                  }
 
-                return const SliverToBoxAdapter(
-                  child: SizedBox(
+                  return const SizedBox(
                     height: 88,
                     child: Center(
                       child: AppProgressIndicator(),
                     ),
-                  ),
-                );
-              },
-              errorBuilder: (context, e, data) {
-                if (data!.isNotEmpty) {
-                  return _PlacesList(places: data);
-                }
+                  );
+                },
+                errorBuilder: (context, e, data) {
+                  if (data!.isNotEmpty) {
+                    return _PlacesList(places: data);
+                  }
 
-                return const SliverToBoxAdapter(
-                  child: SizedBox(
+                  return const SizedBox(
                     height: 150,
                     child: Center(
                       child: AppError(
-                        message: 'Some mistake happened...',
+                        message: 'Something wrong...',
                       ),
                     ),
-                  ),
-                );
-              },
-              builder: (context, data) => _PlacesList(
-                places: data!,
+                  );
+                },
+                builder: (context, data) => _PlacesList(places: data!),
               ),
-            ),
-            StateNotifierBuilder(
-              listenableState: wm.arePlacesReloading,
-              builder: (context, value) => SliverToBoxAdapter(
-                child: value!
+              StateNotifierBuilder(
+                listenableState: wm.arePlacesReloading,
+                builder: (context, value) => value!
                     ? const SizedBox(
                         height: 100,
                         width: double.infinity,
@@ -103,8 +97,8 @@ class PlacesListPage extends ElementaryWidget<IPlacesListPageWidgetModel> {
                       )
                     : const SizedBox(),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -157,8 +151,10 @@ class _PlacesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverList(
-      delegate: SliverChildListDelegate(
+    return ListView.custom(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      childrenDelegate: SliverChildListDelegate(
         places
             .map<Widget>(
               (e) => _PlaceCard(
@@ -195,7 +191,7 @@ class _PlaceCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(
-                        place.urls.first,
+                        place.images.first,
                       ),
                       fit: BoxFit.cover,
                     ),

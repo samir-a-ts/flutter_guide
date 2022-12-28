@@ -1,122 +1,106 @@
+import 'dart:async';
+
 import 'package:elementary/elementary.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
-import 'package:flutter_guide/features/places_list/domain/entity/place.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/model/places_list_page_model.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/widget/places_list_page.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 import 'package:provider/provider.dart';
+import 'package:swipe_refresh/swipe_refresh.dart';
 
 /// Interface of [PlacesListPageWidgetModel]
 abstract class IPlacesListPageWidgetModel extends IWidgetModel {
-  /// List of places viewed on a screen.
+  /// State of list of places viewed on a screen.
   ListenableState<EntityState<Iterable<Place>>> get placesListState;
 
-  /// If the list of places is loaded (used for floating action button).
-  ListenableState<bool> get arePlacesLoaded;
+  /// Whether places are being loaded initially.
+  /// (to determine whether show `new place` button or not)
+  ListenableState<bool> get arePlacesLoading;
 
   /// Translated app bar title.
   String get appBarTitle;
 
   /// Controller of places list.
+  /// (for pagination)
   ScrollController get scrollController;
 
-  /// If the list of new places is currently being added to
-  /// loaded places (used for progress indicator).
+  /// Controller of pull-to-refresh
+  /// on places list (for reload).
+  Stream<SwipeRefreshState> get refreshStream;
+
+  /// Whether additional places are being loaded
+  /// currently.
+  /// (to determine whether to show
+  /// loader in the end of a places list)
   ListenableState<bool> get arePlacesReloading;
+
+  /// Pull-to-refresh functionality:
+  /// Resets the list of places and
+  /// returns all the way to the first page.
+  /// The, reloads.
+  Future<void> refresh();
 }
 
 /// Widget Model for [PlacesListPage]
 class PlacesListPageWidgetModel
     extends WidgetModel<PlacesListPage, PlacesListPageModel>
     implements IPlacesListPageWidgetModel {
-  final _placesListState = EntityStateNotifier<Iterable<Place>>.value([]);
-
-  final _placesLoaded = StateNotifier<bool>(initValue: false);
-
-  final _placesReloaded = StateNotifier<bool>(initValue: false);
-
-  final _scroll = ScrollController();
-
   @override
   ListenableState<EntityState<Iterable<Place>>> get placesListState =>
-      _placesListState;
+      model.placesListState;
 
   @override
   String get appBarTitle => AppTranslations.of(context).placesListTitle;
 
   @override
-  ListenableState<bool> get arePlacesLoaded => _placesLoaded;
+  ListenableState<bool> get arePlacesLoading => model.arePlacesLoading;
 
   @override
-  ScrollController get scrollController => _scroll;
+  ScrollController get scrollController => model.scroll;
 
   @override
-  ListenableState<bool> get arePlacesReloading => _placesReloaded;
+  ListenableState<bool> get arePlacesReloading => model.arePlacesReloading;
 
-  var _page = 0;
+  @override
+  Stream<SwipeRefreshState> get refreshStream => model.refreshStream;
 
-  /// Initialization.
+  /// Constructor for [PlacesListPageWidgetModel].
   PlacesListPageWidgetModel(super.model);
+
+  /// Pull-to-refresh functionality:
+  /// Resets the list of places and
+  /// returns all the way to the first page.
+  /// The, reloads.
+  @override
+  Future<void> refresh() => model.refresh();
 
   @override
   void initWidgetModel() {
+    placesListState.addListener(_errorListener);
+
     super.initWidgetModel();
-
-    _scroll.addListener(_loadMore);
-
-    _loadPlacesList();
   }
 
   @override
   void dispose() {
+    placesListState.removeListener(_errorListener);
+
     super.dispose();
-
-    _scroll
-      ..removeListener(_loadMore)
-      ..dispose();
   }
 
-  void _loadMore() {
-    if (_scroll.position.extentAfter == 0) _loadPlacesList();
-  }
+  void _errorListener() {
+    final state = placesListState.value;
 
-  Future<void> _loadPlacesList() async {
-    if (_placesListState.value!.isLoading) return;
-
-    final previousData = _placesListState.value?.data;
-
-    _placesListState.loading(previousData);
-
-    if (previousData!.isNotEmpty) {
-      _placesReloaded.accept(true);
-    }
-
-    try {
-      final result = await model.loadPlaces(_page);
-
-      _placesListState.content(
-        previousData.followedBy(result),
+    if (state!.hasError && state.data!.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Some error occurred!'),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
       );
-
-      _page++;
-    } on Exception catch (e) {
-      _placesListState.error(e, previousData);
-
-      if (previousData.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Some error occurred!'),
-            backgroundColor: Theme.of(context).errorColor,
-          ),
-        );
-      }
     }
-
-    _placesLoaded.accept(_placesListState.value!.data!.isNotEmpty);
-
-    _placesReloaded.accept(false);
   }
 }
 

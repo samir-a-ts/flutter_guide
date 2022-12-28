@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 /// Main page after splash and tutorial.
 class MainPage extends StatelessWidget {
-  /// Initialization.
+  /// Constructor for [MainPage].
   const MainPage({super.key});
 
   @override

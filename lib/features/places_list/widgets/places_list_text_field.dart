@@ -17,7 +17,7 @@ class PlacesListTextField extends StatelessWidget {
   /// Whether this field enabled.
   final bool enabled;
 
-  /// Initialization.
+  /// Constructor for [PlacesListTextField].
   const PlacesListTextField({
     required this.trailing,
     this.onTapTrailing,

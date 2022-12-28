@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Favorite page.
 class FavoritePage extends StatelessWidget {
-  /// Initialization.
+  /// Constructor for [FavoritePage].
   const FavoritePage({super.key});
 
   @override

@@ -21,15 +21,24 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// one after another.
   final List<Widget> trailing;
 
-  @override
-  Size get preferredSize => const Size(double.infinity, 56);
+  /// What widget is placed
+  /// at the bottom of app bar
+  /// (right down from title)
+  final PreferredSizeWidget? bottom;
 
-  /// Initialization
+  @override
+  Size get preferredSize => Size(
+        double.infinity,
+        56 + (bottom != null ? bottom!.preferredSize.height : 0),
+      );
+
+  /// Constructor for [MainAppBar]
   const MainAppBar({
     required this.title,
     super.key,
     this.leading,
     this.trailing = const <Widget>[],
+    this.bottom,
   });
 
   @override
@@ -47,6 +56,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0.0,
       actions: trailing,
       leading: leading,
+      bottom: bottom,
     );
   }
 }

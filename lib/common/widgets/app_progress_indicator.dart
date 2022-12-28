@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 /// Progress indicator app-styled.
 class AppProgressIndicator extends StatefulWidget {
-  /// Initialization.
+  /// Constructor for [AppProgressIndicator].
   const AppProgressIndicator({super.key});
 
   @override

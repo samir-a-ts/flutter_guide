@@ -14,7 +14,7 @@ class AppTabView extends StatelessWidget {
   /// Current tab.
   final int currentIndex;
 
-  /// Initialization.
+  /// Constructor for [AppTabView]
   const AppTabView({
     required this.length,
     required this.currentIndex,

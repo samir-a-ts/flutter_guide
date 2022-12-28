@@ -9,7 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 /// Splash page
 class SplashPage extends StatefulWidget {
-  /// Initialization
+  /// Constructor for [SplashPage]
   const SplashPage({super.key});
 
   @override

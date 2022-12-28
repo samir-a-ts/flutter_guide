@@ -12,7 +12,7 @@ class AppTheme extends ThemeExtension<AppTheme> {
   /// Additional color.
   final Color additionalColor;
 
-  /// Initialization.
+  /// Constructor for [AppTheme].
   const AppTheme({
     required this.additionalColor,
     required this.thirdColor,

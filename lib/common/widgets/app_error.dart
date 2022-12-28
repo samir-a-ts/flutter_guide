@@ -10,7 +10,7 @@ class AppError extends StatelessWidget {
   /// Text under `error` string.
   final String message;
 
-  /// Initialization.
+  /// Constructor for [AppError].
   const AppError({
     super.key,
     this.message = '',

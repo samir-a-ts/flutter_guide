@@ -11,15 +11,15 @@ abstract class _PlacesApiEndpoints {
 }
 
 /// Service for requesting
-/// and filtering a list of [PlaceDto]s.
+/// and filtering a list of [Place]s.
 class PlacesListApi {
   final Dio _dio;
 
-  /// Initialization.
+  /// Constructor for [PlacesListApi].
   PlacesListApi(this._dio);
 
   /// Returns places with pagination.
-  Future<List<PlaceDto>> getAllPlaces(
+  Future<List<Place>> getAllPlaces(
     int page, [
     int recordsPerPage = 10,
   ]) async {
@@ -35,7 +35,7 @@ class PlacesListApi {
   }
 
   /// Filters all places and returns them.
-  Future<List<PlaceDto>> getFilteredPlaces({
+  Future<List<Place>> getFilteredPlaces({
     double? latitude,
     double? longitude,
     double? radius,
@@ -68,18 +68,11 @@ class PlacesListApi {
     return _processRequest(request);
   }
 
-  List<PlaceDto> _processRequest(Response<dynamic> response) {
-    if (response.statusCode != 200) {
-      throw Exception(
-        (response.data as Map<String, dynamic>)['error'] ??
-            'Unexpected result code: ${response.statusCode}',
-      );
-    }
-
+  List<Place> _processRequest(Response<dynamic> response) {
     final places = (response.data as List)
         .map(
           /// ignore: implicit_dynamic_parameter
-          (value) => PlaceDto.fromMap(
+          (value) => Place.fromMap(
             value as Map<String, dynamic>,
           ),
         )
