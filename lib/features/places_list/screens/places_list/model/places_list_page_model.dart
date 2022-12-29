@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:elementary/elementary.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/places_list_repository.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';
