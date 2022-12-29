@@ -27,5 +27,7 @@ jobs:
         run: flutter pub get
       - name: Finds all warnings and errors in project
         run: flutter analyze
+      - name: Runs tests for this project
+        run: flutter test
       - name: Builds Android app file
         run: flutter build apk --release
