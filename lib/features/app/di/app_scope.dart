@@ -4,12 +4,14 @@ import 'package:flutter_guide/config/app_config.dart';
 import 'package:flutter_guide/config/environment/environment.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_guide/util/default_error_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Scope of dependencies which need through all app's life.
 class AppScope implements IAppScope {
   late final Dio _dio;
   late final ErrorHandler _errorHandler;
   late final AppRouter _router;
+  late final SharedPreferences _sharedPreferences;
 
   @override
   Dio get dio => _dio;
@@ -20,6 +22,9 @@ class AppScope implements IAppScope {
   @override
   AppRouter get router => _router;
 
+  @override
+  SharedPreferences get sharedPreferences => _sharedPreferences;
+
   /// Create an instance [AppScope].
   AppScope() {
     /// List interceptor. Fill in as needed.
@@ -28,6 +33,7 @@ class AppScope implements IAppScope {
     _dio = _initDio(additionalInterceptors);
     _errorHandler = DefaultErrorHandler();
     _router = AppRouter();
+    _initSharedPreferences();
   }
 
   Dio _initDio(Iterable<Interceptor> additionalInterceptors) {
@@ -54,6 +60,10 @@ class AppScope implements IAppScope {
 
     return dio;
   }
+
+  Future<void> _initSharedPreferences() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+  }
 }
 
 /// App dependencies.
@@ -66,4 +76,7 @@ abstract class IAppScope {
 
   /// Class that coordinates navigation for the whole app.
   AppRouter get router;
+
+  /// Local data storage for caching on phone.
+  SharedPreferences get sharedPreferences;
 }

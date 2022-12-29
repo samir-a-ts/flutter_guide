@@ -1,13 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_guide/api/service/places_list/places_list_api.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/places_list_repository.dart';
+import 'package:flutter_guide/features/places_list/domain/repository/places_list_search_cache_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Dependencies required for
 /// places_list feature.
 abstract class IPlacesListScope {
   /// Repository with all features
   /// connected with list of places.
-  IPlacesListRepository get repository;
+  IPlacesListRepository get placesRepository;
+
+  /// Repository with all features
+  /// connected with list of places.
+  IPlacesSearchCacheRepository get placesSearchCacheRepository;
 }
 
 /// Dependencies required for
@@ -15,11 +21,17 @@ abstract class IPlacesListScope {
 class PlacesListScope extends IPlacesListScope {
   final Dio _dio;
 
+  final SharedPreferences _sharedPreferences;
+
   @override
-  IPlacesListRepository get repository => PlacesListRepository(
+  IPlacesListRepository get placesRepository => PlacesListRepository(
         PlacesListApi(_dio),
       );
 
+  @override
+  IPlacesSearchCacheRepository get placesSearchCacheRepository =>
+      PlacesSearchCacheRepository(_sharedPreferences);
+
   /// Constructor for [PlacesListScope].
-  PlacesListScope(this._dio);
+  PlacesListScope(this._dio, this._sharedPreferences);
 }

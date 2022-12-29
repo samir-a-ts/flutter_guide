@@ -14,6 +14,9 @@ class PlacesListTextField extends StatelessWidget {
   /// widget tap.
   final VoidCallback? onTapTrailing;
 
+  /// Controller of [TextField] in this widget.
+  final TextEditingController? controller;
+
   /// Whether this field enabled.
   final bool enabled;
 
@@ -23,6 +26,7 @@ class PlacesListTextField extends StatelessWidget {
     this.onTapTrailing,
     super.key,
     this.enabled = true,
+    this.controller,
   });
 
   @override
@@ -31,6 +35,7 @@ class PlacesListTextField extends StatelessWidget {
       height: 40,
       child: TextField(
         enabled: enabled,
+        controller: controller,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
           prefixIcon: GestureDetector(

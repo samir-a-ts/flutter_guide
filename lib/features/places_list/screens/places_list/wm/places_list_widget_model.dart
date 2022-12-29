@@ -124,7 +124,7 @@ PlacesListPageWidgetModel placesListPageWmFactory(
 ) {
   final placesList = Provider.of<IPlacesListScope>(context, listen: false);
 
-  final model = PlacesListPageModel(placesList.repository);
+  final model = PlacesListPageModel(placesList.placesRepository);
 
   return PlacesListPageWidgetModel(model);
 }

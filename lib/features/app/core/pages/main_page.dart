@@ -16,9 +16,14 @@ class MainPage extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<IPlacesListScope>(
-          create: (context) => PlacesListScope(
-            Provider.of<IAppScope>(context, listen: false).dio,
-          ),
+          create: (context) {
+            final appScope = Provider.of<IAppScope>(context, listen: false);
+
+            return PlacesListScope(
+              appScope.dio,
+              appScope.sharedPreferences,
+            );
+          },
         ),
       ],
       child: AutoTabsScaffold(
