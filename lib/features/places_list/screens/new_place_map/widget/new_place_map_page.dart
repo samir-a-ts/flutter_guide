@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// New place -> map page.
 class NewPlaceMapPage extends StatelessWidget {
-  /// Initialization.
+  /// Constructor for [NewPlaceMapPage].
   const NewPlaceMapPage({super.key});
 
   @override

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// New place -> categories page.
 class NewPlaceCategoriesPage extends StatelessWidget {
-  /// Initialization.
+  /// Constructor for [NewPlaceCategoriesPage].
   const NewPlaceCategoriesPage({super.key});
 
   @override

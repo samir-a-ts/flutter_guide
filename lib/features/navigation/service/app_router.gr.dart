@@ -19,13 +19,13 @@ import '../../favorite/screens/favorite/widget/favorite_page.dart' as _i6;
 import '../../introduction/screens/splash/widget/splash_page.dart' as _i1;
 import '../../introduction/screens/tutorial/widget/tutorial_page.dart' as _i2;
 import '../../map/screens/map/widget/map_page.dart' as _i5;
-import '../../place_list/screens/filter/widget/filter_page.dart' as _i9;
-import '../../place_list/screens/new_place/widget/new_place_page.dart' as _i10;
-import '../../place_list/screens/new_place_categories/widget/new_place_categories_page.dart'
+import '../../places_list/screens/filter/widget/filter_page.dart' as _i9;
+import '../../places_list/screens/new_place/widget/new_place_page.dart' as _i10;
+import '../../places_list/screens/new_place_categories/widget/new_place_categories_page.dart'
     as _i11;
-import '../../place_list/screens/places_list/widget/places_list_page.dart'
+import '../../places_list/screens/places_list/widget/places_list_page.dart'
     as _i4;
-import '../../place_list/screens/search/widget/search_page.dart' as _i8;
+import '../../places_list/screens/search/widget/search_page.dart' as _i8;
 import '../../settings/screens/settings/widget/settings_page.dart' as _i7;
 
 class AppRouter extends _i12.RootStackRouter {

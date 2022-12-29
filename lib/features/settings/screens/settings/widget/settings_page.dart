@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Settings page.
 class SettingsPage extends StatelessWidget {
-  /// Initialization.
+  /// Constructor for [SettingsPage].
   const SettingsPage({super.key});
 
   @override

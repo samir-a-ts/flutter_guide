@@ -12,7 +12,7 @@ class AppTheme extends ThemeExtension<AppTheme> {
   /// Additional color.
   final Color additionalColor;
 
-  /// Initialization.
+  /// Constructor for [AppTheme].
   const AppTheme({
     required this.additionalColor,
     required this.thirdColor,
@@ -117,4 +117,8 @@ abstract class ThemeHelper {
   /// Secondary container from [ColorScheme].
   static Color secondaryColor(BuildContext context) =>
       Theme.of(context).colorScheme.secondaryContainer;
+
+  /// Text theme from [TextTheme].
+  static TextTheme textTheme(BuildContext context) =>
+      Theme.of(context).textTheme;
 }

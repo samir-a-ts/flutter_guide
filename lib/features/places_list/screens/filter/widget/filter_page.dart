@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Filter page
 class FilterPage extends StatelessWidget {
-  /// Initialization.
+  /// Constructor for [FilterPage].
   const FilterPage({super.key});
 
   @override

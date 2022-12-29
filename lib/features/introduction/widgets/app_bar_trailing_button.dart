@@ -8,7 +8,7 @@ class AppBarTrailingButton extends StatelessWidget {
   /// clicks this text
   final VoidCallback onTap;
 
-  /// Initialization.
+  /// Constructor for [AppBarTrailingButton].
   const AppBarTrailingButton({
     required this.onTap,
     super.key,

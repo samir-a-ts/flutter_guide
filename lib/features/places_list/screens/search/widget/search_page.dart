@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Places list -> Search page.
 class SearchPage extends StatelessWidget {
-  /// Initialization.
+  /// Constructor for [SearchPage].
   const SearchPage({super.key});
 
   @override

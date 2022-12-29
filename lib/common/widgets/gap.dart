@@ -7,7 +7,7 @@ class Gap extends StatelessWidget {
   /// Width and height of this [Gap].
   final double dimension;
 
-  /// Initialization.
+  /// Constructor for [Gap]
   const Gap({
     required this.dimension,
     super.key,

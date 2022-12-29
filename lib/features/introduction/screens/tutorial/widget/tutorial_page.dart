@@ -12,7 +12,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 /// Tutorial page:
 class TutorialPage extends StatelessWidget {
-  /// Initialization
+  /// Constructor for [TutorialPage]
   const TutorialPage({super.key});
 
   @override

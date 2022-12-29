@@ -19,7 +19,7 @@ class AppBottomButton extends StatelessWidget {
   /// specify it here.
   final Color? color;
 
-  /// Initialization
+  /// Constructor for [AppBottomButton]
   const AppBottomButton({
     required this.onTap,
     required this.text,
