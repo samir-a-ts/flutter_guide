@@ -27,6 +27,7 @@ dev_dependencies:
   elementary_test: ^1.1.2
   flutter_test:
     sdk: flutter
+  mocktail: ^0.3.0
   intl_utils: ^2.7.0
   # Linter rules
   surf_lint_rules: ^1.5.0

@@ -12,7 +12,7 @@ class PlacesListPageModel extends ElementaryModel {
 
   /// Whether places are being loaded initially.
   /// (to determine whether show `new place` button or not)
-  final arePlacesLoading = StateNotifier<bool>(initValue: false);
+  final arePlacesLoaded = StateNotifier<bool>(initValue: false);
 
   /// Whether additional places are being loaded
   /// currently.
@@ -70,7 +70,7 @@ class PlacesListPageModel extends ElementaryModel {
 
     await _requestPlaces();
 
-    arePlacesLoading.accept(placesListState.value!.data!.isNotEmpty);
+    arePlacesLoaded.accept(placesListState.value!.data!.isNotEmpty);
 
     arePlacesReloading.accept(false);
   }

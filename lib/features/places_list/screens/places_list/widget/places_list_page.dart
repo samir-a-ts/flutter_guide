@@ -36,7 +36,7 @@ class PlacesListPage extends ElementaryWidget<IPlacesListPageWidgetModel> {
         ),
       ),
       floatingActionButton: StateNotifierBuilder(
-        listenableState: wm.arePlacesLoading,
+        listenableState: wm.arePlacesLoaded,
         builder: (context, value) =>
             value! ? const _FloatingActionButton() : const SizedBox(),
       ),

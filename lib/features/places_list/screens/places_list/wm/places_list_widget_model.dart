@@ -17,7 +17,7 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
 
   /// Whether places are being loaded initially.
   /// (to determine whether show `new place` button or not)
-  ListenableState<bool> get arePlacesLoading;
+  ListenableState<bool> get arePlacesLoaded;
 
   /// Translated app bar title.
   String get appBarTitle;
@@ -59,7 +59,7 @@ class PlacesListPageWidgetModel
   String get appBarTitle => AppTranslations.of(context).placesListTitle;
 
   @override
-  ListenableState<bool> get arePlacesLoading => model.arePlacesLoading;
+  ListenableState<bool> get arePlacesLoaded => model.arePlacesLoaded;
 
   @override
   ListenableState<bool> get arePlacesReloading => model.arePlacesReloading;
