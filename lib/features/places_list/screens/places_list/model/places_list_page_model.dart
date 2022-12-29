@@ -21,10 +21,6 @@ class PlacesListPageModel extends ElementaryModel {
   /// loader in the end of a places list)
   final arePlacesReloading = StateNotifier<bool>(initValue: false);
 
-  /// Scroll controller of [ListView] of [Place]s.
-  /// (for pagination)
-  final scroll = ScrollController();
-
   /// Controller of pull-to-refresh
   /// on places list (for reload).
   final _refreshController = StreamController<SwipeRefreshState>();
@@ -42,18 +38,12 @@ class PlacesListPageModel extends ElementaryModel {
 
   @override
   void init() {
-    scroll.addListener(_loadMore);
-
-    _loadPlacesList();
+    loadPlacesList();
   }
 
   @override
   void dispose() {
     _refreshController.close();
-
-    scroll
-      ..removeListener(_loadMore)
-      ..dispose();
   }
 
   /// Pull-to-refresh functionality:
@@ -68,11 +58,9 @@ class PlacesListPageModel extends ElementaryModel {
     _refreshController.sink.add(SwipeRefreshState.hidden);
   }
 
-  void _loadMore() {
-    if (scroll.position.extentAfter == 0) _loadPlacesList();
-  }
-
-  Future<void> _loadPlacesList() async {
+  /// Loads places from current [_page].
+  /// Handles all state transfer.
+  Future<void> loadPlacesList() async {
     if (placesListState.value!.isLoading) return;
 
     final previousData = placesListState.value?.data;
