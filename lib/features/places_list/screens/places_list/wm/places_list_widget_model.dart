@@ -22,10 +22,6 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
   /// Translated app bar title.
   String get appBarTitle;
 
-  /// Controller of places list.
-  /// (for pagination)
-  ScrollController get scrollController;
-
   /// Controller of pull-to-refresh
   /// on places list (for reload).
   Stream<SwipeRefreshState> get refreshStream;
@@ -35,6 +31,10 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
   /// (to determine whether to show
   /// loader in the end of a places list)
   ListenableState<bool> get arePlacesReloading;
+
+  /// Scroll controller of [ListView] of [Place]s.
+  /// (for pagination)
+  ScrollController get scrollController;
 
   /// Pull-to-refresh functionality:
   /// Resets the list of places and
@@ -47,6 +47,10 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
 class PlacesListPageWidgetModel
     extends WidgetModel<PlacesListPage, PlacesListPageModel>
     implements IPlacesListPageWidgetModel {
+  /// Scroll controller  of [ListView] of [Place]s instance.
+  /// (for pagination)
+  final _scrollController = ScrollController();
+
   @override
   ListenableState<EntityState<Iterable<Place>>> get placesListState =>
       model.placesListState;
@@ -58,13 +62,13 @@ class PlacesListPageWidgetModel
   ListenableState<bool> get arePlacesLoading => model.arePlacesLoading;
 
   @override
-  ScrollController get scrollController => model.scroll;
-
-  @override
   ListenableState<bool> get arePlacesReloading => model.arePlacesReloading;
 
   @override
   Stream<SwipeRefreshState> get refreshStream => model.refreshStream;
+
+  @override
+  ScrollController get scrollController => _scrollController;
 
   /// Constructor for [PlacesListPageWidgetModel].
   PlacesListPageWidgetModel(super.model);
@@ -81,13 +85,23 @@ class PlacesListPageWidgetModel
     placesListState.addListener(_errorListener);
 
     super.initWidgetModel();
+
+    _scrollController.addListener(_loadMore);
   }
 
   @override
   void dispose() {
-    placesListState.removeListener(_errorListener);
+    _scrollController
+      ..removeListener(_loadMore)
+      ..dispose();
 
     super.dispose();
+
+    placesListState.removeListener(_errorListener);
+  }
+
+  void _loadMore() {
+    if (_scrollController.position.extentAfter == 0) model.loadPlacesList();
   }
 
   void _errorListener() {
