@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_guide/common/widgets/app_bar.dart';
 import 'package:flutter_guide/common/widgets/app_error.dart';
 import 'package:flutter_guide/common/widgets/app_progress_indicator.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
+import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/wm/places_list_widget_model.dart';
 import 'package:flutter_guide/features/places_list/widgets/places_list_text_field.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
@@ -21,77 +23,86 @@ class PlacesListPage extends ElementaryWidget<IPlacesListPageWidgetModel> {
 
   @override
   Widget build(IPlacesListPageWidgetModel wm) {
-    return Scaffold(
-      appBar: MainAppBar(
-        title: wm.appBarTitle,
-        bottom: const PreferredSize(
-          preferredSize: Size(double.infinity, 40),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: PlacesListTextField(
-              enabled: false,
-              trailing: Icon(Icons.filter),
+    return AutoRouter(
+      builder: (context, content) => content,
+      placeholder: (context) => Scaffold(
+        appBar: MainAppBar(
+          title: wm.appBarTitle,
+          bottom: PreferredSize(
+            preferredSize: const Size(double.infinity, 40),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: GestureDetector(
+                onTap: () {
+                  AutoRouter.of(context).push(PlacesSearchRoute());
+                },
+                child: PlacesListTextField(
+                  enabled: false,
+                  trailingIcon: Icons.settings,
+                  trailingIconColor: Theme.of(context).primaryColor,
+                ),
+              ),
             ),
           ),
         ),
-      ),
-      floatingActionButton: StateNotifierBuilder(
-        listenableState: wm.arePlacesLoaded,
-        builder: (context, value) =>
-            value! ? const _FloatingActionButton() : const SizedBox(),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 4,
+        floatingActionButton: StateNotifierBuilder(
+          listenableState: wm.arePlacesLoaded,
+          builder: (context, value) =>
+              value! ? const _FloatingActionButton() : const SizedBox(),
         ),
-        child: EntityStateNotifierBuilder(
-          listenableEntityState: wm.placesListState,
-          loadingBuilder: (context, data) {
-            if (data?.isNotEmpty ?? false) {
-              return _PlacesList(
-                places: data!,
-                controller: wm.scrollController,
-                onRefresh: wm.refresh,
-                refreshStream: wm.refreshStream,
-                arePlacesReloading: wm.arePlacesReloading,
-              );
-            }
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 4,
+          ),
+          child: EntityStateNotifierBuilder(
+            listenableEntityState: wm.placesListState,
+            loadingBuilder: (context, data) {
+              if (data?.isNotEmpty ?? false) {
+                return _PlacesList(
+                  places: data!,
+                  controller: wm.scrollController,
+                  onRefresh: wm.refresh,
+                  refreshStream: wm.refreshStream,
+                  arePlacesReloading: wm.arePlacesReloading,
+                );
+              }
 
-            return const SizedBox(
-              height: 88,
-              child: Center(
-                child: AppProgressIndicator(),
-              ),
-            );
-          },
-          errorBuilder: (context, e, data) {
-            if (data!.isNotEmpty) {
-              return _PlacesList(
-                places: data,
-                controller: wm.scrollController,
-                onRefresh: wm.refresh,
-                refreshStream: wm.refreshStream,
-                arePlacesReloading: wm.arePlacesReloading,
-              );
-            }
-
-            return const SizedBox(
-              height: 150,
-              child: Center(
-                child: AppError(
-                  message: 'Something wrong...',
+              return const SizedBox(
+                height: 88,
+                child: Center(
+                  child: AppProgressIndicator(),
                 ),
-              ),
-            );
-          },
-          builder: (context, data) => _PlacesList(
-            places: data!,
-            controller: wm.scrollController,
-            onRefresh: wm.refresh,
-            refreshStream: wm.refreshStream,
-            arePlacesReloading: wm.arePlacesReloading,
+              );
+            },
+            errorBuilder: (context, e, data) {
+              if (data!.isNotEmpty) {
+                return _PlacesList(
+                  places: data,
+                  controller: wm.scrollController,
+                  onRefresh: wm.refresh,
+                  refreshStream: wm.refreshStream,
+                  arePlacesReloading: wm.arePlacesReloading,
+                );
+              }
+
+              return const SizedBox(
+                height: 150,
+                child: Center(
+                  child: AppError(
+                    message: 'Something wrong...',
+                  ),
+                ),
+              );
+            },
+            builder: (context, data) => _PlacesList(
+              places: data!,
+              controller: wm.scrollController,
+              onRefresh: wm.refresh,
+              refreshStream: wm.refreshStream,
+              arePlacesReloading: wm.arePlacesReloading,
+            ),
           ),
         ),
       ),

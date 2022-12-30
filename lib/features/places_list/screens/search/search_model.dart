@@ -23,7 +23,7 @@ class PlacesSearchModel extends ElementaryModel {
 
   final _searchStreamController = BehaviorSubject<String>();
 
-  late final StreamSubscription _streamSubscription;
+  late StreamSubscription _streamSubscription;
 
   Stream<String> get _searchStream =>
       _searchStreamController.stream.debounceTime(
@@ -58,7 +58,23 @@ class PlacesSearchModel extends ElementaryModel {
   }
 
   /// React on user input: add query to the stream.
-  void onSearch(String search) => _searchStreamController.add(search);
+  void onSearch(String search) {
+    if (search == (_searchStreamController.valueOrNull ?? '')) return;
+
+    /// If input is empty...
+    if (search.isEmpty) {
+      foundPlacesState.content([]);
+
+      /// In order to stop previous events debouncing.
+      _streamSubscription.cancel();
+
+      _streamSubscription = _searchStream.listen(_loadPlacesFromSearch);
+
+      return;
+    }
+
+    _searchStreamController.add(search);
+  }
 
   /// Removes [SearchHistory] recording
   /// at given [index].
@@ -66,11 +82,10 @@ class PlacesSearchModel extends ElementaryModel {
         searchHistory.value!..remove(index),
       );
 
-  Future<void> _loadPlacesFromSearch(String query) async {
-    searchHistory.accept(
-      searchHistory.value!..add(query),
-    );
+  /// Saves given query in device cache.
+  void saveSearch(String query) => searchHistory.value!.add(query);
 
+  Future<void> _loadPlacesFromSearch(String query) async {
     try {
       final places = await _placesListRepository.getFilteredPlaces(
         name: query,

@@ -78,7 +78,7 @@ class Place {
         latitude = map['lat'] as double,
         longitude = map['lng'] as double,
         name = map['name'] as String,
-        images = List<String>.from(map['urls'] as List),
+        images = List<String>.from((map['urls'] as List?) ?? <String>[]),
         placeType = _fromString(map['placeType'] as String),
         description = map['description'] as String;
 

@@ -12,6 +12,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i12;
+import 'package:elementary/elementary.dart' as _i15;
+import 'package:flutter/cupertino.dart' as _i14;
 import 'package:flutter/material.dart' as _i13;
 
 import '../../app/core/pages/main_page.dart' as _i3;
@@ -20,12 +22,13 @@ import '../../introduction/screens/splash/widget/splash_page.dart' as _i1;
 import '../../introduction/screens/tutorial/widget/tutorial_page.dart' as _i2;
 import '../../map/screens/map/widget/map_page.dart' as _i5;
 import '../../places_list/screens/filter/widget/filter_page.dart' as _i9;
-import '../../places_list/screens/new_place/widget/new_place_page.dart' as _i10;
-import '../../places_list/screens/new_place_categories/widget/new_place_categories_page.dart'
+import '../../places_list/screens/new_place/new_place/widget/new_place_page.dart'
+    as _i10;
+import '../../places_list/screens/new_place/widget/new_place_categories_page.dart'
     as _i11;
 import '../../places_list/screens/places_list/widget/places_list_page.dart'
     as _i4;
-import '../../places_list/screens/search/widget/search_page.dart' as _i8;
+import '../../places_list/screens/search/search_widget.dart' as _i8;
 import '../../settings/screens/settings/widget/settings_page.dart' as _i7;
 
 class AppRouter extends _i12.RootStackRouter {
@@ -76,10 +79,15 @@ class AppRouter extends _i12.RootStackRouter {
         child: const _i7.SettingsPage(),
       );
     },
-    SearchRoute.name: (routeData) {
+    PlacesSearchRoute.name: (routeData) {
+      final args = routeData.argsAs<PlacesSearchRouteArgs>(
+          orElse: () => const PlacesSearchRouteArgs());
       return _i12.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const _i8.SearchPage(),
+        child: _i8.PlacesSearchPage(
+          key: args.key,
+          wmFactory: args.wmFactory,
+        ),
       );
     },
     FilterRoute.name: (routeData) {
@@ -128,7 +136,7 @@ class AppRouter extends _i12.RootStackRouter {
               parent: MainRoute.name,
               children: [
                 _i12.RouteConfig(
-                  SearchRoute.name,
+                  PlacesSearchRoute.name,
                   path: 'search',
                   parent: PlacesListRoute.name,
                 ),
@@ -263,15 +271,42 @@ class SettingsRoute extends _i12.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i8.SearchPage]
-class SearchRoute extends _i12.PageRouteInfo<void> {
-  const SearchRoute()
-      : super(
-          SearchRoute.name,
+/// [_i8.PlacesSearchPage]
+class PlacesSearchRoute extends _i12.PageRouteInfo<PlacesSearchRouteArgs> {
+  PlacesSearchRoute({
+    _i14.Key? key,
+    _i15.WidgetModel<_i15.ElementaryWidget<_i15.IWidgetModel>,
+                _i15.ElementaryModel>
+            Function(_i14.BuildContext)
+        wmFactory = _i8.defaultSearchWidgetModelFactory,
+  }) : super(
+          PlacesSearchRoute.name,
           path: 'search',
+          args: PlacesSearchRouteArgs(
+            key: key,
+            wmFactory: wmFactory,
+          ),
         );
 
-  static const String name = 'SearchRoute';
+  static const String name = 'PlacesSearchRoute';
+}
+
+class PlacesSearchRouteArgs {
+  const PlacesSearchRouteArgs({
+    this.key,
+    this.wmFactory = _i8.defaultSearchWidgetModelFactory,
+  });
+
+  final _i14.Key? key;
+
+  final _i15.WidgetModel<_i15.ElementaryWidget<_i15.IWidgetModel>,
+          _i15.ElementaryModel>
+      Function(_i14.BuildContext) wmFactory;
+
+  @override
+  String toString() {
+    return 'PlacesSearchRouteArgs{key: $key, wmFactory: $wmFactory}';
+  }
 }
 
 /// generated route for

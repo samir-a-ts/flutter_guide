@@ -259,6 +259,26 @@ class AppTranslations {
       args: [],
     );
   }
+
+  /// `Вы искали`
+  String get youSearched {
+    return Intl.message(
+      'Вы искали',
+      name: 'youSearched',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Очистить историю`
+  String get clearHistory {
+    return Intl.message(
+      'Очистить историю',
+      name: 'clearHistory',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppTranslations> {

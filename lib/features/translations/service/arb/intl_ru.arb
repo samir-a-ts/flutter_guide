@@ -19,5 +19,7 @@
     "hotel": "отель",
     "other": "другое",
     "error": "Ошибка",
-    "newPlace": "Новое место"
+    "newPlace": "Новое место",
+    "youSearched": "Вы искали",
+    "clearHistory": "Очистить историю"
 }
