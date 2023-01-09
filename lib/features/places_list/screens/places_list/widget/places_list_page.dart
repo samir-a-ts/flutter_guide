@@ -87,10 +87,12 @@ class PlacesListPage extends ElementaryWidget<IPlacesListPageWidgetModel> {
                 );
               }
 
-              return const SizedBox(
+              return SizedBox(
                 height: 150,
                 child: Center(
                   child: AppError(
+                    title: wm.errorText,
+                    icon: Icons.cancel,
                     message: 'Something wrong...',
                   ),
                 ),

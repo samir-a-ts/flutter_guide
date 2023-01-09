@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:elementary/elementary.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
-import 'package:flutter_guide/features/places_list/domain/entity/search_history.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/places_list_repository.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/places_list_search_cache_repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,7 +14,7 @@ class PlacesSearchModel extends ElementaryModel {
 
   /// List of previous queries (search history)
   ///  of user place's search.
-  final searchHistory = StateNotifier<SearchHistory>();
+  final searchHistory = StateNotifier<List<String>>();
 
   final IPlacesListRepository _placesListRepository;
 
@@ -24,6 +23,8 @@ class PlacesSearchModel extends ElementaryModel {
   final _searchStreamController = BehaviorSubject<String>();
 
   late StreamSubscription _streamSubscription;
+
+  String _lastQuery = '';
 
   Stream<String> get _searchStream =>
       _searchStreamController.stream.debounceTime(
@@ -41,7 +42,7 @@ class PlacesSearchModel extends ElementaryModel {
   void init() {
     _loadHistoryFromCache();
 
-    _streamSubscription = _searchStream.listen(_loadPlacesFromSearch);
+    _renewSubscription();
   }
 
   @override
@@ -59,8 +60,6 @@ class PlacesSearchModel extends ElementaryModel {
 
   /// React on user input: add query to the stream.
   void onSearch(String search) {
-    if (search == (_searchStreamController.valueOrNull ?? '')) return;
-
     /// If input is empty...
     if (search.isEmpty) {
       foundPlacesState.content([]);
@@ -68,7 +67,7 @@ class PlacesSearchModel extends ElementaryModel {
       /// In order to stop previous events debouncing.
       _streamSubscription.cancel();
 
-      _streamSubscription = _searchStream.listen(_loadPlacesFromSearch);
+      _renewSubscription();
 
       return;
     }
@@ -76,16 +75,39 @@ class PlacesSearchModel extends ElementaryModel {
     _searchStreamController.add(search);
   }
 
-  /// Removes [SearchHistory] recording
+  /// Removes history recording
   /// at given [index].
-  void deleteHistoryAt(int index) => searchHistory.accept(
-        searchHistory.value!..remove(index),
-      );
+  void deleteHistoryAt(int index) {
+    final historyList = List.of(searchHistory.value!);
+
+    // ignore: cascade_invocations
+    historyList.removeAt(index);
+
+    searchHistory.accept(historyList);
+  }
 
   /// Saves given query in device cache.
-  void saveSearch(String query) => searchHistory.value!.add(query);
+  void saveSearch(String query) {
+    final historyList = List.of(searchHistory.value!);
+
+    if (historyList.contains(query)) return;
+
+    searchHistory.accept(
+      [
+        query,
+        ...historyList,
+      ],
+    );
+  }
+
+  /// Deletes all recordings from list of history.
+  void clearHistory() => searchHistory.accept([]);
 
   Future<void> _loadPlacesFromSearch(String query) async {
+    if (_lastQuery == query || query.length == 1) return;
+
+    _lastQuery = query;
+
     try {
       final places = await _placesListRepository.getFilteredPlaces(
         name: query,
@@ -100,6 +122,9 @@ class PlacesSearchModel extends ElementaryModel {
   void _loadHistoryFromCache() => searchHistory.accept(
         _placesSearchCacheRepository.getSearchHistory(),
       );
+
+  void _renewSubscription() =>
+      _streamSubscription = _searchStream.listen(_loadPlacesFromSearch);
 
   Future<void> _cacheHistory() =>
       _placesSearchCacheRepository.cacheSearchHistory(

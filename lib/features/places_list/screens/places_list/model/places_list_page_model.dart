@@ -22,7 +22,7 @@ class PlacesListPageModel extends ElementaryModel {
 
   /// Controller of pull-to-refresh
   /// on places list (for reload).
-  final _refreshController = StreamController<SwipeRefreshState>();
+  final _refreshController = StreamController<SwipeRefreshState>.broadcast();
 
   final IPlacesListRepository _repository;
 

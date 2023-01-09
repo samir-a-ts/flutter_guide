@@ -3,7 +3,6 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
-import 'package:flutter_guide/features/places_list/domain/entity/search_history.dart';
 import 'package:flutter_guide/features/places_list/screens/search/search_model.dart';
 import 'package:flutter_guide/features/places_list/screens/search/search_widget.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
@@ -16,10 +15,22 @@ abstract class IPlacesSearchWidgetModel extends IWidgetModel {
 
   /// List of previous queries (search history)
   ///  of user place's search.
-  ListenableState<SearchHistory> get searchHistory;
+  ListenableState<List<String>> get searchHistory;
 
   /// Translated app bar title.
   String get appBarTitle;
+
+  /// Translated error widget title.
+  String get errorText;
+
+  /// Translated error widget message.
+  String get errorMessage;
+
+  /// Translated empty widget title.
+  String get emptyTitle;
+
+  /// Translated empty widget message.
+  String get emptyMessage;
 
   /// Focus manager of search input field.
   FocusNode get focus;
@@ -38,6 +49,12 @@ abstract class IPlacesSearchWidgetModel extends IWidgetModel {
 
   /// Saves given query in device cache.
   void saveSearch(String query);
+
+  /// Returns to the list of places.
+  void popSearch();
+
+  /// Deletes all recordings in current history list.
+  void clearHistory();
 }
 
 /// Default widget model for PlacesSearchWidget
@@ -53,7 +70,7 @@ class PlacesSearchWidgetModel
       model.foundPlacesState;
 
   @override
-  ListenableState<SearchHistory> get searchHistory => model.searchHistory;
+  ListenableState<List<String>> get searchHistory => model.searchHistory;
 
   @override
   String get appBarTitle => AppTranslations.of(context).placesListTitle;
@@ -67,6 +84,18 @@ class PlacesSearchWidgetModel
   @override
   Color get searchIconColor => AppTheme.of(context).thirdColor;
 
+  @override
+  String get errorMessage => AppTranslations.of(context).somethingWrong;
+
+  @override
+  String get errorText => AppTranslations.of(context).error;
+
+  @override
+  String get emptyMessage => AppTranslations.of(context).emptyMessage;
+
+  @override
+  String get emptyTitle => AppTranslations.of(context).emptyTitle;
+
   /// Constructor for [PlacesSearchWidgetModel].
   PlacesSearchWidgetModel(PlacesSearchModel model) : super(model);
 
@@ -75,6 +104,12 @@ class PlacesSearchWidgetModel
 
   @override
   void deleteHistoryAt(int index) => model.deleteHistoryAt(index);
+
+  @override
+  void popSearch() => AutoRouter.of(context).removeLast();
+
+  @override
+  void clearHistory() => model.clearHistory();
 
   @override
   void initWidgetModel() {
@@ -91,10 +126,12 @@ class PlacesSearchWidgetModel
       ..removeListener(_search)
       ..dispose();
 
+    _focus
+      ..unfocus()
+      ..dispose();
+
     super.dispose();
   }
 
-  void _search() {
-    model.onSearch(textController.text);
-  }
+  void _search() => model.onSearch(textController.text);
 }

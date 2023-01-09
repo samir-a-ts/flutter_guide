@@ -7,7 +7,6 @@ import 'package:flutter_guide/common/widgets/app_error.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/features/app/di/app_scope.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
-import 'package:flutter_guide/features/places_list/domain/entity/search_history.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/widget/places_list_page.dart';
 import 'package:flutter_guide/features/places_list/screens/search/search_model.dart';
 import 'package:flutter_guide/features/places_list/screens/search/search_wm.dart';
@@ -40,51 +39,58 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
 
   @override
   Widget build(IPlacesSearchWidgetModel wm) {
-    return Scaffold(
-      appBar: MainAppBar(
-        title: wm.appBarTitle,
-        bottom: PreferredSize(
-          preferredSize: const Size(double.infinity, 40),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: PlacesListTextField(
-              trailingIcon: Icons.cancel,
-              trailingIconColor: wm.searchIconColor,
-              controller: wm.textController,
-              focusNode: wm.focus,
-              onTapTrailing: () {
-                wm.textController.text = '';
-              },
+    return WillPopScope(
+      onWillPop: () async {
+        wm.popSearch();
+
+        return false;
+      },
+      child: Scaffold(
+        appBar: MainAppBar(
+          title: wm.appBarTitle,
+          bottom: PreferredSize(
+            preferredSize: const Size(double.infinity, 40),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: PlacesListTextField(
+                trailingIcon: Icons.cancel,
+                trailingIconColor: wm.searchIconColor,
+                controller: wm.textController,
+                focusNode: wm.focus,
+                onTapTrailing: () {
+                  wm.textController.text = '';
+                },
+              ),
             ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-        ).copyWith(top: 32),
-        child: EntityStateNotifierBuilder(
-          listenableEntityState: wm.foundPlacesState,
-          errorBuilder: (context, e, data) {
-            return const SizedBox(
-              height: 150,
-              child: Center(
-                child: AppError(
-                  message: 'Something wrong...',
-                ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+          ).copyWith(top: 32),
+          child: EntityStateNotifierBuilder(
+            listenableEntityState: wm.foundPlacesState,
+            errorBuilder: (context, e, data) => Center(
+              child: AppError(
+                icon: Icons.error,
+                title: wm.errorText,
+                message: wm.errorMessage,
               ),
-            );
-          },
-          builder: (context, data) => _SearchBodyWidget(
-            foundPlacesState: data!,
-            searchState: wm.searchHistory,
-            controller: wm.textController,
-            onSelect: (value) {
-              /// Navigate to:
-              wm.saveSearch(wm.textController.text);
-            },
-            onTap: (value) => wm.textController.text = value,
-            onDelete: (index) => wm.deleteHistoryAt(index),
+            ),
+            builder: (context, data) => _SearchBodyWidget(
+              foundPlacesState: data!,
+              searchState: wm.searchHistory,
+              controller: wm.textController,
+              emptyTitle: wm.emptyTitle,
+              emptyMessage: wm.emptyMessage,
+              clearHistory: wm.clearHistory,
+              onSelect: (value) {
+                /// Navigate to:
+                wm.saveSearch(wm.textController.text);
+              },
+              onTap: (value) => wm.textController.text = value,
+              onDelete: (index) => wm.deleteHistoryAt(index),
+            ),
           ),
         ),
       ),
@@ -93,13 +99,17 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
 }
 
 class _SearchBodyWidget extends StatelessWidget {
-  final ListenableState<SearchHistory> searchState;
+  final ListenableState<List<String>> searchState;
   final Iterable<Place> foundPlacesState;
   final TextEditingController controller;
 
   final ValueChanged<int> onDelete;
   final ValueChanged<String> onTap;
   final ValueChanged<Place> onSelect;
+  final VoidCallback clearHistory;
+
+  final String emptyTitle;
+  final String emptyMessage;
 
   const _SearchBodyWidget({
     required this.searchState,
@@ -108,14 +118,21 @@ class _SearchBodyWidget extends StatelessWidget {
     required this.onTap,
     required this.onSelect,
     required this.controller,
+    required this.emptyTitle,
+    required this.emptyMessage,
+    required this.clearHistory,
   });
 
   @override
   Widget build(BuildContext context) {
     if (foundPlacesState.isEmpty) {
       if (controller.text.isNotEmpty) {
-        return const Center(
-          child: Text('Empty!'),
+        return Center(
+          child: AppError(
+            icon: Icons.search,
+            title: emptyTitle,
+            message: emptyMessage,
+          ),
         );
       }
 
@@ -123,6 +140,7 @@ class _SearchBodyWidget extends StatelessWidget {
         searchState: searchState,
         onDelete: onDelete,
         onTap: onTap,
+        clearHistory: clearHistory,
       );
     }
 
@@ -130,10 +148,11 @@ class _SearchBodyWidget extends StatelessWidget {
 
     return ListView.separated(
       itemCount: list.length,
-      itemBuilder: (context, index) => GestureDetector(
+      itemBuilder: (context, index) => InkWell(
         onTap: () => onSelect(list[index]),
         child: _SearchResultWidget(
           list[index],
+          controller.text,
         ),
       ),
       separatorBuilder: (context, index) => const Divider(),
@@ -142,15 +161,17 @@ class _SearchBodyWidget extends StatelessWidget {
 }
 
 class _SearchHistoryWidget extends StatelessWidget {
-  final ListenableState<SearchHistory> searchState;
+  final ListenableState<List<String>> searchState;
 
   final ValueChanged<int> onDelete;
   final ValueChanged<String> onTap;
+  final VoidCallback clearHistory;
 
   const _SearchHistoryWidget({
     required this.searchState,
     required this.onDelete,
     required this.onTap,
+    required this.clearHistory,
   });
 
   @override
@@ -176,13 +197,20 @@ class _SearchHistoryWidget extends StatelessWidget {
             return SliverToBoxAdapter(
               child: value!.isEmpty
                   ? const SizedBox()
-                  : Text(
-                      AppTranslations.of(context).clearHistory,
-                      style:
-                          ThemeHelper.textTheme(context).bodyMedium!.copyWith(
+                  : GestureDetector(
+                      onTap: clearHistory,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: Text(
+                          AppTranslations.of(context).clearHistory,
+                          style: ThemeHelper.textTheme(context)
+                              .bodyMedium!
+                              .copyWith(
                                 color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.w500,
                               ),
+                        ),
+                      ),
                     ),
             );
           },
@@ -193,7 +221,7 @@ class _SearchHistoryWidget extends StatelessWidget {
 }
 
 class _HistoryList extends StatelessWidget {
-  final ListenableState<SearchHistory> searchState;
+  final ListenableState<List<String>> searchState;
   final ValueChanged<int> onDelete;
   final ValueChanged<String> onTap;
 
@@ -214,21 +242,27 @@ class _HistoryList extends StatelessWidget {
           );
         }
 
-        final list = value.toList();
-
         var i = -1;
 
         return SliverList(
           delegate: SliverChildListDelegate(
             List.generate(
-              (list.length * 2) - 1,
+              (value.length * 2) - 1,
               (index) {
-                if ((index + 1).isEven) return const Divider();
+                if ((index + 1).isEven) {
+                  return Divider(
+                    color: Theme.of(context).disabledColor.withOpacity(.56),
+                    indent: 0,
+                    endIndent: 0,
+                    thickness: 0.8,
+                    height: 0,
+                  );
+                }
 
                 i++;
 
                 return _HistoryTile(
-                  query: list[i],
+                  query: value[i],
                   onDelete: onDelete,
                   onTap: onTap,
                   index: i,
@@ -257,12 +291,23 @@ class _HistoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () => onTap(query),
-      title: Text(query),
-      trailing: IconButton(
-        onPressed: () => onDelete(index),
-        icon: const Icon(Icons.cancel),
+    return SizedBox(
+      height: 48,
+      child: ListTile(
+        onTap: () => onTap(query),
+        title: Text(
+          query,
+          style: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
+                color: AppTheme.of(context).thirdColor,
+              ),
+        ),
+        trailing: IconButton(
+          onPressed: () => onDelete(index),
+          icon: Icon(
+            Icons.close,
+            color: AppTheme.of(context).thirdColor,
+          ),
+        ),
       ),
     );
   }
@@ -271,7 +316,12 @@ class _HistoryTile extends StatelessWidget {
 class _SearchResultWidget extends StatelessWidget {
   final Place place;
 
-  const _SearchResultWidget(this.place);
+  final String searchString;
+
+  const _SearchResultWidget(
+    this.place,
+    this.searchString,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -299,12 +349,9 @@ class _SearchResultWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text(
-                    place.name,
-                    style: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.primaryContainer,
-                          fontWeight: FontWeight.w500,
-                        ),
+                  _SearchTextHighlight(
+                    searchString: searchString,
+                    text: place.name,
                   ),
                   Text(
                     place.placeType.translate(context),
@@ -317,6 +364,75 @@ class _SearchResultWidget extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SearchTextHighlight extends StatelessWidget {
+  final String searchString;
+
+  final String text;
+
+  const _SearchTextHighlight({
+    required this.text,
+    required this.searchString,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final style = ThemeHelper.textTheme(context).bodyMedium!.copyWith(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          fontWeight: FontWeight.w500,
+        );
+
+    if (searchString.isEmpty) {
+      return Text(
+        text,
+        style: style,
+      );
+    }
+
+    final matches = text.allMatches(searchString);
+
+    final spans = <InlineSpan>[];
+
+    var index = 0;
+
+    var lastMatch = 0;
+
+    for (final match in matches) {
+      spans.add(
+        TextSpan(
+          text: text.substring(index, match.start),
+          style: style,
+        ),
+      );
+
+      index = match.start;
+
+      spans.add(
+        TextSpan(
+          text: text.substring(index, match.end),
+          style: style.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      );
+
+      lastMatch = match.end;
+    }
+
+    spans.add(
+      TextSpan(
+        text: text.substring(lastMatch, text.length),
+        style: style,
+      ),
+    );
+
+    return RichText(
+      text: TextSpan(
+        children: spans,
       ),
     );
   }

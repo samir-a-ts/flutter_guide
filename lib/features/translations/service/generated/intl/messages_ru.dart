@@ -25,6 +25,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "cafe": MessageLookupByLibrary.simpleMessage("кафе"),
         "clearHistory":
             MessageLookupByLibrary.simpleMessage("Очистить историю"),
+        "emptyMessage": MessageLookupByLibrary.simpleMessage(
+            "Попробуйте изменить параметры поиска"),
+        "emptyTitle":
+            MessageLookupByLibrary.simpleMessage("Ничего не найдено."),
         "error": MessageLookupByLibrary.simpleMessage("Ошибка"),
         "hotel": MessageLookupByLibrary.simpleMessage("отель"),
         "letsGo": MessageLookupByLibrary.simpleMessage("На старт"),
@@ -38,6 +42,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "restaurant": MessageLookupByLibrary.simpleMessage("ресторан"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
         "skip": MessageLookupByLibrary.simpleMessage("Пропустить"),
+        "somethingWrong":
+            MessageLookupByLibrary.simpleMessage("Упс, что-то пошло не так..."),
         "temple": MessageLookupByLibrary.simpleMessage("храм"),
         "theatre": MessageLookupByLibrary.simpleMessage("театр"),
         "tutorialSubtitle1": MessageLookupByLibrary.simpleMessage(

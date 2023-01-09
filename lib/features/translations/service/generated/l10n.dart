@@ -279,6 +279,36 @@ class AppTranslations {
       args: [],
     );
   }
+
+  /// `Упс, что-то пошло не так...`
+  String get somethingWrong {
+    return Intl.message(
+      'Упс, что-то пошло не так...',
+      name: 'somethingWrong',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ничего не найдено.`
+  String get emptyTitle {
+    return Intl.message(
+      'Ничего не найдено.',
+      name: 'emptyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Попробуйте изменить параметры поиска`
+  String get emptyMessage {
+    return Intl.message(
+      'Попробуйте изменить параметры поиска',
+      name: 'emptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppTranslations> {

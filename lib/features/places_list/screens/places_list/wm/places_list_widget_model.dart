@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
@@ -22,6 +21,13 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
 
   /// Translated app bar title.
   String get appBarTitle;
+
+  /// Translated string in case of any error
+  /// ocurred.
+  String get errorText;
+
+  /// Translated error widget message.
+  String get errorMessage;
 
   /// Controller of pull-to-refresh
   /// on places list (for reload).
@@ -70,6 +76,12 @@ class PlacesListPageWidgetModel
 
   @override
   ScrollController get scrollController => _scrollController;
+
+  @override
+  String get errorText => AppTranslations.of(context).error;
+
+  @override
+  String get errorMessage => AppTranslations.of(context).somethingWrong;
 
   /// Constructor for [PlacesListPageWidgetModel].
   PlacesListPageWidgetModel(super.model);

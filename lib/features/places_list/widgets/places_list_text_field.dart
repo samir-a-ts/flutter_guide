@@ -75,8 +75,8 @@ class PlacesListTextField extends StatelessWidget {
           ),
           floatingLabelBehavior: FloatingLabelBehavior.never,
           floatingLabelAlignment: FloatingLabelAlignment.start,
-          hintText: AppTranslations.of(context).search,
-          hintStyle: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
+          labelText: AppTranslations.of(context).search,
+          labelStyle: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
                 color: Theme.of(context).disabledColor,
               ),
         ),

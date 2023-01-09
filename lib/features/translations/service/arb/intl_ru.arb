@@ -21,5 +21,8 @@
     "error": "Ошибка",
     "newPlace": "Новое место",
     "youSearched": "Вы искали",
-    "clearHistory": "Очистить историю"
+    "clearHistory": "Очистить историю",
+    "somethingWrong": "Упс, что-то пошло не так...",
+    "emptyTitle": "Ничего не найдено.",
+    "emptyMessage": "Попробуйте изменить параметры поиска"
 }

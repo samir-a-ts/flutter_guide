@@ -1,15 +1,14 @@
-import 'package:flutter_guide/features/places_list/domain/entity/search_history.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Interface for [PlacesSearchCacheRepository]
 abstract class IPlacesSearchCacheRepository {
-  /// Loads cached [SearchHistory] from
+  /// Loads cached search history from
   /// [SharedPreferences] local storage.
-  SearchHistory getSearchHistory();
+  List<String> getSearchHistory();
 
   /// Updates value in [SharedPreferences]
   /// cache.
-  Future<void> cacheSearchHistory(SearchHistory searchHistory);
+  Future<void> cacheSearchHistory(List<String> searchHistory);
 }
 
 /// Search history cache manager. Update + read.
@@ -22,16 +21,16 @@ class PlacesSearchCacheRepository extends IPlacesSearchCacheRepository {
   PlacesSearchCacheRepository(this._sharedPreferences);
 
   @override
-  Future<void> cacheSearchHistory(SearchHistory searchHistory) =>
+  Future<void> cacheSearchHistory(List<String> searchHistory) =>
       _sharedPreferences.setStringList(
         _searchHistoryKey,
-        searchHistory.toList(),
+        searchHistory,
       );
 
   @override
-  SearchHistory getSearchHistory() => SearchHistory(
-        _sharedPreferences.getStringList(
-          _searchHistoryKey,
-        ),
-      );
+  List<String> getSearchHistory() =>
+      _sharedPreferences.getStringList(
+        _searchHistoryKey,
+      ) ??
+      [];
 }
