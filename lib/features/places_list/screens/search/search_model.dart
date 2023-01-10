@@ -22,6 +22,8 @@ class PlacesSearchModel extends ElementaryModel {
 
   final _searchStreamController = BehaviorSubject<String>();
 
+  String _lastQuery = '';
+
   Stream<String> get _searchStream =>
       _searchStreamController.stream.debounceTime(
         const Duration(seconds: 1),
@@ -54,13 +56,17 @@ class PlacesSearchModel extends ElementaryModel {
 
   /// React on user input: add query to the stream.
   void onSearch(String search) {
-    if (search.isEmpty) {
-      foundPlacesState.content([]);
-    } else if (!foundPlacesState.value!.isLoading) {
-      foundPlacesState.loading(foundPlacesState.value!.data ?? []);
-    }
+    if (_lastQuery != search) {
+      if (search.isEmpty) {
+        foundPlacesState.content([]);
+      } else if (!foundPlacesState.value!.isLoading) {
+        foundPlacesState.loading(foundPlacesState.value!.data ?? []);
+      }
 
-    _searchStreamController.add(search);
+      _lastQuery = search;
+
+      _searchStreamController.add(search);
+    }
   }
 
   /// Removes history recording
@@ -92,11 +98,7 @@ class PlacesSearchModel extends ElementaryModel {
   void clearHistory() => searchHistory.accept([]);
 
   Future<void> _loadPlacesFromSearch(String query) async {
-    if (query.isEmpty) {
-      foundPlacesState.content([]);
-
-      return;
-    }
+    if (query.isEmpty) return;
 
     try {
       final places = await _placesListRepository.getFilteredPlaces(
