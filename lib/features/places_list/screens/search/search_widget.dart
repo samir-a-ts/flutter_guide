@@ -4,6 +4,7 @@ import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/common/widgets/app_bar.dart';
 import 'package:flutter_guide/common/widgets/app_error.dart';
+import 'package:flutter_guide/common/widgets/app_progress_indicator.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/features/app/di/app_scope.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
@@ -40,28 +41,15 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
   @override
   Widget build(IPlacesSearchWidgetModel wm) {
     return WillPopScope(
-      onWillPop: () async {
-        wm.popSearch();
-
-        return false;
-      },
+      onWillPop: wm.searchPopCallback,
       child: Scaffold(
         appBar: MainAppBar(
           title: wm.appBarTitle,
-          bottom: PreferredSize(
-            preferredSize: const Size(double.infinity, 40),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: PlacesListTextField(
-                trailingIcon: Icons.cancel,
-                trailingIconColor: wm.searchIconColor,
-                controller: wm.textController,
-                focusNode: wm.focus,
-                onTapTrailing: () {
-                  wm.textController.text = '';
-                },
-              ),
-            ),
+          bottom: _SearchPageInput(
+            controller: wm.textController,
+            focus: wm.focus,
+            searchIconColor: wm.searchIconColor,
+            clearInput: wm.clearInput,
           ),
         ),
         body: Padding(
@@ -77,6 +65,9 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
                 message: wm.errorMessage,
               ),
             ),
+            loadingBuilder: (context, data) => const Center(
+              child: AppProgressIndicator(),
+            ),
             builder: (context, data) => _SearchBodyWidget(
               foundPlacesState: data!,
               searchState: wm.searchHistory,
@@ -84,12 +75,10 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
               emptyTitle: wm.emptyTitle,
               emptyMessage: wm.emptyMessage,
               clearHistory: wm.clearHistory,
-              onSelect: (value) {
-                /// Navigate to:
-                wm.saveSearch(wm.textController.text);
-              },
-              onTap: (value) => wm.textController.text = value,
-              onDelete: (index) => wm.deleteHistoryAt(index),
+              onSelect: wm.onSearchResultTap,
+              onTap: wm.onSearchHistoryTap,
+              onDelete: wm.deleteHistoryAt,
+              highlightSearchText: wm.highlightSearchText,
             ),
           ),
         ),
@@ -99,6 +88,9 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
 }
 
 class _SearchBodyWidget extends StatelessWidget {
+  final List<InlineSpan> Function(String searchText, String text)
+      highlightSearchText;
+
   final ListenableState<List<String>> searchState;
   final Iterable<Place> foundPlacesState;
   final TextEditingController controller;
@@ -121,6 +113,7 @@ class _SearchBodyWidget extends StatelessWidget {
     required this.emptyTitle,
     required this.emptyMessage,
     required this.clearHistory,
+    required this.highlightSearchText,
   });
 
   @override
@@ -151,8 +144,9 @@ class _SearchBodyWidget extends StatelessWidget {
       itemBuilder: (context, index) => InkWell(
         onTap: () => onSelect(list[index]),
         child: _SearchResultWidget(
-          list[index],
-          controller.text,
+          place: list[index],
+          searchString: controller.text,
+          highlightSearchText: highlightSearchText,
         ),
       ),
       separatorBuilder: (context, index) => const Divider(),
@@ -249,12 +243,11 @@ class _HistoryList extends StatelessWidget {
             List.generate(
               (value.length * 2) - 1,
               (index) {
-                if ((index + 1).isEven) {
+                if (index.isOdd) {
                   return Divider(
                     color: Theme.of(context).disabledColor.withOpacity(.56),
                     indent: 0,
                     endIndent: 0,
-                    thickness: 0.8,
                     height: 0,
                   );
                 }
@@ -318,10 +311,14 @@ class _SearchResultWidget extends StatelessWidget {
 
   final String searchString;
 
-  const _SearchResultWidget(
-    this.place,
-    this.searchString,
-  );
+  final List<InlineSpan> Function(String searchText, String text)
+      highlightSearchText;
+
+  const _SearchResultWidget({
+    required this.place,
+    required this.searchString,
+    required this.highlightSearchText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -336,7 +333,16 @@ class _SearchResultWidget extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
-                image: NetworkImage(place.images.first),
+                image: NetworkImage(
+                  place.images.isEmpty
+                      ? 'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.dumpaday.com%2Fwp-content%2Fuploads%2F2019%2F12%2Fpictures-10-2.jpg&f=1&nofb=1&ipt=c3bca4b17b06e50c1a43fadddc8ef4ceb45646c0d92f3da90dc63b9d383f91ca&ipo=images'
+                      : place.images.first,
+
+                  /// Some places, for some unknown reason,
+                  /// do not have just any image links
+                  /// whatsoever. I am to lazy to bring this
+                  /// thing anywhere, so let it stay here...
+                ),
                 fit: BoxFit.cover,
               ),
             ),
@@ -349,9 +355,10 @@ class _SearchResultWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _SearchTextHighlight(
-                    searchString: searchString,
-                    text: place.name,
+                  RichText(
+                    text: TextSpan(
+                      children: highlightSearchText(searchString, place.name),
+                    ),
                   ),
                   Text(
                     place.placeType.translate(context),
@@ -369,71 +376,37 @@ class _SearchResultWidget extends StatelessWidget {
   }
 }
 
-class _SearchTextHighlight extends StatelessWidget {
-  final String searchString;
+// ignore: prefer_mixin
+class _SearchPageInput extends StatelessWidget with PreferredSizeWidget {
+  final TextEditingController controller;
 
-  final String text;
+  final FocusNode focus;
 
-  const _SearchTextHighlight({
-    required this.text,
-    required this.searchString,
+  final Color searchIconColor;
+
+  final void Function() clearInput;
+
+  const _SearchPageInput({
+    required this.controller,
+    required this.focus,
+    required this.searchIconColor,
+    required this.clearInput,
   });
 
   @override
   Widget build(BuildContext context) {
-    final style = ThemeHelper.textTheme(context).bodyMedium!.copyWith(
-          color: Theme.of(context).colorScheme.primaryContainer,
-          fontWeight: FontWeight.w500,
-        );
-
-    if (searchString.isEmpty) {
-      return Text(
-        text,
-        style: style,
-      );
-    }
-
-    final matches = text.allMatches(searchString);
-
-    final spans = <InlineSpan>[];
-
-    var index = 0;
-
-    var lastMatch = 0;
-
-    for (final match in matches) {
-      spans.add(
-        TextSpan(
-          text: text.substring(index, match.start),
-          style: style,
-        ),
-      );
-
-      index = match.start;
-
-      spans.add(
-        TextSpan(
-          text: text.substring(index, match.end),
-          style: style.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      );
-
-      lastMatch = match.end;
-    }
-
-    spans.add(
-      TextSpan(
-        text: text.substring(lastMatch, text.length),
-        style: style,
-      ),
-    );
-
-    return RichText(
-      text: TextSpan(
-        children: spans,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: PlacesListTextField(
+        trailingIcon: Icons.cancel,
+        trailingIconColor: searchIconColor,
+        controller: controller,
+        focusNode: focus,
+        onTapTrailing: clearInput,
       ),
     );
   }
+
+  @override
+  Size get preferredSize => const Size(double.infinity, 40);
 }

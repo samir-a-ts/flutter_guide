@@ -7,16 +7,32 @@ import 'package:flutter_guide/common/widgets/app_bar.dart';
 import 'package:flutter_guide/common/widgets/app_error.dart';
 import 'package:flutter_guide/common/widgets/app_progress_indicator.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
-import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
+import 'package:flutter_guide/features/places_list/di/places_list_scope_widget.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/wm/places_list_widget_model.dart';
 import 'package:flutter_guide/features/places_list/widgets/places_list_text_field.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';
 
 /// Places list page.
-class PlacesListPage extends ElementaryWidget<IPlacesListPageWidgetModel> {
-  /// Constructor for [PlacesListPage].
-  const PlacesListPage({super.key})
+/// Wraps [PlacesListContentWidget] with
+/// needed dependencies.
+class PlacesListPage extends StatelessWidget {
+  /// Constructor for [PlacesListPage]
+  const PlacesListPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const PlacesListScopeWidget(
+      child: PlacesListContentWidget(),
+    );
+  }
+}
+
+/// Places list page content.
+class PlacesListContentWidget
+    extends ElementaryWidget<IPlacesListPageWidgetModel> {
+  /// Constructor for [PlacesListContentWidget].
+  const PlacesListContentWidget({super.key})
       : super(
           placesListPageWmFactory,
         );
@@ -24,8 +40,8 @@ class PlacesListPage extends ElementaryWidget<IPlacesListPageWidgetModel> {
   @override
   Widget build(IPlacesListPageWidgetModel wm) {
     return AutoRouter(
-      builder: (context, content) => content,
-      placeholder: (context) => Scaffold(
+      builder: (_, content) => content,
+      placeholder: (_) => Scaffold(
         appBar: MainAppBar(
           title: wm.appBarTitle,
           bottom: PreferredSize(
@@ -33,13 +49,11 @@ class PlacesListPage extends ElementaryWidget<IPlacesListPageWidgetModel> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: GestureDetector(
-                onTap: () {
-                  AutoRouter.of(context).push(PlacesSearchRoute());
-                },
+                onTap: wm.onSearchInputTap,
                 child: PlacesListTextField(
                   enabled: false,
                   trailingIcon: Icons.settings,
-                  trailingIconColor: Theme.of(context).primaryColor,
+                  trailingIconColor: wm.inputTrailingFilterIconColor,
                 ),
               ),
             ),

@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
+import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/model/places_list_page_model.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/widget/places_list_page.dart';
@@ -29,6 +31,10 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
   /// Translated error widget message.
   String get errorMessage;
 
+  /// Color, in which the filter button
+  /// on search input will be painted.
+  Color get inputTrailingFilterIconColor;
+
   /// Controller of pull-to-refresh
   /// on places list (for reload).
   Stream<SwipeRefreshState> get refreshStream;
@@ -48,11 +54,14 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
   /// returns all the way to the first page.
   /// The, reloads.
   Future<void> refresh();
+
+  /// Navigates to places search page.
+  void onSearchInputTap();
 }
 
 /// Widget Model for [PlacesListPage]
 class PlacesListPageWidgetModel
-    extends WidgetModel<PlacesListPage, PlacesListPageModel>
+    extends WidgetModel<PlacesListContentWidget, PlacesListPageModel>
     implements IPlacesListPageWidgetModel {
   /// Scroll controller  of [ListView] of [Place]s instance.
   /// (for pagination)
@@ -83,6 +92,9 @@ class PlacesListPageWidgetModel
   @override
   String get errorMessage => AppTranslations.of(context).somethingWrong;
 
+  @override
+  Color get inputTrailingFilterIconColor => Theme.of(context).primaryColor;
+
   /// Constructor for [PlacesListPageWidgetModel].
   PlacesListPageWidgetModel(super.model);
 
@@ -92,6 +104,9 @@ class PlacesListPageWidgetModel
   /// The, reloads.
   @override
   Future<void> refresh() => model.refresh();
+
+  @override
+  void onSearchInputTap() => AutoRouter.of(context).push(PlacesSearchRoute());
 
   @override
   void initWidgetModel() {

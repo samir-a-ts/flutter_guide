@@ -36,7 +36,6 @@ class _AppWidgetState extends State<AppWidget> {
     final debugConfig = Environment<AppConfig>.instance().config.debugOptions;
 
     return DiScope<IAppScope>(
-      key: ObjectKey(_scope),
       factory: () => _scope,
       child: ScreenUtilInit(
         designSize: const Size(360, 760),

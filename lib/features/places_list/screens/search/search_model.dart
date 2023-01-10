@@ -22,10 +22,6 @@ class PlacesSearchModel extends ElementaryModel {
 
   final _searchStreamController = BehaviorSubject<String>();
 
-  late StreamSubscription _streamSubscription;
-
-  String _lastQuery = '';
-
   Stream<String> get _searchStream =>
       _searchStreamController.stream.debounceTime(
         const Duration(seconds: 1),
@@ -42,13 +38,11 @@ class PlacesSearchModel extends ElementaryModel {
   void init() {
     _loadHistoryFromCache();
 
-    _renewSubscription();
+    _searchStream.listen(_loadPlacesFromSearch);
   }
 
   @override
   void dispose() {
-    _streamSubscription.cancel();
-
     _searchStreamController.close();
 
     _cacheHistory();
@@ -60,16 +54,10 @@ class PlacesSearchModel extends ElementaryModel {
 
   /// React on user input: add query to the stream.
   void onSearch(String search) {
-    /// If input is empty...
     if (search.isEmpty) {
       foundPlacesState.content([]);
-
-      /// In order to stop previous events debouncing.
-      _streamSubscription.cancel();
-
-      _renewSubscription();
-
-      return;
+    } else if (!foundPlacesState.value!.isLoading) {
+      foundPlacesState.loading(foundPlacesState.value!.data ?? []);
     }
 
     _searchStreamController.add(search);
@@ -104,9 +92,11 @@ class PlacesSearchModel extends ElementaryModel {
   void clearHistory() => searchHistory.accept([]);
 
   Future<void> _loadPlacesFromSearch(String query) async {
-    if (_lastQuery == query || query.length == 1) return;
+    if (query.isEmpty) {
+      foundPlacesState.content([]);
 
-    _lastQuery = query;
+      return;
+    }
 
     try {
       final places = await _placesListRepository.getFilteredPlaces(
@@ -122,9 +112,6 @@ class PlacesSearchModel extends ElementaryModel {
   void _loadHistoryFromCache() => searchHistory.accept(
         _placesSearchCacheRepository.getSearchHistory(),
       );
-
-  void _renewSubscription() =>
-      _streamSubscription = _searchStream.listen(_loadPlacesFromSearch);
 
   Future<void> _cacheHistory() =>
       _placesSearchCacheRepository.cacheSearchHistory(
