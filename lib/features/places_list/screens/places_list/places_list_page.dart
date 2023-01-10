@@ -8,7 +8,7 @@ import 'package:flutter_guide/common/widgets/app_error.dart';
 import 'package:flutter_guide/common/widgets/app_progress_indicator.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope_widget.dart';
-import 'package:flutter_guide/features/places_list/screens/places_list/wm/places_list_widget_model.dart';
+import 'package:flutter_guide/features/places_list/screens/places_list/places_list_widget_model.dart';
 import 'package:flutter_guide/features/places_list/widgets/places_list_text_field.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';

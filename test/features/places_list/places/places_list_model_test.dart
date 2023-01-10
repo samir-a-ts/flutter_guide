@@ -1,8 +1,8 @@
 import 'package:elementary_test/elementary_test.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/places_list_repository.dart';
-import 'package:flutter_guide/features/places_list/screens/places_list/model/places_list_page_model.dart';
-import 'package:flutter_guide/features/places_list/screens/places_list/wm/places_list_widget_model.dart';
+import 'package:flutter_guide/features/places_list/screens/places_list/places_list_page_model.dart';
+import 'package:flutter_guide/features/places_list/screens/places_list/places_list_widget_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
