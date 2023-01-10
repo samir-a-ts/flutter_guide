@@ -46,8 +46,8 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
         appBar: MainAppBar(
           title: wm.appBarTitle,
           bottom: _SearchPageInput(
-            controller: wm.textController,
-            focus: wm.focus,
+            controller: wm.searchTextController,
+            focus: wm.searchInputFocus,
             searchIconColor: wm.searchIconColor,
             clearInput: wm.clearInput,
           ),
@@ -71,7 +71,7 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
             builder: (context, data) => _SearchBodyWidget(
               foundPlacesState: data!,
               searchState: wm.searchHistory,
-              controller: wm.textController,
+              controller: wm.searchTextController,
               emptyTitle: wm.emptyTitle,
               emptyMessage: wm.emptyMessage,
               clearHistory: wm.clearHistory,
@@ -386,6 +386,9 @@ class _SearchPageInput extends StatelessWidget with PreferredSizeWidget {
 
   final void Function() clearInput;
 
+  @override
+  Size get preferredSize => const Size(double.infinity, 40);
+
   const _SearchPageInput({
     required this.controller,
     required this.focus,
@@ -406,7 +409,4 @@ class _SearchPageInput extends StatelessWidget with PreferredSizeWidget {
       ),
     );
   }
-
-  @override
-  Size get preferredSize => const Size(double.infinity, 40);
 }
