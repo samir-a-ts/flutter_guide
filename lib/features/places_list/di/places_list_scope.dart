@@ -23,15 +23,24 @@ class PlacesListScope extends IPlacesListScope {
 
   final SharedPreferences _sharedPreferences;
 
+  late final IPlacesListRepository _placesRepository;
+
+  late final IPlacesSearchCacheRepository _placesSearchCacheRepository;
+
   @override
-  IPlacesListRepository get placesRepository => PlacesListRepository(
-        PlacesListApi(_dio),
-      );
+  IPlacesListRepository get placesRepository => _placesRepository;
 
   @override
   IPlacesSearchCacheRepository get placesSearchCacheRepository =>
-      PlacesSearchCacheRepository(_sharedPreferences);
+      _placesSearchCacheRepository;
 
   /// Constructor for [PlacesListScope].
-  PlacesListScope(this._dio, this._sharedPreferences);
+  PlacesListScope(this._dio, this._sharedPreferences) {
+    _placesRepository = PlacesListRepository(
+      PlacesListApi(_dio),
+    );
+
+    _placesSearchCacheRepository =
+        PlacesSearchCacheRepository(_sharedPreferences);
+  }
 }

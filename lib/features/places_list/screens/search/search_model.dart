@@ -22,8 +22,6 @@ class PlacesSearchModel extends ElementaryModel {
 
   final _searchStreamController = BehaviorSubject<String>();
 
-  late StreamSubscription _streamSubscription;
-
   String _lastQuery = '';
 
   Stream<String> get _searchStream =>
@@ -41,13 +39,11 @@ class PlacesSearchModel extends ElementaryModel {
   void init() {
     _loadHistoryFromCache();
 
-    _renewSubscription();
+    _searchStream.listen(_loadPlacesFromSearch);
   }
 
   @override
   void dispose() {
-    _streamSubscription.cancel();
-
     _searchStreamController.close();
 
     _cacheHistory();
@@ -59,19 +55,17 @@ class PlacesSearchModel extends ElementaryModel {
 
   /// React on user input: add query to the stream.
   void onSearch(String search) {
-    /// If input is empty...
-    if (search.isEmpty) {
-      foundPlacesState.content([]);
+    if (_lastQuery != search) {
+      if (search.isEmpty) {
+        foundPlacesState.content([]);
+      } else if (!foundPlacesState.value!.isLoading) {
+        foundPlacesState.loading(foundPlacesState.value!.data ?? []);
+      }
 
-      /// In order to stop previous events debouncing.
-      _streamSubscription.cancel();
+      _lastQuery = search;
 
-      _renewSubscription();
-
-      return;
+      _searchStreamController.add(search);
     }
-
-    _searchStreamController.add(search);
   }
 
   /// Removes history recording
@@ -103,9 +97,7 @@ class PlacesSearchModel extends ElementaryModel {
   void clearHistory() => searchHistory.accept([]);
 
   Future<void> _loadPlacesFromSearch(String query) async {
-    if (_lastQuery == query || query.length == 1) return;
-
-    _lastQuery = query;
+    if (query.isEmpty) return;
 
     try {
       final places = await _placesListRepository.getFilteredPlaces(
@@ -121,9 +113,6 @@ class PlacesSearchModel extends ElementaryModel {
   void _loadHistoryFromCache() => searchHistory.accept(
         _placesSearchCacheRepository.getSearchHistory(),
       );
-
-  void _renewSubscription() =>
-      _streamSubscription = _searchStream.listen(_loadPlacesFromSearch);
 
   Future<void> _cacheHistory() =>
       _placesSearchCacheRepository.cacheSearchHistory(

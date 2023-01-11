@@ -59,7 +59,7 @@ class PlacesListTextField extends StatelessWidget {
               color: Theme.of(context).disabledColor,
             ),
           ),
-          suffix: IconButton(
+          suffixIcon: IconButton(
             onPressed: onTapTrailing,
             icon: Icon(
               trailingIcon,
@@ -67,7 +67,6 @@ class PlacesListTextField extends StatelessWidget {
             ),
           ),
           filled: true,
-          contentPadding: EdgeInsets.zero,
           fillColor: AppTheme.of(context).additionalColor,
           focusedBorder: InputBorder.none,
           border: UnderlineInputBorder(
