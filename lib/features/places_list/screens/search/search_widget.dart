@@ -236,32 +236,24 @@ class _HistoryList extends StatelessWidget {
           );
         }
 
-        var i = -1;
-
         return SliverList(
           delegate: SliverChildListDelegate(
-            List.generate(
-              (value.length * 2) - 1,
-              (index) {
-                if (index.isOdd) {
-                  return Divider(
-                    color: Theme.of(context).disabledColor.withOpacity(.56),
-                    indent: 0,
-                    endIndent: 0,
-                    height: 0,
-                  );
-                }
-
-                i++;
-
-                return _HistoryTile(
-                  query: value[i],
-                  onDelete: onDelete,
-                  onTap: onTap,
-                  index: i,
-                );
-              },
-            ),
+            [
+              for (var i = 0; i < (value.length * 2) - 1; i++)
+                i.isOdd
+                    ? Divider(
+                        color: Theme.of(context).disabledColor.withOpacity(.56),
+                        indent: 0,
+                        endIndent: 0,
+                        height: 0,
+                      )
+                    : _HistoryTile(
+                        query: value[i ~/ 2],
+                        onDelete: onDelete,
+                        onTap: onTap,
+                        index: i ~/ 2,
+                      ),
+            ],
           ),
         );
       },
