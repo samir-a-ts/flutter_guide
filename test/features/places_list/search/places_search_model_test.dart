@@ -146,9 +146,8 @@ void main() {
 
       expect(wm.foundPlacesState.value!.data, isEmpty);
 
-      wm.saveSearch('something');
+      wm.model.saveSearch('something');
 
-      // ignore: cascade_invocations
       wm.deleteHistoryAt(1);
 
       expect(
@@ -181,9 +180,13 @@ void main() {
 
       wm.model.onSearch('Shrek');
 
+      expect(wm.foundPlacesState.value!.isLoading, equals(true));
+
       await Future<dynamic>.delayed(
         const Duration(seconds: 1, milliseconds: 200),
       );
+
+      expect(wm.foundPlacesState.value!.isLoading, equals(false));
 
       expect(wm.foundPlacesState.value!.data, isNotEmpty);
 
