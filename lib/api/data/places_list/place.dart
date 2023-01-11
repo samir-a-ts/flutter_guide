@@ -1,31 +1,40 @@
 /// Types of places.
 enum PlaceType {
-  /// Cafe.
-  cafe,
+  /// Hotel.
+  hotel,
 
   /// Restaurant.
   restaurant,
 
-  /// Museum.
-  museum,
-
-  /// Monument.
-  monument,
-
-  /// Temple.
-  temple,
+  /// Unspecified.
+  other,
 
   /// Park.
   park,
 
-  /// Theatre.
-  theatre,
+  /// Museum.
+  museum,
 
-  /// Hotel.
-  hotel,
+  /// Cafe.
+  cafe;
 
-  /// Unspecified.
-  other,
+  @override
+  String toString() {
+    switch (this) {
+      case PlaceType.cafe:
+        return 'cafe';
+      case PlaceType.restaurant:
+        return 'restaurant';
+      case PlaceType.museum:
+        return 'museum';
+      case PlaceType.park:
+        return 'park';
+      case PlaceType.hotel:
+        return 'hotel';
+      case PlaceType.other:
+        return 'other';
+    }
+  }
 }
 
 /// Model holding data about
@@ -90,14 +99,8 @@ class Place {
         return PlaceType.restaurant;
       case 'museum':
         return PlaceType.museum;
-      case 'monument':
-        return PlaceType.monument;
-      case 'temple':
-        return PlaceType.temple;
       case 'park':
         return PlaceType.park;
-      case 'theatre':
-        return PlaceType.theatre;
       case 'hotel':
         return PlaceType.hotel;
     }

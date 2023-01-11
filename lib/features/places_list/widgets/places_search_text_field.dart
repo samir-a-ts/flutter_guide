@@ -4,16 +4,7 @@ import 'package:flutter_guide/features/translations/service/generated/l10n.dart'
 
 /// Text field styled particularly
 /// for this feature.
-class PlacesListTextField extends StatelessWidget {
-  /// Icon located at the end
-  /// of the text field, right after
-  /// the field.
-  final IconData? trailingIcon;
-
-  /// Color, which [trailingIcon]
-  /// will be painted with.
-  final Color? trailingIconColor;
-
+class PlacesSearchTextField extends StatelessWidget {
   /// What happens on the trailing
   /// widget tap.
   final VoidCallback? onTapTrailing;
@@ -21,21 +12,15 @@ class PlacesListTextField extends StatelessWidget {
   /// Controller of [TextField] in this widget.
   final TextEditingController? controller;
 
-  /// Whether this field enabled.
-  final bool enabled;
-
   /// Focus controller of this text field.
   final FocusNode? focusNode;
 
-  /// Constructor for [PlacesListTextField].
-  const PlacesListTextField({
-    this.trailingIcon,
+  /// Constructor for [PlacesSearchTextField].
+  const PlacesSearchTextField({
     this.onTapTrailing,
     super.key,
-    this.enabled = true,
     this.controller,
     this.focusNode,
-    this.trailingIconColor,
   });
 
   @override
@@ -43,7 +28,6 @@ class PlacesListTextField extends StatelessWidget {
     return SizedBox(
       height: 40,
       child: TextField(
-        enabled: enabled,
         controller: controller,
         focusNode: focusNode,
         textAlignVertical: TextAlignVertical.center,
@@ -52,21 +36,19 @@ class PlacesListTextField extends StatelessWidget {
               color: Theme.of(context).colorScheme.secondaryContainer,
             ),
         decoration: InputDecoration(
-          prefixIcon: GestureDetector(
-            onTap: onTapTrailing,
-            child: Icon(
-              Icons.search,
-              color: Theme.of(context).disabledColor,
-            ),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Theme.of(context).disabledColor,
           ),
           suffixIcon: IconButton(
             onPressed: onTapTrailing,
             icon: Icon(
-              trailingIcon,
-              color: trailingIconColor,
+              Icons.cancel,
+              color: AppTheme.of(context).thirdColor,
             ),
           ),
           filled: true,
+          contentPadding: const EdgeInsets.all(14),
           fillColor: AppTheme.of(context).additionalColor,
           focusedBorder: InputBorder.none,
           border: UnderlineInputBorder(

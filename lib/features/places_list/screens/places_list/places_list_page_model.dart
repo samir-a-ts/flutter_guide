@@ -1,12 +1,19 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/places_list_repository.dart';
+import 'package:flutter_guide/features/places_list/screens/filter/places_filter_widget.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';
 
 /// Model for `PlacesListPage`.
 class PlacesListPageModel extends ElementaryModel {
+  /// State of list of places,
+  /// returned from filtered search.
+  final filteredPlacesListState =
+      EntityStateNotifier<Iterable<Place>>.value([]);
+
   /// State of list of places viewed on a screen.
   final placesListState = EntityStateNotifier<Iterable<Place>>.value([]);
 
@@ -57,6 +64,37 @@ class PlacesListPageModel extends ElementaryModel {
     _refreshController.sink.add(SwipeRefreshState.hidden);
   }
 
+  /// Loads filtered list of places,
+  /// taking data from [filterParameters]
+  Future<void> applyFilter(PlacesFilterParameters filterParameters) async {
+    if (filterParameters.isEmpty) {
+      filteredPlacesListState.content([]);
+
+      return;
+    }
+
+    filteredPlacesListState.loading();
+
+    try {
+      final result = await _repository.getFilteredPlaces(
+        latitude: filterParameters.location.latitude,
+        longitude: filterParameters.location.longitude,
+        radius: filterParameters.range,
+        types: filterParameters.types
+            .map(
+              (e) => e.toString(),
+            )
+            .toList(),
+      );
+
+      filteredPlacesListState.content(result);
+    } on DioError catch (e) {
+      filteredPlacesListState.error(e);
+    }
+
+    arePlacesLoaded.accept(false);
+  }
+
   /// Loads places from current [_page].
   /// Handles all state transfer.
   Future<void> loadPlacesList() async {
@@ -86,7 +124,7 @@ class PlacesListPageModel extends ElementaryModel {
       );
 
       _page++;
-    } on Exception catch (e) {
+    } on DioError catch (e) {
       placesListState.error(e, previousData);
     }
   }

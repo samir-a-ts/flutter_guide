@@ -3,7 +3,7 @@ import 'package:flutter_guide/features/navigation/domain/entity/app_routes.dart'
 import 'package:flutter_guide/features/places_list/screens/filter/places_filter_widget.dart';
 
 /// Filter route.
-const filterRoutes = AutoRoute<dynamic>(
+const filterRoutes = AutoRoute<PlacesFilterParameters>(
   path: AppRoutes.filter,
   page: PlacesFilterPage,
 );

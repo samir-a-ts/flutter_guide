@@ -9,7 +9,7 @@ import 'package:flutter_guide/common/widgets/app_progress_indicator.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope_widget.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/places_list_widget_model.dart';
-import 'package:flutter_guide/features/places_list/widgets/places_list_text_field.dart';
+import 'package:flutter_guide/features/places_list/widgets/places_search_text_field_placeholder.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';
 
@@ -48,13 +48,9 @@ class PlacesListContentWidget
             preferredSize: const Size(double.infinity, 40),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GestureDetector(
+              child: PlacesListTextFieldPlaceholder(
                 onTap: wm.onSearchInputTap,
-                child: PlacesListTextField(
-                  enabled: false,
-                  trailingIcon: Icons.settings,
-                  trailingIconColor: wm.inputTrailingFilterIconColor,
-                ),
+                onTrailingIconTap: wm.onFilterIconTap,
               ),
             ),
           ),
@@ -71,54 +67,80 @@ class PlacesListContentWidget
             vertical: 4,
           ),
           child: EntityStateNotifierBuilder(
-            listenableEntityState: wm.placesListState,
-            loadingBuilder: (context, data) {
-              if (data?.isNotEmpty ?? false) {
-                return _PlacesList(
-                  places: data!,
-                  controller: wm.scrollController,
-                  onRefresh: wm.refresh,
-                  refreshStream: wm.refreshStream,
-                  arePlacesReloading: wm.arePlacesReloading,
-                );
-              }
-
-              return const SizedBox(
-                height: 88,
-                child: Center(
-                  child: AppProgressIndicator(),
-                ),
-              );
-            },
-            errorBuilder: (context, e, data) {
-              if (data!.isNotEmpty) {
-                return _PlacesList(
-                  places: data,
-                  controller: wm.scrollController,
-                  onRefresh: wm.refresh,
-                  refreshStream: wm.refreshStream,
-                  arePlacesReloading: wm.arePlacesReloading,
-                );
-              }
-
-              return SizedBox(
-                height: 150,
-                child: Center(
-                  child: AppError(
-                    title: wm.errorText,
-                    icon: Icons.cancel,
-                    message: 'Something wrong...',
-                  ),
-                ),
-              );
-            },
-            builder: (context, data) => _PlacesList(
-              places: data!,
-              controller: wm.scrollController,
-              onRefresh: wm.refresh,
-              refreshStream: wm.refreshStream,
-              arePlacesReloading: wm.arePlacesReloading,
+            listenableEntityState: wm.filteredPlacesListState,
+            errorBuilder: (context, e, data) => Center(
+              child: AppError(
+                title: wm.errorText,
+                icon: Icons.cancel,
+                message: wm.errorMessage,
+              ),
             ),
+            loadingBuilder: (context, data) => const Center(
+              child: AppProgressIndicator(),
+            ),
+            builder: (context, filtered) {
+              if (filtered!.isEmpty) {
+                return EntityStateNotifierBuilder(
+                  listenableEntityState: wm.placesListState,
+                  loadingBuilder: (context, data) {
+                    if (data?.isNotEmpty ?? false) {
+                      return _PlacesList(
+                        places: data!,
+                        controller: wm.scrollController,
+                        onRefresh: wm.refresh,
+                        refreshStream: wm.refreshStream,
+                        arePlacesReloading: wm.arePlacesReloading,
+                      );
+                    }
+
+                    return const SizedBox(
+                      height: 88,
+                      child: Center(
+                        child: AppProgressIndicator(),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, e, data) {
+                    if (data!.isNotEmpty) {
+                      return _PlacesList(
+                        places: data,
+                        controller: wm.scrollController,
+                        onRefresh: wm.refresh,
+                        refreshStream: wm.refreshStream,
+                        arePlacesReloading: wm.arePlacesReloading,
+                      );
+                    }
+
+                    return SizedBox(
+                      height: 150,
+                      child: Center(
+                        child: AppError(
+                          title: wm.errorText,
+                          icon: Icons.cancel,
+                          message: wm.errorMessage,
+                        ),
+                      ),
+                    );
+                  },
+                  builder: (context, data) => _PlacesList(
+                    places: data!,
+                    controller: wm.scrollController,
+                    onRefresh: wm.refresh,
+                    refreshStream: wm.refreshStream,
+                    arePlacesReloading: wm.arePlacesReloading,
+                  ),
+                );
+              }
+
+              return ListView(
+                children: [
+                  for (final place in filtered)
+                    _PlaceCard(
+                      place: place,
+                    ),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -252,7 +274,7 @@ class _PlaceCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        place.placeType.translate(context),
+                        place.placeType.translate(context).toLowerCase(),
                         style: ThemeHelper.textTheme(context)
                             .labelMedium!
                             .copyWith(
@@ -314,14 +336,8 @@ extension PlaceTypeExt on PlaceType {
         return AppTranslations.of(context).restaurant;
       case PlaceType.museum:
         return AppTranslations.of(context).museum;
-      case PlaceType.monument:
-        return AppTranslations.of(context).monument;
-      case PlaceType.temple:
-        return AppTranslations.of(context).temple;
       case PlaceType.park:
         return AppTranslations.of(context).park;
-      case PlaceType.theatre:
-        return AppTranslations.of(context).theatre;
       case PlaceType.hotel:
         return AppTranslations.of(context).hotel;
       case PlaceType.other:

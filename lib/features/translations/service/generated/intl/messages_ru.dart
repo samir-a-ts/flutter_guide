@@ -20,32 +20,37 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ru';
 
+  static String m0(to) => "до ${to} км";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "cafe": MessageLookupByLibrary.simpleMessage("кафе"),
+        "cafe": MessageLookupByLibrary.simpleMessage("Кафе"),
+        "categories": MessageLookupByLibrary.simpleMessage("Категории"),
+        "clear": MessageLookupByLibrary.simpleMessage("Очистить"),
         "clearHistory":
             MessageLookupByLibrary.simpleMessage("Очистить историю"),
+        "distance": MessageLookupByLibrary.simpleMessage("Расстояние"),
         "emptyMessage": MessageLookupByLibrary.simpleMessage(
             "Попробуйте изменить параметры поиска"),
         "emptyTitle":
             MessageLookupByLibrary.simpleMessage("Ничего не найдено."),
         "error": MessageLookupByLibrary.simpleMessage("Ошибка"),
-        "hotel": MessageLookupByLibrary.simpleMessage("отель"),
+        "fromToDistance": m0,
+        "hotel": MessageLookupByLibrary.simpleMessage("Отель"),
         "letsGo": MessageLookupByLibrary.simpleMessage("На старт"),
-        "monument": MessageLookupByLibrary.simpleMessage("монумент"),
-        "museum": MessageLookupByLibrary.simpleMessage("музей"),
+        "loading": MessageLookupByLibrary.simpleMessage("Загрузка..."),
+        "museum": MessageLookupByLibrary.simpleMessage("Музей"),
         "newPlace": MessageLookupByLibrary.simpleMessage("Новое место"),
-        "other": MessageLookupByLibrary.simpleMessage("другое"),
-        "park": MessageLookupByLibrary.simpleMessage("парк"),
+        "other": MessageLookupByLibrary.simpleMessage("Особое место"),
+        "park": MessageLookupByLibrary.simpleMessage("Парк"),
         "placesListTitle":
             MessageLookupByLibrary.simpleMessage("Список интересных мест"),
-        "restaurant": MessageLookupByLibrary.simpleMessage("ресторан"),
+        "restaurant": MessageLookupByLibrary.simpleMessage("Ресторан"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
+        "showFiltered": MessageLookupByLibrary.simpleMessage("Показать"),
         "skip": MessageLookupByLibrary.simpleMessage("Пропустить"),
         "somethingWrong":
             MessageLookupByLibrary.simpleMessage("Упс, что-то пошло не так..."),
-        "temple": MessageLookupByLibrary.simpleMessage("храм"),
-        "theatre": MessageLookupByLibrary.simpleMessage("театр"),
         "tutorialSubtitle1": MessageLookupByLibrary.simpleMessage(
             "Ищи новые локации и сохраняй самые любимые."),
         "tutorialSubtitle2": MessageLookupByLibrary.simpleMessage(

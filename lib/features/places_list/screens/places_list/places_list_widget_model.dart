@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
+import 'package:flutter_guide/features/places_list/screens/filter/places_filter_widget.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/places_list_page.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/places_list_page_model.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
@@ -16,6 +17,9 @@ import 'package:swipe_refresh/swipe_refresh.dart';
 abstract class IPlacesListPageWidgetModel extends IWidgetModel {
   /// State of list of places viewed on a screen.
   ListenableState<EntityState<Iterable<Place>>> get placesListState;
+
+  /// State of list of places viewed on a screen.
+  ListenableState<EntityState<Iterable<Place>>> get filteredPlacesListState;
 
   /// Whether places are being loaded initially.
   /// (to determine whether show `new place` button or not)
@@ -57,6 +61,10 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
 
   /// Navigates to places search page.
   void onSearchInputTap();
+
+  /// Handle tap on filter icon
+  /// in search input.
+  void onFilterIconTap();
 }
 
 /// Widget Model for [PlacesListPage]
@@ -70,6 +78,10 @@ class PlacesListPageWidgetModel
   @override
   ListenableState<EntityState<Iterable<Place>>> get placesListState =>
       model.placesListState;
+
+  @override
+  ListenableState<EntityState<Iterable<Place>>> get filteredPlacesListState =>
+      model.filteredPlacesListState;
 
   @override
   String get appBarTitle => AppTranslations.of(context).placesListTitle;
@@ -107,6 +119,14 @@ class PlacesListPageWidgetModel
 
   @override
   void onSearchInputTap() => AutoRouter.of(context).push(PlacesSearchRoute());
+
+  @override
+  Future<void> onFilterIconTap() async {
+    final result = await AutoRouter.of(context)
+        .push<PlacesFilterParameters>(PlacesFilterRoute());
+
+    return model.applyFilter(result!);
+  }
 
   @override
   void initWidgetModel() {
