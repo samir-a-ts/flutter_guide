@@ -33,7 +33,7 @@ abstract class IPlacesSearchWidgetModel extends IWidgetModel {
   String get emptyMessage;
 
   /// Focus manager of search input field.
-  FocusNode get focus;
+  FocusNode get searchInputFocus;
 
   /// Color, which trailing icon
   /// of search input will be painted
@@ -41,7 +41,7 @@ abstract class IPlacesSearchWidgetModel extends IWidgetModel {
   Color get searchIconColor;
 
   /// Controller of user search input field.
-  TextEditingController get textController;
+  TextEditingController get searchTextController;
 
   /// Delete search record from history
   /// add given [index].
@@ -77,9 +77,9 @@ abstract class IPlacesSearchWidgetModel extends IWidgetModel {
 class PlacesSearchWidgetModel
     extends WidgetModel<PlacesSearchPage, PlacesSearchModel>
     implements IPlacesSearchWidgetModel {
-  final _textController = TextEditingController();
+  final _searchTextController = TextEditingController();
 
-  final _focus = FocusNode();
+  final _searchInputFocus = FocusNode();
 
   @override
   EntityStateNotifier<Iterable<Place>> get foundPlacesState =>
@@ -92,10 +92,10 @@ class PlacesSearchWidgetModel
   String get appBarTitle => AppTranslations.of(context).placesListTitle;
 
   @override
-  TextEditingController get textController => _textController;
+  TextEditingController get searchTextController => _searchTextController;
 
   @override
-  FocusNode get focus => _focus;
+  FocusNode get searchInputFocus => _searchInputFocus;
 
   @override
   Color get searchIconColor => AppTheme.of(context).thirdColor;
@@ -126,14 +126,15 @@ class PlacesSearchWidgetModel
   }
 
   @override
-  void clearInput() => textController.text = '';
+  void clearInput() => searchTextController.text = '';
 
   @override
-  void onSearchHistoryTap(String selected) => textController.text = selected;
+  void onSearchHistoryTap(String selected) =>
+      searchTextController.text = selected;
 
   @override
   void onSearchResultTap(Place selected) {
-    model.saveSearch(textController.text);
+    model.saveSearch(searchTextController.text);
 
     /// Navigate to details page:
   }
@@ -188,18 +189,18 @@ class PlacesSearchWidgetModel
   void initWidgetModel() {
     super.initWidgetModel();
 
-    _focus.requestFocus();
+    _searchInputFocus.requestFocus();
 
-    textController.addListener(_search);
+    searchTextController.addListener(_search);
   }
 
   @override
   void dispose() {
-    textController
+    searchTextController
       ..removeListener(_search)
       ..dispose();
 
-    _focus
+    _searchInputFocus
       ..unfocus()
       ..dispose();
 
@@ -207,6 +208,6 @@ class PlacesSearchWidgetModel
   }
 
   void _search() {
-    model.onSearch(textController.text);
+    model.onSearch(searchTextController.text);
   }
 }

@@ -46,8 +46,8 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
         appBar: MainAppBar(
           title: wm.appBarTitle,
           bottom: _SearchPageInput(
-            controller: wm.textController,
-            focus: wm.focus,
+            controller: wm.searchTextController,
+            focus: wm.searchInputFocus,
             searchIconColor: wm.searchIconColor,
             clearInput: wm.clearInput,
           ),
@@ -71,7 +71,7 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
             builder: (context, data) => _SearchBodyWidget(
               foundPlacesState: data!,
               searchState: wm.searchHistory,
-              controller: wm.textController,
+              controller: wm.searchTextController,
               emptyTitle: wm.emptyTitle,
               emptyMessage: wm.emptyMessage,
               clearHistory: wm.clearHistory,
@@ -236,32 +236,24 @@ class _HistoryList extends StatelessWidget {
           );
         }
 
-        var i = -1;
-
         return SliverList(
           delegate: SliverChildListDelegate(
-            List.generate(
-              (value.length * 2) - 1,
-              (index) {
-                if (index.isOdd) {
-                  return Divider(
-                    color: Theme.of(context).disabledColor.withOpacity(.56),
-                    indent: 0,
-                    endIndent: 0,
-                    height: 0,
-                  );
-                }
-
-                i++;
-
-                return _HistoryTile(
-                  query: value[i],
-                  onDelete: onDelete,
-                  onTap: onTap,
-                  index: i,
-                );
-              },
-            ),
+            [
+              for (var i = 0; i < (value.length * 2) - 1; i++)
+                i.isOdd
+                    ? Divider(
+                        color: Theme.of(context).disabledColor.withOpacity(.56),
+                        indent: 0,
+                        endIndent: 0,
+                        height: 0,
+                      )
+                    : _HistoryTile(
+                        query: value[i ~/ 2],
+                        onDelete: onDelete,
+                        onTap: onTap,
+                        index: i ~/ 2,
+                      ),
+            ],
           ),
         );
       },
@@ -386,6 +378,9 @@ class _SearchPageInput extends StatelessWidget with PreferredSizeWidget {
 
   final void Function() clearInput;
 
+  @override
+  Size get preferredSize => const Size(double.infinity, 40);
+
   const _SearchPageInput({
     required this.controller,
     required this.focus,
@@ -406,7 +401,4 @@ class _SearchPageInput extends StatelessWidget with PreferredSizeWidget {
       ),
     );
   }
-
-  @override
-  Size get preferredSize => const Size(double.infinity, 40);
 }
