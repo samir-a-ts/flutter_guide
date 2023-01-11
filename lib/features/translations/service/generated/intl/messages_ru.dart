@@ -23,6 +23,12 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "cafe": MessageLookupByLibrary.simpleMessage("кафе"),
+        "clearHistory":
+            MessageLookupByLibrary.simpleMessage("Очистить историю"),
+        "emptyMessage": MessageLookupByLibrary.simpleMessage(
+            "Попробуйте изменить параметры поиска"),
+        "emptyTitle":
+            MessageLookupByLibrary.simpleMessage("Ничего не найдено."),
         "error": MessageLookupByLibrary.simpleMessage("Ошибка"),
         "hotel": MessageLookupByLibrary.simpleMessage("отель"),
         "letsGo": MessageLookupByLibrary.simpleMessage("На старт"),
@@ -36,6 +42,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "restaurant": MessageLookupByLibrary.simpleMessage("ресторан"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
         "skip": MessageLookupByLibrary.simpleMessage("Пропустить"),
+        "somethingWrong":
+            MessageLookupByLibrary.simpleMessage("Упс, что-то пошло не так..."),
         "temple": MessageLookupByLibrary.simpleMessage("храм"),
         "theatre": MessageLookupByLibrary.simpleMessage("театр"),
         "tutorialSubtitle1": MessageLookupByLibrary.simpleMessage(
@@ -49,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tutorialTitle2": MessageLookupByLibrary.simpleMessage(
             "Построй маршрут и отправляйся в путь"),
         "tutorialTitle3": MessageLookupByLibrary.simpleMessage(
-            "Добавляй места, которые нашёл сам")
+            "Добавляй места, которые нашёл сам"),
+        "youSearched": MessageLookupByLibrary.simpleMessage("Вы искали")
       };
 }

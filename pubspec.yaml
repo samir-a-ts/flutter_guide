@@ -4,20 +4,32 @@ version: 1.0.0+1
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 dependencies:
-  auto_route: ^5.0.4
+  # Network
   dio: ^4.0.6
+  # State management
   elementary: ^1.5.0
+  # DI
+  provider: ^6.0.5
+  # Routing
+  auto_route: ^5.0.4
+  # Flutter dependencies
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  # UI
   flutter_screenutil: ^5.6.0
   flutter_svg: ^1.1.6
-  intl: ^0.17.0
-  logger: ^1.1.0
-  provider: ^6.0.5
-  surf_logger: ^1.1.0
   swipe_refresh: ^1.0.2
+  # Translations
+  intl: ^0.17.0
+  # Log
+  logger: ^1.1.0
+  surf_logger: ^1.1.0
+  # Local DB
+  shared_preferences: ^2.0.15
+  # Utils
+  rxdart: ^0.27.7
 
 dev_dependencies:
   auto_route_generator: ^5.0.2

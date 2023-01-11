@@ -259,6 +259,56 @@ class AppTranslations {
       args: [],
     );
   }
+
+  /// `Вы искали`
+  String get youSearched {
+    return Intl.message(
+      'Вы искали',
+      name: 'youSearched',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Очистить историю`
+  String get clearHistory {
+    return Intl.message(
+      'Очистить историю',
+      name: 'clearHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Упс, что-то пошло не так...`
+  String get somethingWrong {
+    return Intl.message(
+      'Упс, что-то пошло не так...',
+      name: 'somethingWrong',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ничего не найдено.`
+  String get emptyTitle {
+    return Intl.message(
+      'Ничего не найдено.',
+      name: 'emptyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Попробуйте изменить параметры поиска`
+  String get emptyMessage {
+    return Intl.message(
+      'Попробуйте изменить параметры поиска',
+      name: 'emptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppTranslations> {

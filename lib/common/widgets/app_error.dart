@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
-import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 
 /// Diverse error indication to user.
 class AppError extends StatelessWidget {
+  /// Icon, which will be
+  /// shown on the top of the widget.
+  final IconData icon;
+
+  /// The text under the [icon].
+  final String title;
+
   /// What user have been informed about.
   ///
   /// Text under `error` string.
@@ -12,6 +18,8 @@ class AppError extends StatelessWidget {
 
   /// Constructor for [AppError].
   const AppError({
+    required this.icon,
+    required this.title,
     super.key,
     this.message = '',
   });
@@ -22,13 +30,13 @@ class AppError extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
-          Icons.cancel,
+          icon,
           size: 64,
           color: Theme.of(context).disabledColor,
         ),
         const Gap(dimension: 24),
         Text(
-          AppTranslations.of(context).error,
+          title,
           style: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: Theme.of(context).disabledColor,
