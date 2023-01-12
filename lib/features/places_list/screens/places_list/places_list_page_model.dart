@@ -14,6 +14,9 @@ class PlacesListPageModel extends ElementaryModel {
   final filteredPlacesListState =
       EntityStateNotifier<Iterable<Place>>.value([]);
 
+  /// Whether to show places loaded in [filteredPlacesListState].
+  final showFilteredPlacesState = StateNotifier<bool>(initValue: false);
+
   /// State of list of places viewed on a screen.
   final placesListState = EntityStateNotifier<Iterable<Place>>.value([]);
 
@@ -59,6 +62,10 @@ class PlacesListPageModel extends ElementaryModel {
   Future<void> refresh() async {
     _page = 0;
 
+    filteredPlacesListState.content([]);
+
+    showFilteredPlacesState.accept(false);
+
     await _requestPlaces(refreshList: true);
 
     _refreshController.sink.add(SwipeRefreshState.hidden);
@@ -70,8 +77,12 @@ class PlacesListPageModel extends ElementaryModel {
     if (filterParameters.isEmpty) {
       filteredPlacesListState.content([]);
 
+      showFilteredPlacesState.accept(false);
+
       return;
     }
+
+    showFilteredPlacesState.accept(true);
 
     filteredPlacesListState.loading();
 
@@ -91,14 +102,14 @@ class PlacesListPageModel extends ElementaryModel {
     } on DioError catch (e) {
       filteredPlacesListState.error(e);
     }
-
-    arePlacesLoaded.accept(false);
   }
 
   /// Loads places from current [_page].
   /// Handles all state transfer.
   Future<void> loadPlacesList() async {
     if (placesListState.value!.isLoading) return;
+
+    if (showFilteredPlacesState.value!) return;
 
     final previousData = placesListState.value?.data;
 

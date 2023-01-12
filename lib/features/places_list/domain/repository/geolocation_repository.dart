@@ -2,6 +2,7 @@ import 'package:geolocator/geolocator.dart';
 
 /// Repository for requesting
 /// current user position in the world's map.
+// ignore: one_member_abstracts
 abstract class ILocationRepository {
   /// Gets current user location from phone.
   ///

@@ -25,6 +25,9 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
   /// (to determine whether show `new place` button or not)
   ListenableState<bool> get arePlacesLoaded;
 
+  /// Whether to show places loaded in [filteredPlacesListState].
+  ListenableState<bool> get showFilteredPlaces;
+
   /// Translated app bar title.
   String get appBarTitle;
 
@@ -91,6 +94,9 @@ class PlacesListPageWidgetModel
 
   @override
   ListenableState<bool> get arePlacesReloading => model.arePlacesReloading;
+
+  @override
+  ListenableState<bool> get showFilteredPlaces => model.showFilteredPlacesState;
 
   @override
   Stream<SwipeRefreshState> get refreshStream => model.refreshStream;

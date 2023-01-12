@@ -49,7 +49,7 @@ class AppBottomButton extends StatelessWidget {
             Text(
               text.toUpperCase(),
               style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: Theme.of(context).backgroundColor,
                     fontWeight: FontWeight.w700,
                   ),
             ),

@@ -66,64 +66,20 @@ class PlacesListContentWidget
             horizontal: 16,
             vertical: 4,
           ),
-          child: EntityStateNotifierBuilder(
-            listenableEntityState: wm.filteredPlacesListState,
-            errorBuilder: (context, e, data) => Center(
-              child: AppError(
-                title: wm.errorText,
-                icon: Icons.cancel,
-                message: wm.errorMessage,
-              ),
-            ),
-            loadingBuilder: (context, data) => const Center(
-              child: AppProgressIndicator(),
-            ),
-            builder: (context, filtered) {
-              if (filtered!.isEmpty) {
+          child: StateNotifierBuilder(
+            listenableState: wm.showFilteredPlaces,
+            builder: (context, show) {
+              if (show!) {
                 return EntityStateNotifierBuilder(
-                  listenableEntityState: wm.placesListState,
-                  loadingBuilder: (context, data) {
-                    if (data?.isNotEmpty ?? false) {
-                      return _PlacesList(
-                        places: data!,
-                        controller: wm.scrollController,
-                        onRefresh: wm.refresh,
-                        refreshStream: wm.refreshStream,
-                        arePlacesReloading: wm.arePlacesReloading,
-                      );
-                    }
-
-                    return const SizedBox(
-                      height: 88,
-                      child: Center(
-                        child: AppProgressIndicator(),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, e, data) {
-                    if (data!.isNotEmpty) {
-                      return _PlacesList(
-                        places: data,
-                        controller: wm.scrollController,
-                        onRefresh: wm.refresh,
-                        refreshStream: wm.refreshStream,
-                        arePlacesReloading: wm.arePlacesReloading,
-                      );
-                    }
-
-                    return SizedBox(
-                      height: 150,
-                      child: Center(
-                        child: AppError(
-                          title: wm.errorText,
-                          icon: Icons.cancel,
-                          message: wm.errorMessage,
-                        ),
-                      ),
-                    );
-                  },
-                  builder: (context, data) => _PlacesList(
-                    places: data!,
+                  listenableEntityState: wm.filteredPlacesListState,
+                  errorBuilder: (context, e, data) => AppError(
+                    title: wm.errorText,
+                    icon: Icons.cancel,
+                    message: wm.errorMessage,
+                  ),
+                  loadingBuilder: (context, data) => const _LoadingWidget(),
+                  builder: (context, filtered) => _PlacesList(
+                    places: filtered!,
                     controller: wm.scrollController,
                     onRefresh: wm.refresh,
                     refreshStream: wm.refreshStream,
@@ -132,13 +88,45 @@ class PlacesListContentWidget
                 );
               }
 
-              return ListView(
-                children: [
-                  for (final place in filtered)
-                    _PlaceCard(
-                      place: place,
-                    ),
-                ],
+              return EntityStateNotifierBuilder(
+                listenableEntityState: wm.placesListState,
+                loadingBuilder: (context, data) {
+                  if (data?.isNotEmpty ?? false) {
+                    return _PlacesList(
+                      places: data!,
+                      controller: wm.scrollController,
+                      onRefresh: wm.refresh,
+                      refreshStream: wm.refreshStream,
+                      arePlacesReloading: wm.arePlacesReloading,
+                    );
+                  }
+
+                  return const _LoadingWidget();
+                },
+                errorBuilder: (context, e, data) {
+                  if (data!.isNotEmpty) {
+                    return _PlacesList(
+                      places: data,
+                      controller: wm.scrollController,
+                      onRefresh: wm.refresh,
+                      refreshStream: wm.refreshStream,
+                      arePlacesReloading: wm.arePlacesReloading,
+                    );
+                  }
+
+                  return AppError(
+                    title: wm.errorText,
+                    icon: Icons.cancel,
+                    message: wm.errorMessage,
+                  );
+                },
+                builder: (context, data) => _PlacesList(
+                  places: data!,
+                  controller: wm.scrollController,
+                  onRefresh: wm.refresh,
+                  refreshStream: wm.refreshStream,
+                  arePlacesReloading: wm.arePlacesReloading,
+                ),
               );
             },
           ),
@@ -146,6 +134,15 @@ class PlacesListContentWidget
       ),
     );
   }
+}
+
+class _LoadingWidget extends StatelessWidget {
+  const _LoadingWidget();
+
+  @override
+  Widget build(BuildContext context) => const Center(
+        child: AppProgressIndicator(),
+      );
 }
 
 class _FloatingActionButton extends StatelessWidget {
@@ -217,13 +214,10 @@ class _PlacesList extends StatelessWidget {
       indicatorColor: Theme.of(context).primaryColor,
       childrenDelegate: SliverChildListDelegate(
         [
-          ...places
-              .map<Widget>(
-                (e) => _PlaceCard(
-                  place: e,
-                ),
-              )
-              .toList(),
+          for (final place in places)
+            _PlaceCard(
+              place: place,
+            ),
           StateNotifierBuilder(
             listenableState: arePlacesReloading,
             builder: (context, value) => value!
@@ -264,7 +258,7 @@ class _PlaceCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(
-                        place.images.first,
+                        place.images.isEmpty ? '' : place.images.first,
                       ),
                       fit: BoxFit.cover,
                     ),

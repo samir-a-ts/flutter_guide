@@ -115,7 +115,9 @@ class PlacesFilterWidgetModel
       AutoRouter.of(context).popForced<PlacesFilterParameters>(
         PlacesFilterParameters(
           location: userLocationState.value!.data!,
-          range: rangeState.value!,
+          range: rangeState.value! * 1000,
+
+          /// in metres.
           types: filterPlacesTypesState.value!.toList(),
         ),
       );
