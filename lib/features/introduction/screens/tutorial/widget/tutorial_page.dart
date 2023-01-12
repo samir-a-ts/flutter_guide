@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/common/widgets/app_bar_trailing_button.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
-import 'package:flutter_guide/features/app/core/widgets/app_bottom_button.dart';
+import 'package:flutter_guide/common/widgets/app_bottom_button.dart';
 import 'package:flutter_guide/features/introduction/widgets/app_tab_view.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
@@ -155,9 +155,12 @@ class _TutorialPageBodyState extends State<_TutorialPageBody> {
               if (_controller.index != _tabs.length - 1) {
                 return Align(
                   alignment: Alignment.topRight,
-                  child: AppBarTrailingButton(
-                    onTap: _skip,
-                    title: AppTranslations.of(context).skip,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0, top: 18),
+                    child: AppTextButton(
+                      onTap: _skip,
+                      text: AppTranslations.of(context).skip,
+                    ),
                   ),
                 );
               }

@@ -6,7 +6,7 @@ import 'package:flutter_guide/common/widgets/app_bar.dart';
 import 'package:flutter_guide/common/widgets/app_bar_trailing_button.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/common/widgets/label.dart';
-import 'package:flutter_guide/features/app/core/widgets/app_bottom_button.dart';
+import 'package:flutter_guide/common/widgets/app_bottom_button.dart';
 import 'package:flutter_guide/features/places_list/domain/entity/location.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/geolocation_repository.dart';
 import 'package:flutter_guide/features/places_list/screens/filter/places_filter_model.dart';
@@ -48,9 +48,9 @@ class PlacesFilterPage extends ElementaryWidget<IPlacesFilterWidgetModel> {
             ),
           ),
           trailing: [
-            AppBarTrailingButton(
+            AppTextButton(
               onTap: wm.clearFilter,
-              title: wm.clearButtonText,
+              text: wm.clearButtonText,
             ),
           ],
         ),
@@ -103,9 +103,8 @@ class PlacesFilterPage extends ElementaryWidget<IPlacesFilterWidgetModel> {
                     listenableEntityState: wm.userLocationState,
                     loadingBuilder: (context, data) {
                       return AppBottomButton(
-                        onTap: () {},
                         text: wm.loadingText,
-                        color: wm.disabledBottomButtonColor,
+                        buttonType: AppBottomButtonType.disabled,
                       );
                     },
                     builder: (context, snapshot) {

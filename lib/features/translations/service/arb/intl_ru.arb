@@ -27,5 +27,12 @@
     "distance": "Расстояние",
     "fromToDistance": "до {to} км",
     "loading": "Загрузка...",
-    "showFiltered": "Показать"
+    "showFiltered": "Показать",
+    "cancel": "Отмена",
+    "category": "Категория",
+    "create": "Создать",
+    "description": "Описание",
+    "newPlace": "Новое место",
+    "searchOnMap": "Указать на карте",
+    "title": "Название"
 }

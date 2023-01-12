@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 
+/// Mode of [AppBottomButton],
+/// which resolves, which color
+/// will be used to paint
+/// this widget.
+enum AppBottomButtonType {
+  /// Color: primary color from theme.
+  /// Text color: background color.
+  primary,
+
+  /// Disabled set of colors.
+  disabled,
+}
+
 /// Large primary-colored bottom button.
 class AppBottomButton extends StatelessWidget {
+  /// Current mode of this button, sets of
+  /// colors used will depend on this.
+  final AppBottomButtonType? buttonType;
+
   /// What happens on tap.
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   /// What is written in the center of
   /// the button.
@@ -19,25 +36,47 @@ class AppBottomButton extends StatelessWidget {
   /// specify it here.
   final Color? color;
 
+  /// Color, in which bold [text]
+  /// on button will be painted in.
+  final Color? textColor;
+
   /// Constructor for [AppBottomButton]
   const AppBottomButton({
-    required this.onTap,
     required this.text,
+    this.onTap,
     super.key,
     this.icon,
     this.color,
+    this.textColor,
+    this.buttonType,
   });
 
   @override
   Widget build(BuildContext context) {
+    var buttonColor = color;
+    var buttonTextColor = textColor;
+
+    if (buttonType != null) {
+      switch (buttonType!) {
+        case AppBottomButtonType.primary:
+          buttonColor ??= Theme.of(context).primaryColor;
+          buttonTextColor ??= Theme.of(context).backgroundColor;
+          break;
+        case AppBottomButtonType.disabled:
+          buttonColor ??= Theme.of(context).backgroundColor;
+          buttonTextColor ??= Theme.of(context).disabledColor.withOpacity(.56);
+          break;
+      }
+    }
+
     return GestureDetector(
-      onTap: onTap,
+      onTap: buttonType == AppBottomButtonType.disabled ? null : onTap,
       child: Container(
         width: double.infinity,
         height: 48,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: color ?? Theme.of(context).primaryColor,
+          color: buttonColor ?? Theme.of(context).primaryColor,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -49,7 +88,7 @@ class AppBottomButton extends StatelessWidget {
             Text(
               text.toUpperCase(),
               style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                    color: Theme.of(context).backgroundColor,
+                    color: buttonTextColor ?? Theme.of(context).backgroundColor,
                     fontWeight: FontWeight.w700,
                   ),
             ),

@@ -339,6 +339,66 @@ class AppTranslations {
       args: [],
     );
   }
+
+  /// `Отмена`
+  String get cancel {
+    return Intl.message(
+      'Отмена',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Категория`
+  String get category {
+    return Intl.message(
+      'Категория',
+      name: 'category',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Создать`
+  String get create {
+    return Intl.message(
+      'Создать',
+      name: 'create',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Описание`
+  String get description {
+    return Intl.message(
+      'Описание',
+      name: 'description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Указать на карте`
+  String get searchOnMap {
+    return Intl.message(
+      'Указать на карте',
+      name: 'searchOnMap',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Название`
+  String get title {
+    return Intl.message(
+      'Название',
+      name: 'title',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppTranslations> {

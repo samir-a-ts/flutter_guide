@@ -25,10 +25,14 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "cafe": MessageLookupByLibrary.simpleMessage("Кафе"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Отмена"),
         "categories": MessageLookupByLibrary.simpleMessage("Категории"),
+        "category": MessageLookupByLibrary.simpleMessage("Категория"),
         "clear": MessageLookupByLibrary.simpleMessage("Очистить"),
         "clearHistory":
             MessageLookupByLibrary.simpleMessage("Очистить историю"),
+        "create": MessageLookupByLibrary.simpleMessage("Создать"),
+        "description": MessageLookupByLibrary.simpleMessage("Описание"),
         "distance": MessageLookupByLibrary.simpleMessage("Расстояние"),
         "emptyMessage": MessageLookupByLibrary.simpleMessage(
             "Попробуйте изменить параметры поиска"),
@@ -47,10 +51,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Список интересных мест"),
         "restaurant": MessageLookupByLibrary.simpleMessage("Ресторан"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
+        "searchOnMap": MessageLookupByLibrary.simpleMessage("Указать на карте"),
         "showFiltered": MessageLookupByLibrary.simpleMessage("Показать"),
         "skip": MessageLookupByLibrary.simpleMessage("Пропустить"),
         "somethingWrong":
             MessageLookupByLibrary.simpleMessage("Упс, что-то пошло не так..."),
+        "title": MessageLookupByLibrary.simpleMessage("Название"),
         "tutorialSubtitle1": MessageLookupByLibrary.simpleMessage(
             "Ищи новые локации и сохраняй самые любимые."),
         "tutorialSubtitle2": MessageLookupByLibrary.simpleMessage(

@@ -1,36 +1,41 @@
 import 'package:flutter/material.dart';
 
-/// Tappable colored text
-/// specially for the `MainAppBar`
-class AppBarTrailingButton extends StatelessWidget {
+/// Colored and bold text
+/// with on tap handling.
+class AppTextButton extends StatelessWidget {
   /// What happens when user
   /// clicks this text
   final VoidCallback onTap;
 
   /// What is going to be written
   /// on this button.
-  final String title;
+  final String text;
 
-  /// Constructor for [AppBarTrailingButton].
-  const AppBarTrailingButton({
+  /// Color, in which the [text]
+  /// in [AppTextButton] will be painted in.
+  ///
+  /// If it is null, defaults to
+  /// primaryColor from [Theme].
+  final Color? color;
+
+  /// Constructor for [AppTextButton].
+  const AppTextButton({
     required this.onTap,
-    required this.title,
+    required this.text,
+    this.color,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16.0, top: 18),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).primaryColor,
-              ),
-        ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: color ?? Theme.of(context).primaryColor,
+            ),
       ),
     );
   }
