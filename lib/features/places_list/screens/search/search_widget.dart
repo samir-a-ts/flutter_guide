@@ -7,7 +7,6 @@ import 'package:flutter_guide/common/widgets/app_error.dart';
 import 'package:flutter_guide/common/widgets/app_progress_indicator.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/common/widgets/label.dart';
-import 'package:flutter_guide/features/app/di/app_scope.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/places_list_page.dart';
 import 'package:flutter_guide/features/places_list/screens/search/search_model.dart';
@@ -18,13 +17,10 @@ import 'package:provider/provider.dart';
 
 /// Factory for [PlacesSearchWidgetModel].
 PlacesSearchWidgetModel defaultSearchWidgetModelFactory(BuildContext context) {
-  final appScope = Provider.of<IAppScope>(context, listen: false);
-
   final placesScope = Provider.of<IPlacesListScope>(context, listen: false);
 
   return PlacesSearchWidgetModel(
     PlacesSearchModel(
-      appScope.errorHandler,
       placesScope.placesRepository,
       placesScope.placesSearchCacheRepository,
     ),

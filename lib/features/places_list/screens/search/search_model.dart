@@ -31,10 +31,9 @@ class PlacesSearchModel extends ElementaryModel {
 
   /// Constructor for [PlacesSearchModel].
   PlacesSearchModel(
-    ErrorHandler errorHandler,
     this._placesListRepository,
     this._placesSearchCacheRepository,
-  ) : super(errorHandler: errorHandler);
+  );
 
   @override
   void init() {
