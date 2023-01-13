@@ -32,8 +32,7 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
   /// Constructor for [PlacesSearchPage]
   const PlacesSearchPage({
     Key? key,
-    WidgetModelFactory wmFactory = defaultSearchWidgetModelFactory,
-  }) : super(wmFactory, key: key);
+  }) : super(defaultSearchWidgetModelFactory, key: key);
 
   @override
   Widget build(IPlacesSearchWidgetModel wm) {

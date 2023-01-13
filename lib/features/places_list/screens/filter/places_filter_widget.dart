@@ -7,7 +7,7 @@ import 'package:flutter_guide/common/widgets/app_bar_trailing_button.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/common/widgets/label.dart';
 import 'package:flutter_guide/features/app/core/widgets/app_bottom_button.dart';
-import 'package:flutter_guide/features/places_list/domain/entity/location.dart';
+import 'package:flutter_guide/features/places_list/domain/entity/places_filter_parameters.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/geolocation_repository.dart';
 import 'package:flutter_guide/features/places_list/screens/filter/places_filter_model.dart';
 import 'package:flutter_guide/features/places_list/screens/filter/places_filter_wm.dart';
@@ -15,23 +15,27 @@ import 'package:flutter_guide/features/places_list/screens/places_list/places_li
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 
 /// Default factory for [PlacesFilterWidgetModel]
-PlacesFilterWidgetModel defaultPlacesFilterWidgetModelFactory(
-  BuildContext context,
+WidgetModelFactory defaultPlacesFilterWidgetModelFactory(
+  PlacesFilterParameters? initialParams,
 ) {
-  return PlacesFilterWidgetModel(
-    PlacesFilterModel(
-      LocationRepository(),
-    ),
-  );
+  return (context) => PlacesFilterWidgetModel(
+        PlacesFilterModel(
+          LocationRepository(),
+          initial: initialParams,
+        ),
+      );
 }
 
 /// Widget for PlacesFilter module.
 class PlacesFilterPage extends ElementaryWidget<IPlacesFilterWidgetModel> {
   /// Constructor for [PlacesFilterPage]
-  const PlacesFilterPage({
+  PlacesFilterPage({
     Key? key,
-    WidgetModelFactory wmFactory = defaultPlacesFilterWidgetModelFactory,
-  }) : super(wmFactory, key: key);
+    PlacesFilterParameters? initialParams,
+  }) : super(
+          defaultPlacesFilterWidgetModelFactory(initialParams),
+          key: key,
+        );
 
   @override
   Widget build(IPlacesFilterWidgetModel wm) {
@@ -163,6 +167,7 @@ extension _PlaceTypeIcons on PlaceType {
     switch (this) {
       case PlaceType.cafe:
         return Icons.local_cafe;
+
       case PlaceType.restaurant:
         return Icons.restaurant;
 
@@ -258,37 +263,4 @@ class _PlaceTypeOption extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Filter options, that will be
-/// returned from filter page and
-/// applied to places list page.
-class PlacesFilterParameters {
-  /// Chosen places types.
-  final List<PlaceType> types;
-
-  /// To which radius from
-  /// [location] places to show.
-  final double range;
-
-  /// Current user location.
-  final Location location;
-
-  /// Whether the filter is not
-  /// filled up with any data.
-  bool get isEmpty => types.isEmpty || range == 0.0;
-
-  /// Constructor for [PlacesFilterParameters]
-  PlacesFilterParameters({
-    required this.location,
-    this.types = const [],
-    this.range = 0,
-  });
-
-  /// Creates instance with guaranteed
-  /// [isEmpty] true.
-  PlacesFilterParameters.empty()
-      : location = const Location(0, 0),
-        range = 0,
-        types = const [];
 }

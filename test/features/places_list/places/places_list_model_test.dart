@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:elementary_test/elementary_test.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/places_list_repository.dart';
@@ -8,10 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  final testDioError = DioError(
-    requestOptions: RequestOptions(path: ''),
-  );
-
   const testPlaces = [
     Place(
       id: 0,
@@ -142,7 +137,7 @@ void main() {
         () => repository.getAllPlaces(0),
       ).thenAnswer(
         (invocation) => Future.error(
-          testDioError,
+          Exception(),
         ),
       );
 
@@ -212,7 +207,7 @@ void main() {
           .thenAnswer((invocation) async => testPlaces);
 
       when(() => repository.getAllPlaces(1)).thenAnswer(
-        (invocation) => Future.error(testDioError),
+        (invocation) => Future.error(Exception()),
       );
 
       final future1 = wm.model.loadPlacesList();

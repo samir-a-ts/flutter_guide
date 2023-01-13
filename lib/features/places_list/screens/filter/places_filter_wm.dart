@@ -3,6 +3,7 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/features/places_list/domain/entity/location.dart';
+import 'package:flutter_guide/features/places_list/domain/entity/places_filter_parameters.dart';
 import 'package:flutter_guide/features/places_list/screens/filter/places_filter_model.dart';
 import 'package:flutter_guide/features/places_list/screens/filter/places_filter_widget.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
@@ -115,9 +116,7 @@ class PlacesFilterWidgetModel
       AutoRouter.of(context).popForced<PlacesFilterParameters>(
         PlacesFilterParameters(
           location: userLocationState.value!.data!,
-          range: rangeState.value! * 1000,
-
-          /// in metres.
+          range: rangeState.value!,
           types: filterPlacesTypesState.value!.toList(),
         ),
       );

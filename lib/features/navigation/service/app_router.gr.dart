@@ -12,8 +12,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i12;
-import 'package:elementary/elementary.dart' as _i15;
-import 'package:flutter/cupertino.dart' as _i14;
+import 'package:flutter/cupertino.dart' as _i15;
 import 'package:flutter/material.dart' as _i13;
 
 import '../../app/core/pages/main_page.dart' as _i3;
@@ -21,6 +20,7 @@ import '../../favorite/screens/favorite/widget/favorite_page.dart' as _i6;
 import '../../introduction/screens/splash/widget/splash_page.dart' as _i1;
 import '../../introduction/screens/tutorial/widget/tutorial_page.dart' as _i2;
 import '../../map/screens/map/widget/map_page.dart' as _i5;
+import '../../places_list/domain/entity/places_filter_parameters.dart' as _i14;
 import '../../places_list/screens/filter/places_filter_widget.dart' as _i9;
 import '../../places_list/screens/new_place/new_place/widget/new_place_page.dart'
     as _i10;
@@ -79,24 +79,19 @@ class AppRouter extends _i12.RootStackRouter {
       );
     },
     PlacesSearchRoute.name: (routeData) {
-      final args = routeData.argsAs<PlacesSearchRouteArgs>(
-          orElse: () => const PlacesSearchRouteArgs());
       return _i12.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: _i8.PlacesSearchPage(
-          key: args.key,
-          wmFactory: args.wmFactory,
-        ),
+        child: const _i8.PlacesSearchPage(),
       );
     },
     PlacesFilterRoute.name: (routeData) {
       final args = routeData.argsAs<PlacesFilterRouteArgs>(
           orElse: () => const PlacesFilterRouteArgs());
-      return _i12.MaterialPageX<_i9.PlacesFilterParameters>(
+      return _i12.MaterialPageX<_i14.PlacesFilterParameters>(
         routeData: routeData,
         child: _i9.PlacesFilterPage(
           key: args.key,
-          wmFactory: args.wmFactory,
+          initialParams: args.initialParams,
         ),
       );
     },
@@ -276,58 +271,28 @@ class SettingsRoute extends _i12.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i8.PlacesSearchPage]
-class PlacesSearchRoute extends _i12.PageRouteInfo<PlacesSearchRouteArgs> {
-  PlacesSearchRoute({
-    _i14.Key? key,
-    _i15.WidgetModel<_i15.ElementaryWidget<_i15.IWidgetModel>,
-                _i15.ElementaryModel>
-            Function(_i14.BuildContext)
-        wmFactory = _i8.defaultSearchWidgetModelFactory,
-  }) : super(
+class PlacesSearchRoute extends _i12.PageRouteInfo<void> {
+  const PlacesSearchRoute()
+      : super(
           PlacesSearchRoute.name,
           path: 'search',
-          args: PlacesSearchRouteArgs(
-            key: key,
-            wmFactory: wmFactory,
-          ),
         );
 
   static const String name = 'PlacesSearchRoute';
-}
-
-class PlacesSearchRouteArgs {
-  const PlacesSearchRouteArgs({
-    this.key,
-    this.wmFactory = _i8.defaultSearchWidgetModelFactory,
-  });
-
-  final _i14.Key? key;
-
-  final _i15.WidgetModel<_i15.ElementaryWidget<_i15.IWidgetModel>,
-          _i15.ElementaryModel>
-      Function(_i14.BuildContext) wmFactory;
-
-  @override
-  String toString() {
-    return 'PlacesSearchRouteArgs{key: $key, wmFactory: $wmFactory}';
-  }
 }
 
 /// generated route for
 /// [_i9.PlacesFilterPage]
 class PlacesFilterRoute extends _i12.PageRouteInfo<PlacesFilterRouteArgs> {
   PlacesFilterRoute({
-    _i14.Key? key,
-    _i15.WidgetModel<_i15.ElementaryWidget<_i15.IWidgetModel>,
-                _i15.ElementaryModel>
-            Function(_i14.BuildContext)
-        wmFactory = _i9.defaultPlacesFilterWidgetModelFactory,
+    _i15.Key? key,
+    _i14.PlacesFilterParameters? initialParams,
   }) : super(
           PlacesFilterRoute.name,
           path: 'filter',
           args: PlacesFilterRouteArgs(
             key: key,
-            wmFactory: wmFactory,
+            initialParams: initialParams,
           ),
         );
 
@@ -337,18 +302,16 @@ class PlacesFilterRoute extends _i12.PageRouteInfo<PlacesFilterRouteArgs> {
 class PlacesFilterRouteArgs {
   const PlacesFilterRouteArgs({
     this.key,
-    this.wmFactory = _i9.defaultPlacesFilterWidgetModelFactory,
+    this.initialParams,
   });
 
-  final _i14.Key? key;
+  final _i15.Key? key;
 
-  final _i15.WidgetModel<_i15.ElementaryWidget<_i15.IWidgetModel>,
-          _i15.ElementaryModel>
-      Function(_i14.BuildContext) wmFactory;
+  final _i14.PlacesFilterParameters? initialParams;
 
   @override
   String toString() {
-    return 'PlacesFilterRouteArgs{key: $key, wmFactory: $wmFactory}';
+    return 'PlacesFilterRouteArgs{key: $key, initialParams: $initialParams}';
   }
 }
 

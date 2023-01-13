@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
+import 'package:flutter_guide/features/places_list/domain/entity/places_filter_parameters.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/places_list_repository.dart';
-import 'package:flutter_guide/features/places_list/screens/filter/places_filter_widget.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';
 
 /// Model for `PlacesListPage`.
@@ -15,7 +14,7 @@ class PlacesListPageModel extends ElementaryModel {
       EntityStateNotifier<Iterable<Place>>.value([]);
 
   /// Whether to show places loaded in [filteredPlacesListState].
-  final showFilteredPlacesState = StateNotifier<bool>(initValue: false);
+  final placesFilterState = StateNotifier<PlacesFilterParameters>();
 
   /// State of list of places viewed on a screen.
   final placesListState = EntityStateNotifier<Iterable<Place>>.value([]);
@@ -60,48 +59,17 @@ class PlacesListPageModel extends ElementaryModel {
   /// returns all the way to the first page.
   /// The, reloads.
   Future<void> refresh() async {
-    _page = 0;
-
-    filteredPlacesListState.content([]);
-
-    showFilteredPlacesState.accept(false);
-
-    await _requestPlaces(refreshList: true);
-
-    _refreshController.sink.add(SwipeRefreshState.hidden);
-  }
-
-  /// Loads filtered list of places,
-  /// taking data from [filterParameters]
-  Future<void> applyFilter(PlacesFilterParameters filterParameters) async {
-    if (filterParameters.isEmpty) {
-      filteredPlacesListState.content([]);
-
-      showFilteredPlacesState.accept(false);
+    if (placesFilterState.value != null) {
+      await _requestFilteredPlaces();
 
       return;
+    } else {
+      _page = 0;
+
+      await _requestPlaces(refreshList: true);
     }
 
-    showFilteredPlacesState.accept(true);
-
-    filteredPlacesListState.loading();
-
-    try {
-      final result = await _repository.getFilteredPlaces(
-        latitude: filterParameters.location.latitude,
-        longitude: filterParameters.location.longitude,
-        radius: filterParameters.range,
-        types: filterParameters.types
-            .map(
-              (e) => e.toString(),
-            )
-            .toList(),
-      );
-
-      filteredPlacesListState.content(result);
-    } on DioError catch (e) {
-      filteredPlacesListState.error(e);
-    }
+    _refreshController.sink.add(SwipeRefreshState.hidden);
   }
 
   /// Loads places from current [_page].
@@ -109,7 +77,7 @@ class PlacesListPageModel extends ElementaryModel {
   Future<void> loadPlacesList() async {
     if (placesListState.value!.isLoading) return;
 
-    if (showFilteredPlacesState.value!) return;
+    if (placesFilterState.value != null) return _requestFilteredPlaces();
 
     final previousData = placesListState.value?.data;
 
@@ -124,6 +92,45 @@ class PlacesListPageModel extends ElementaryModel {
     arePlacesReloading.accept(false);
   }
 
+  /// Save given [params] tp [placesFilterState]
+  /// and request data using this filter.
+  void applyFilter(PlacesFilterParameters params) {
+    placesFilterState.accept(params);
+
+    _requestFilteredPlaces();
+  }
+
+  Future<void> _requestFilteredPlaces() async {
+    if (placesFilterState.value!.isEmpty) {
+      filteredPlacesListState.content([]);
+
+      placesFilterState.accept(null);
+
+      return;
+    }
+
+    filteredPlacesListState.loading();
+
+    final params = placesFilterState.value!;
+
+    try {
+      final result = await _repository.getFilteredPlaces(
+        latitude: params.location.latitude,
+        longitude: params.location.longitude,
+        radius: params.range,
+        types: params.types
+            .map(
+              (e) => e.toString(),
+            )
+            .toList(),
+      );
+
+      filteredPlacesListState.content(result);
+    } on Exception catch (e) {
+      filteredPlacesListState.error(e);
+    }
+  }
+
   Future<void> _requestPlaces({bool refreshList = false}) async {
     final previousData = placesListState.value?.data;
 
@@ -135,7 +142,7 @@ class PlacesListPageModel extends ElementaryModel {
       );
 
       _page++;
-    } on DioError catch (e) {
+    } on Exception catch (e) {
       placesListState.error(e, previousData);
     }
   }

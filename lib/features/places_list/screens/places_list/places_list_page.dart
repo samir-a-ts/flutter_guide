@@ -67,9 +67,9 @@ class PlacesListContentWidget
             vertical: 4,
           ),
           child: StateNotifierBuilder(
-            listenableState: wm.showFilteredPlaces,
-            builder: (context, show) {
-              if (show!) {
+            listenableState: wm.placesFilterState,
+            builder: (context, filter) {
+              if (filter != null) {
                 return EntityStateNotifierBuilder(
                   listenableEntityState: wm.filteredPlacesListState,
                   errorBuilder: (context, e, data) => AppError(
@@ -78,13 +78,23 @@ class PlacesListContentWidget
                     message: wm.errorMessage,
                   ),
                   loadingBuilder: (context, data) => const _LoadingWidget(),
-                  builder: (context, filtered) => _PlacesList(
-                    places: filtered!,
-                    controller: wm.scrollController,
-                    onRefresh: wm.refresh,
-                    refreshStream: wm.refreshStream,
-                    arePlacesReloading: wm.arePlacesReloading,
-                  ),
+                  builder: (context, filtered) {
+                    if (filtered!.isEmpty) {
+                      return AppError(
+                        title: wm.emptyText,
+                        icon: Icons.search,
+                        message: wm.emptyMessage,
+                      );
+                    }
+
+                    return _PlacesList(
+                      places: filtered,
+                      controller: wm.scrollController,
+                      onRefresh: wm.refresh,
+                      refreshStream: wm.refreshStream,
+                      arePlacesReloading: wm.arePlacesReloading,
+                    );
+                  },
                 );
               }
 

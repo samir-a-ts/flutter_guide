@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
-import 'package:flutter_guide/features/places_list/screens/filter/places_filter_widget.dart';
+import 'package:flutter_guide/features/places_list/domain/entity/places_filter_parameters.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/places_list_page.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/places_list_page_model.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
@@ -26,7 +26,7 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
   ListenableState<bool> get arePlacesLoaded;
 
   /// Whether to show places loaded in [filteredPlacesListState].
-  ListenableState<bool> get showFilteredPlaces;
+  ListenableState<PlacesFilterParameters> get placesFilterState;
 
   /// Translated app bar title.
   String get appBarTitle;
@@ -37,6 +37,13 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
 
   /// Translated error widget message.
   String get errorMessage;
+
+  /// Translated string in case of any error
+  /// ocurred.
+  String get emptyText;
+
+  /// Translated error widget message.
+  String get emptyMessage;
 
   /// Color, in which the filter button
   /// on search input will be painted.
@@ -96,7 +103,8 @@ class PlacesListPageWidgetModel
   ListenableState<bool> get arePlacesReloading => model.arePlacesReloading;
 
   @override
-  ListenableState<bool> get showFilteredPlaces => model.showFilteredPlacesState;
+  ListenableState<PlacesFilterParameters> get placesFilterState =>
+      model.placesFilterState;
 
   @override
   Stream<SwipeRefreshState> get refreshStream => model.refreshStream;
@@ -109,6 +117,12 @@ class PlacesListPageWidgetModel
 
   @override
   String get errorMessage => AppTranslations.of(context).somethingWrong;
+
+  @override
+  String get emptyMessage => AppTranslations.of(context).emptyMessage;
+
+  @override
+  String get emptyText => AppTranslations.of(context).emptyTitle;
 
   @override
   Color get inputTrailingFilterIconColor => Theme.of(context).primaryColor;
@@ -124,12 +138,16 @@ class PlacesListPageWidgetModel
   Future<void> refresh() => model.refresh();
 
   @override
-  void onSearchInputTap() => AutoRouter.of(context).push(PlacesSearchRoute());
+  void onSearchInputTap() =>
+      AutoRouter.of(context).push(const PlacesSearchRoute());
 
   @override
   Future<void> onFilterIconTap() async {
-    final result = await AutoRouter.of(context)
-        .push<PlacesFilterParameters>(PlacesFilterRoute());
+    final result = await AutoRouter.of(context).push<PlacesFilterParameters>(
+      PlacesFilterRoute(
+        initialParams: placesFilterState.value,
+      ),
+    );
 
     return model.applyFilter(result!);
   }
@@ -155,7 +173,8 @@ class PlacesListPageWidgetModel
   }
 
   void _loadMore() {
-    if (_scrollController.position.extentAfter == 0) model.loadPlacesList();
+    if (_scrollController.position.extentAfter == 0 &&
+        placesFilterState.value == null) model.loadPlacesList();
   }
 
   void _errorListener() {
