@@ -57,8 +57,11 @@ class PlacesListContentWidget
         ),
         floatingActionButton: StateNotifierBuilder(
           listenableState: wm.arePlacesLoaded,
-          builder: (context, value) =>
-              value! ? const _FloatingActionButton() : const SizedBox(),
+          builder: (context, value) => value!
+              ? _FloatingActionButton(
+                  onTap: wm.onNewPlaceButtonTap,
+                )
+              : const SizedBox(),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Padding(
@@ -146,39 +149,46 @@ class _LoadingWidget extends StatelessWidget {
 }
 
 class _FloatingActionButton extends StatelessWidget {
-  const _FloatingActionButton();
+  final VoidCallback onTap;
+
+  const _FloatingActionButton({
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 177,
-      height: 48,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: LinearGradient(
-          colors: [
-            AppTheme.of(context).yellowColor,
-            Theme.of(context).primaryColor,
-          ],
-          begin: const Alignment(-1, .1),
-          end: const Alignment(1, -.1),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 177,
+        height: 48,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          gradient: LinearGradient(
+            colors: [
+              AppTheme.of(context).yellowColor,
+              Theme.of(context).primaryColor,
+            ],
+            begin: const Alignment(-1, .1),
+            end: const Alignment(1, -.1),
+          ),
         ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.add,
-          ),
-          const Gap(dimension: 16),
-          Text(
-            AppTranslations.of(context).newPlace.toUpperCase(),
-            style: ThemeHelper.textTheme(context).labelMedium!.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).backgroundColor,
-                ),
-          ),
-        ],
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.add,
+            ),
+            const Gap(dimension: 16),
+            Text(
+              AppTranslations.of(context).newPlace.toUpperCase(),
+              style: ThemeHelper.textTheme(context).labelMedium!.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).backgroundColor,
+                  ),
+            ),
+          ],
+        ),
       ),
     );
   }

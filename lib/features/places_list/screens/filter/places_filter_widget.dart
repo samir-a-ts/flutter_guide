@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/common/widgets/app_bar.dart';
-import 'package:flutter_guide/common/widgets/app_bar_trailing_button.dart';
+import 'package:flutter_guide/common/widgets/app_bottom_button.dart';
+import 'package:flutter_guide/common/widgets/app_text_button.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/common/widgets/label.dart';
-import 'package:flutter_guide/common/widgets/app_bottom_button.dart';
 import 'package:flutter_guide/features/places_list/domain/entity/location.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/geolocation_repository.dart';
 import 'package:flutter_guide/features/places_list/screens/filter/places_filter_model.dart';
@@ -30,8 +30,7 @@ class PlacesFilterPage extends ElementaryWidget<IPlacesFilterWidgetModel> {
   /// Constructor for [PlacesFilterPage]
   const PlacesFilterPage({
     Key? key,
-    WidgetModelFactory wmFactory = defaultPlacesFilterWidgetModelFactory,
-  }) : super(wmFactory, key: key);
+  }) : super(defaultPlacesFilterWidgetModelFactory, key: key);
 
   @override
   Widget build(IPlacesFilterWidgetModel wm) {
@@ -138,7 +137,7 @@ class _FilterSliderLabel extends StatelessWidget {
         Text(
           AppTranslations.of(context).distance,
           style: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: ThemeHelper.mainColor(context),
               ),
         ),
         StateNotifierBuilder(
@@ -232,7 +231,7 @@ class _PlaceTypeOption extends StatelessWidget {
                       height: 16,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Theme.of(context).colorScheme.primaryContainer,
+                        color: ThemeHelper.mainColor(context),
                       ),
                       child: Center(
                         child: Icon(
@@ -249,7 +248,7 @@ class _PlaceTypeOption extends StatelessWidget {
             Text(
               placeType.translate(context),
               style: ThemeHelper.textTheme(context).labelSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    color: ThemeHelper.secondaryColor(context),
                   ),
             ),
           ],

@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/util/default_error_handler.dart';
-import 'package:rxdart/rxdart.dart';
 
 /// Elementary model for `NewPlacePage`
 class NewPlaceModel extends ElementaryModel {

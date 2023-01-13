@@ -1,13 +1,18 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_guide/api/data/places_list/place.dart';
+import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/common/widgets/app_bar.dart';
-import 'package:flutter_guide/common/widgets/app_bar_trailing_button.dart';
 import 'package:flutter_guide/common/widgets/app_bottom_button.dart';
+import 'package:flutter_guide/common/widgets/app_divider.dart';
+import 'package:flutter_guide/common/widgets/app_text_button.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/common/widgets/label.dart';
 import 'package:flutter_guide/features/places_list/screens/new_place/new_place/new_place_model.dart';
 import 'package:flutter_guide/features/places_list/screens/new_place/new_place/new_place_wm.dart';
+import 'package:flutter_guide/features/places_list/screens/places_list/places_list_page.dart';
+import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 
 /// Default factory for [NewPlaceWidgetModel].
 NewPlaceWidgetModel defaultNewPlaceWidgetModelFactory(BuildContext context) {
@@ -21,8 +26,7 @@ class NewPlacePage extends ElementaryWidget<INewPlaceWidgetModel> {
   /// Constructor for [NewPlacePage]
   const NewPlacePage({
     Key? key,
-    WidgetModelFactory wmFactory = defaultNewPlaceWidgetModelFactory,
-  }) : super(wmFactory, key: key);
+  }) : super(defaultNewPlaceWidgetModelFactory, key: key);
 
   @override
   Widget build(INewPlaceWidgetModel wm) {
@@ -30,86 +34,90 @@ class NewPlacePage extends ElementaryWidget<INewPlaceWidgetModel> {
       placeholder: (context) => Scaffold(
         appBar: MainAppBar(
           title: wm.newPlaceText,
-          leading: AppTextButton(
-            onTap: wm.cancel,
-            text: wm.cancelButtonText,
-            color: wm.cancelButtonColor,
+          leading: Padding(
+            padding: const EdgeInsets.only(
+              top: 18,
+              left: 16,
+            ),
+            child: AppTextButton(
+              onTap: wm.cancel,
+              text: wm.cancelButtonText,
+              color: wm.cancelButtonColor,
+            ),
           ),
         ),
-        body: Padding(
+        bottomNavigationBar: StateNotifierBuilder(
+          listenableState: wm.creationEnabledState,
+          builder: (context, enabled) => Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
+            child: AppBottomButton(
+              buttonType: enabled!
+                  ? AppBottomButtonType.primary
+                  : AppBottomButtonType.disabled,
+              onTap: wm.createPlace,
+              text: wm.createButtonText,
+            ),
+          ),
+        ),
+        body: ListView(
           padding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 24,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              StateNotifierBuilder(
-                listenableState: wm.selectedImagesState,
-                builder: (context, images) {
-                  return _ImagePicker(
-                    images: images!,
-                    onAdd: wm.selectNewImage,
-                    onDelete: wm.deleteImage,
-                  );
-                },
-              ),
-              const Gap(dimension: 24),
-              Label(labelText: wm.categoryLabelText),
-              StateNotifierBuilder(
-                listenableState: wm.selectedPlaceTypeState,
-                builder: (context, placeType) {
-                  return _PlaceTypePicker(
-                    placeType: placeType,
-                    onSelect: wm.selectNewType,
-                  );
-                },
-              ),
-              const Gap(dimension: 24),
-              Label(labelText: wm.titleLabelText),
-              const Gap(dimension: 12),
-              NewPlaceTextField(
-                controller: wm.placeTitleFieldController,
-                onClear: wm.clearTitleField,
-              ),
-              const Gap(dimension: 24),
-              _LocationInputsWidget(
-                latitudeController: wm.latitudeFieldController,
-                longitudeController: wm.longitudeFieldController,
-                onLatitudeClear: wm.clearLatitudeField,
-                onLongitudeClear: wm.clearLongitudeField,
-              ),
-              const Gap(dimension: 15),
-              AppTextButton(
-                onTap: wm.findPlaceOnMap,
-                text: wm.searchOnMapText,
-              ),
-              const Gap(dimension: 37),
-              Label(labelText: wm.descriptionLabelText),
-              const Gap(dimension: 12),
-              NewPlaceTextField(
-                controller: wm.placeDescriptionFieldController,
-                onClear: wm.clearDescriptionField,
-                lines: 4,
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: StateNotifierBuilder(
-                    listenableState: wm.creationEnabledState,
-                    builder: (context, enabled) => AppBottomButton(
-                      buttonType: enabled!
-                          ? AppBottomButtonType.primary
-                          : AppBottomButtonType.disabled,
-                      onTap: wm.createPlace,
-                      text: wm.createButtonText,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          children: [
+            StateNotifierBuilder(
+              listenableState: wm.selectedImagesState,
+              builder: (context, images) {
+                return _ImagePicker(
+                  images: images!,
+                  onAdd: wm.selectNewImage,
+                  onDelete: wm.deleteImage,
+                );
+              },
+            ),
+            const Gap(dimension: 24),
+            Label(labelText: wm.categoryLabelText),
+            const Gap(dimension: 14),
+            StateNotifierBuilder(
+              listenableState: wm.selectedPlaceTypeState,
+              builder: (context, placeType) {
+                return _PlaceTypePicker(
+                  placeType: placeType,
+                  onSelect: wm.selectNewType,
+                );
+              },
+            ),
+            const Gap(dimension: 24),
+            Label(labelText: wm.titleLabelText),
+            const Gap(dimension: 12),
+            _NewPlaceTextField(
+              controller: wm.placeTitleFieldController,
+              onClear: wm.clearTitleField,
+            ),
+            const Gap(dimension: 24),
+            _LocationInputsWidget(
+              latitudeController: wm.latitudeFieldController,
+              longitudeController: wm.longitudeFieldController,
+              onLatitudeClear: wm.clearLatitudeField,
+              onLongitudeClear: wm.clearLongitudeField,
+            ),
+            const Gap(dimension: 15),
+            AppTextButton(
+              onTap: wm.findPlaceOnMap,
+              text: wm.searchOnMapText,
+            ),
+            const Gap(dimension: 37),
+            Label(labelText: wm.descriptionLabelText),
+            const Gap(dimension: 12),
+            _NewPlaceTextField(
+              controller: wm.placeDescriptionFieldController,
+              onClear: wm.clearDescriptionField,
+              lines: 4,
+            ),
+          ],
         ),
       ),
     );
@@ -131,16 +139,19 @@ class _ImagePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      scrollDirection: Axis.horizontal,
-      children: [
-        _AddImageButton(onAdd: onAdd),
-        for (var i = 0; i < images.length; i++)
-          _ImagePickerTile(
-            image: images[i],
-            onDeleteButtonTap: () => onDelete(i),
-          ),
-      ],
+    return SizedBox(
+      height: 77,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          _AddImageButton(onAdd: onAdd),
+          for (var i = 0; i < images.length; i++)
+            _ImagePickerTile(
+              image: images[i],
+              onDeleteButtonTap: () => onDelete(i),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -167,7 +178,7 @@ class _AddImageButton extends StatelessWidget {
         child: Center(
           child: Icon(
             Icons.add,
-            size: 17,
+            size: 50,
             color: Theme.of(context).primaryColor,
           ),
         ),
@@ -212,6 +223,171 @@ class _ImagePickerTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _LocationInputsWidget extends StatelessWidget {
+  final TextEditingController? latitudeController;
+
+  final TextEditingController? longitudeController;
+
+  final VoidCallback? onLatitudeClear;
+
+  final VoidCallback? onLongitudeClear;
+
+  const _LocationInputsWidget({
+    this.latitudeController,
+    this.longitudeController,
+    this.onLatitudeClear,
+    this.onLongitudeClear,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 68,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Label(
+                  labelText: AppTranslations.of(context).latitude,
+                ),
+                const Gap(dimension: 12),
+                _NewPlaceTextField(
+                  controller: latitudeController,
+                  onClear: onLatitudeClear,
+                ),
+              ],
+            ),
+          ),
+          const Gap(dimension: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Label(
+                  labelText: AppTranslations.of(context).longitude,
+                ),
+                const Gap(dimension: 12),
+                _NewPlaceTextField(
+                  controller: longitudeController,
+                  onClear: onLongitudeClear,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NewPlaceTextField extends StatelessWidget {
+  final TextEditingController? controller;
+
+  final VoidCallback? onClear;
+
+  final int? lines;
+
+  final _focus = FocusNode();
+
+  _NewPlaceTextField({
+    this.controller,
+    this.onClear,
+    this.lines,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: lines == null ? 40 : lines! * 40,
+      child: TextField(
+        controller: controller,
+        style: ThemeHelper.textTheme(context).bodyMedium,
+        cursorColor: Theme.of(context).primaryColor,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Theme.of(context).backgroundColor,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: Theme.of(context).primaryColor.withOpacity(0.4),
+              width: 2,
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: Theme.of(context).primaryColor.withOpacity(0.4),
+            ),
+          ),
+          suffixIcon: AnimatedBuilder(
+            animation: _focus,
+            builder: (context, child) {
+              return _focus.hasFocus ? child! : const SizedBox();
+            },
+            child: IconButton(
+              onPressed: onClear,
+              icon: Icon(
+                Icons.cancel,
+                size: 20,
+                color: AppTheme.of(context).thirdColor,
+              ),
+            ),
+          ),
+        ),
+        minLines: lines,
+        maxLines: lines == null ? null : 4,
+      ),
+    );
+  }
+}
+
+class _PlaceTypePicker extends StatelessWidget {
+  final PlaceType? placeType;
+
+  final VoidCallback? onSelect;
+
+  const _PlaceTypePicker({
+    this.placeType,
+    this.onSelect,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              placeType == null
+                  ? AppTranslations.of(context).notChosen
+                  : placeType!.translate(context),
+              style: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
+                    color: placeType == null
+                        ? AppTheme.of(context).thirdColor
+                        : ThemeHelper.mainTextColor(context),
+                  ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              size: 18,
+              color: ThemeHelper.mainColor(context),
+            ),
+          ],
+        ),
+        const Gap(dimension: 14),
+        const AppDivider(),
+      ],
     );
   }
 }

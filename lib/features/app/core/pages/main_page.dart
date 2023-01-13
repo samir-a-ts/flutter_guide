@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -92,7 +93,7 @@ class _MainNavigationBarTile extends StatelessWidget {
         child: Center(
           child: SvgPicture.asset(
             iconPath,
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: ThemeHelper.mainTextColor(context),
           ),
         ),
       ),

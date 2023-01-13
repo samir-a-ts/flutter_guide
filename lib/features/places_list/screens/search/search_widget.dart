@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/common/widgets/app_bar.dart';
+import 'package:flutter_guide/common/widgets/app_divider.dart';
 import 'package:flutter_guide/common/widgets/app_error.dart';
 import 'package:flutter_guide/common/widgets/app_progress_indicator.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
@@ -32,8 +33,7 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
   /// Constructor for [PlacesSearchPage]
   const PlacesSearchPage({
     Key? key,
-    WidgetModelFactory wmFactory = defaultSearchWidgetModelFactory,
-  }) : super(wmFactory, key: key);
+  }) : super(defaultSearchWidgetModelFactory, key: key);
 
   @override
   Widget build(IPlacesSearchWidgetModel wm) {
@@ -145,7 +145,7 @@ class _SearchBodyWidget extends StatelessWidget {
           highlightSearchText: highlightSearchText,
         ),
       ),
-      separatorBuilder: (context, index) => const Divider(),
+      separatorBuilder: (context, index) => const AppDivider(),
     );
   }
 }
@@ -234,12 +234,7 @@ class _HistoryList extends StatelessWidget {
             [
               for (var i = 0; i < (value.length * 2) - 1; i++)
                 i.isOdd
-                    ? Divider(
-                        color: Theme.of(context).disabledColor.withOpacity(.56),
-                        indent: 0,
-                        endIndent: 0,
-                        height: 0,
-                      )
+                    ? const AppDivider()
                     : _HistoryTile(
                         query: value[i ~/ 2],
                         onDelete: onDelete,

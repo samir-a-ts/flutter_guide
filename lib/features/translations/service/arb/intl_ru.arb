@@ -34,5 +34,8 @@
     "description": "Описание",
     "newPlace": "Новое место",
     "searchOnMap": "Указать на карте",
-    "title": "Название"
+    "title": "Название",
+    "latitude": "Широта",
+    "longitude": "Долгота",
+    "notChosen": "Не выбрано"
 }

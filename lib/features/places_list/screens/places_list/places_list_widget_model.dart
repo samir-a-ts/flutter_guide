@@ -68,6 +68,10 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
   /// Handle tap on filter icon
   /// in search input.
   void onFilterIconTap();
+
+  /// Navigates to `NewPlacePage`
+  /// for creating user's own place.
+  void onNewPlaceButtonTap();
 }
 
 /// Widget Model for [PlacesListPage]
@@ -124,15 +128,20 @@ class PlacesListPageWidgetModel
   Future<void> refresh() => model.refresh();
 
   @override
-  void onSearchInputTap() => AutoRouter.of(context).push(PlacesSearchRoute());
+  void onSearchInputTap() =>
+      AutoRouter.of(context).push(const PlacesSearchRoute());
 
   @override
   Future<void> onFilterIconTap() async {
     final result = await AutoRouter.of(context)
-        .push<PlacesFilterParameters>(PlacesFilterRoute());
+        .push<PlacesFilterParameters>(const PlacesFilterRoute());
 
     return model.applyFilter(result!);
   }
+
+  @override
+  void onNewPlaceButtonTap() =>
+      AutoRouter.of(context).push(const NewPlaceRoute());
 
   @override
   void initWidgetModel() {

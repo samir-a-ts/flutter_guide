@@ -151,7 +151,7 @@ class PlacesSearchWidgetModel
     var saveIndex = 0;
 
     final style = ThemeHelper.textTheme(context).bodyMedium!.copyWith(
-          color: Theme.of(context).colorScheme.primaryContainer,
+          color: ThemeHelper.mainColor(context),
           fontWeight: FontWeight.w500,
         );
 

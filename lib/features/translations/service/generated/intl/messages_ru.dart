@@ -41,10 +41,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "error": MessageLookupByLibrary.simpleMessage("Ошибка"),
         "fromToDistance": m0,
         "hotel": MessageLookupByLibrary.simpleMessage("Отель"),
+        "latitude": MessageLookupByLibrary.simpleMessage("Широта"),
         "letsGo": MessageLookupByLibrary.simpleMessage("На старт"),
         "loading": MessageLookupByLibrary.simpleMessage("Загрузка..."),
+        "longitude": MessageLookupByLibrary.simpleMessage("Долгота"),
         "museum": MessageLookupByLibrary.simpleMessage("Музей"),
         "newPlace": MessageLookupByLibrary.simpleMessage("Новое место"),
+        "notChosen": MessageLookupByLibrary.simpleMessage("Не выбрано"),
         "other": MessageLookupByLibrary.simpleMessage("Особое место"),
         "park": MessageLookupByLibrary.simpleMessage("Парк"),
         "placesListTitle":

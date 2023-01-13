@@ -48,13 +48,14 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: ThemeHelper.textTheme(context).titleSmall!.copyWith(
               fontWeight: FontWeight.w500,
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: ThemeHelper.mainTextColor(context),
             ),
       ),
       centerTitle: true,
       backgroundColor: Theme.of(context).backgroundColor,
       elevation: 0.0,
       actions: trailing,
+      leadingWidth: 100,
       leading: leading,
       bottom: bottom,
     );

@@ -399,6 +399,36 @@ class AppTranslations {
       args: [],
     );
   }
+
+  /// `Широта`
+  String get latitude {
+    return Intl.message(
+      'Широта',
+      name: 'latitude',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Долгота`
+  String get longitude {
+    return Intl.message(
+      'Долгота',
+      name: 'longitude',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Не выбрано`
+  String get notChosen {
+    return Intl.message(
+      'Не выбрано',
+      name: 'notChosen',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppTranslations> {
