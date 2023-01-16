@@ -37,5 +37,8 @@
     "title": "Название",
     "latitude": "Широта",
     "longitude": "Долгота",
-    "notChosen": "Не выбрано"
+    "notChosen": "Не выбрано",
+    "camera": "Камера",
+    "gallery": "Галерея",
+    "save": "Сохранить"
 }

@@ -12,6 +12,10 @@ enum AppBottomButtonType {
 
   /// Disabled set of colors.
   disabled,
+
+  /// Color: background color
+  /// Text color: primary
+  secondary,
 }
 
 /// Large primary-colored bottom button.
@@ -65,6 +69,10 @@ class AppBottomButton extends StatelessWidget {
         case AppBottomButtonType.disabled:
           buttonColor ??= Theme.of(context).backgroundColor;
           buttonTextColor ??= Theme.of(context).disabledColor.withOpacity(.56);
+          break;
+        case AppBottomButtonType.secondary:
+          buttonColor ??= Theme.of(context).backgroundColor;
+          buttonTextColor ??= Theme.of(context).primaryColor;
           break;
       }
     }

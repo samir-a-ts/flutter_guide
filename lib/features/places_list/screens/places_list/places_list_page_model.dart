@@ -118,11 +118,7 @@ class PlacesListPageModel extends ElementaryModel {
         latitude: params.location.latitude,
         longitude: params.location.longitude,
         radius: params.range,
-        types: params.types
-            .map(
-              (e) => e.toString(),
-            )
-            .toList(),
+        types: params.types,
       );
 
       filteredPlacesListState.content(result);

@@ -1,17 +1,24 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
+import 'package:flutter_guide/common/widgets/app_error_snack_bar.dart';
+import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
+import 'package:flutter_guide/features/places_list/domain/entity/location.dart';
 import 'package:flutter_guide/features/places_list/screens/new_place/new_place/new_place_model.dart';
 import 'package:flutter_guide/features/places_list/screens/new_place/new_place/new_place_widget.dart';
+import 'package:flutter_guide/features/places_list/widgets/image_source_pick_dialog.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// Elementary widget model for [NewPlacePage]
 abstract class INewPlaceWidgetModel extends IWidgetModel {
   /// Current list of attached to
   /// this place images.
-  ListenableState<List<ImageProvider>> get selectedImagesState;
+  ListenableState<EntityState<List<File>>> get selectedImagesState;
 
   /// Current place type selected from
   /// category input.
@@ -123,7 +130,7 @@ class NewPlaceWidgetModel extends WidgetModel<NewPlacePage, NewPlaceModel>
   ListenableState<bool> get creationEnabledState => model.creationEnabledState;
 
   @override
-  ListenableState<List<ImageProvider<Object>>> get selectedImagesState =>
+  ListenableState<EntityState<List<File>>> get selectedImagesState =>
       model.selectedImagesState;
 
   @override
@@ -174,6 +181,8 @@ class NewPlaceWidgetModel extends WidgetModel<NewPlacePage, NewPlaceModel>
   void initWidgetModel() {
     super.initWidgetModel();
 
+    selectedImagesState.addListener(_errorHandler);
+
     _controllerChanges = Listenable.merge(
       [
         _titleController,
@@ -188,6 +197,8 @@ class NewPlaceWidgetModel extends WidgetModel<NewPlacePage, NewPlaceModel>
 
   @override
   void dispose() {
+    selectedImagesState.removeListener(_errorHandler);
+
     _controllerChanges.removeListener(_updateFields);
 
     _titleController.dispose();
@@ -214,23 +225,48 @@ class NewPlaceWidgetModel extends WidgetModel<NewPlacePage, NewPlaceModel>
   void clearTitleField() => _titleController.text = '';
 
   @override
-  void findPlaceOnMap() {
-    // TODO: implement findPlaceOnMap
+  Future<void> findPlaceOnMap() async {
+    final location = await AutoRouter.of(context).push<Location>(
+      const NewPlaceMapRoute(),
+    );
+
+    if (location != null) {
+      model
+        ..setLatitude(location.latitude.toString())
+        ..setLongitude(location.longitude.toString());
+
+      _latitudeController.text = location.latitude.toString();
+      _longitudeController.text = location.longitude.toString();
+    }
   }
 
   @override
-  void selectNewImage() {
-    // TODO: implement selectNewImage
+  Future<void> selectNewImage() async {
+    final result = await showModalBottomSheet<ImageSource?>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const ImageSourcePickDialog(),
+    );
+
+    if (result != null) {
+      await model.selectNewImage(result);
+    }
   }
 
   @override
-  void deleteImage(int index) {
-    // TODO: implement deleteImage
-  }
+  void deleteImage(int index) => model.deleteImage(index);
 
   @override
-  void selectNewType() {
-    // TODO: implement selectNewType
+  Future<void> selectNewType() async {
+    final result = await AutoRouter.of(context).push<PlaceType>(
+      NewPlaceCategoriesRoute(
+        initialType: selectedPlaceTypeState.value,
+      ),
+    );
+
+    if (result != null) {
+      model.selectNewType(result);
+    }
   }
 
   @override
@@ -238,7 +274,7 @@ class NewPlaceWidgetModel extends WidgetModel<NewPlacePage, NewPlaceModel>
 
   @override
   void createPlace() {
-    // TODO: implement createPlace
+    model.createPlace();
   }
 
   void _updateFields() => model
@@ -246,4 +282,12 @@ class NewPlaceWidgetModel extends WidgetModel<NewPlacePage, NewPlaceModel>
     ..setDescription(_descriptionController.text)
     ..setLatitude(_latitudeController.text)
     ..setLongitude(_longitudeController.text);
+
+  void _errorHandler() {
+    if (selectedImagesState.value!.hasError) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const AppErrorSnackBar() as SnackBar,
+      );
+    }
+  }
 }

@@ -2,6 +2,7 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
+import 'package:flutter_guide/common/widgets/app_back_button.dart';
 import 'package:flutter_guide/common/widgets/app_bar.dart';
 import 'package:flutter_guide/common/widgets/app_bottom_button.dart';
 import 'package:flutter_guide/common/widgets/app_text_button.dart';
@@ -44,23 +45,34 @@ class PlacesFilterPage extends ElementaryWidget<IPlacesFilterWidgetModel> {
       child: Scaffold(
         appBar: MainAppBar(
           title: '',
-          leading: IconButton(
-            onPressed: wm.returnToListWithoutFilter,
-            icon: const Icon(
-              Icons.chevron_left,
-              color: Colors.black,
+          leading: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+              ),
+              child: AppBackButton(
+                onTap: wm.returnToListWithoutFilter,
+              ),
             ),
           ),
           trailing: [
-            AppTextButton(
-              onTap: wm.clearFilter,
-              text: wm.clearButtonText,
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 16,
+                top: 18,
+              ),
+              child: AppTextButton(
+                onTap: wm.clearFilter,
+                text: wm.clearButtonText,
+              ),
             ),
           ],
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Label(
                 labelText: wm.categoriesText,

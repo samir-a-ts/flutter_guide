@@ -55,7 +55,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Theme.of(context).backgroundColor,
       elevation: 0.0,
       actions: trailing,
-      leadingWidth: 100,
+      leadingWidth: 80,
       leading: leading,
       bottom: bottom,
     );

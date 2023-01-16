@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 
@@ -8,6 +10,9 @@ abstract class _PlacesApiEndpoints {
 
   /// Filter.
   static const placesFilter = '/filtered_places';
+
+  /// File uploading endpoint.
+  static const uploadFile = '/upload_file';
 }
 
 /// Service for requesting
@@ -72,6 +77,49 @@ class PlacesListApi {
 
     return _processRequest(request);
   }
+
+  /// Takes all [files], uploads it to the server
+  /// and returns a list of concrete file urls.
+  Future<List<String>> uploadFiles(List<File> files) async {
+    final multipartFiles = await Future.wait([
+      for (final file in files) MultipartFile.fromFile(file.path),
+    ]);
+
+    final formData = FormData.fromMap(<String, dynamic>{
+      'files': multipartFiles,
+    });
+
+    final request = await _dio.post<List>(
+      _PlacesApiEndpoints.uploadFile,
+      data: formData,
+    );
+
+    final result = request.data!.cast<String>();
+
+    return result;
+  }
+
+  /// Creates new place on the backend
+  /// with given params.
+  Future<void> createNewPlace({
+    required double latitude,
+    required double longitude,
+    required String name,
+    required String description,
+    required String placeType,
+    required Future<List<String>> urls,
+  }) =>
+      _dio.post<dynamic>(
+        _PlacesApiEndpoints.placesPagination,
+        data: <String, dynamic>{
+          'lat': latitude,
+          'lng': longitude,
+          'name': name,
+          'description': description,
+          'placeType': placeType.toString(),
+          'urls': urls,
+        },
+      );
 
   List<Place> _processRequest(Response<dynamic> response) {
     final places = (response.data as List)

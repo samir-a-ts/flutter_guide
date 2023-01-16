@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +11,22 @@ import 'package:flutter_guide/common/widgets/app_divider.dart';
 import 'package:flutter_guide/common/widgets/app_text_button.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/common/widgets/label.dart';
+import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
 import 'package:flutter_guide/features/places_list/screens/new_place/new_place/new_place_model.dart';
 import 'package:flutter_guide/features/places_list/screens/new_place/new_place/new_place_wm.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/places_list_page.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
+import 'package:provider/provider.dart';
 
 /// Default factory for [NewPlaceWidgetModel].
 NewPlaceWidgetModel defaultNewPlaceWidgetModelFactory(BuildContext context) {
+  final placesListScope = Provider.of<IPlacesListScope>(context);
+
   return NewPlaceWidgetModel(
-    NewPlaceModel(),
+    NewPlaceModel(
+      placesListScope.imageRepository,
+      placesListScope.placesRepository,
+    ),
   );
 }
 
@@ -31,18 +40,19 @@ class NewPlacePage extends ElementaryWidget<INewPlaceWidgetModel> {
   @override
   Widget build(INewPlaceWidgetModel wm) {
     return AutoRouter(
+      builder: (context, content) => content,
       placeholder: (context) => Scaffold(
         appBar: MainAppBar(
           title: wm.newPlaceText,
-          leading: Padding(
-            padding: const EdgeInsets.only(
-              top: 18,
-              left: 16,
-            ),
-            child: AppTextButton(
-              onTap: wm.cancel,
-              text: wm.cancelButtonText,
-              color: wm.cancelButtonColor,
+          leading: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: AppTextButton(
+                onTap: wm.cancel,
+                text: wm.cancelButtonText,
+                color: wm.cancelButtonColor,
+              ),
             ),
           ),
         ),
@@ -68,8 +78,8 @@ class NewPlacePage extends ElementaryWidget<INewPlaceWidgetModel> {
             vertical: 24,
           ),
           children: [
-            StateNotifierBuilder(
-              listenableState: wm.selectedImagesState,
+            EntityStateNotifierBuilder(
+              listenableEntityState: wm.selectedImagesState,
               builder: (context, images) {
                 return _ImagePicker(
                   images: images!,
@@ -125,7 +135,7 @@ class NewPlacePage extends ElementaryWidget<INewPlaceWidgetModel> {
 }
 
 class _ImagePicker extends StatelessWidget {
-  final List<ImageProvider> images;
+  final List<File> images;
 
   final VoidCallback onAdd;
 
@@ -145,11 +155,13 @@ class _ImagePicker extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         children: [
           _AddImageButton(onAdd: onAdd),
-          for (var i = 0; i < images.length; i++)
+          for (var i = 0; i < images.length; i++) ...[
+            const Gap(dimension: 16),
             _ImagePickerTile(
               image: images[i],
               onDeleteButtonTap: () => onDelete(i),
             ),
+          ],
         ],
       ),
     );
@@ -188,7 +200,7 @@ class _AddImageButton extends StatelessWidget {
 }
 
 class _ImagePickerTile extends StatelessWidget {
-  final ImageProvider image;
+  final File image;
 
   final VoidCallback onDeleteButtonTap;
 
@@ -205,7 +217,7 @@ class _ImagePickerTile extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         image: DecorationImage(
-          image: image,
+          image: FileImage(image),
           fit: BoxFit.cover,
         ),
       ),
@@ -217,7 +229,7 @@ class _ImagePickerTile extends StatelessWidget {
             onTap: onDeleteButtonTap,
             child: Icon(
               Icons.cancel,
-              size: 8,
+              size: 20,
               color: Theme.of(context).backgroundColor,
             ),
           ),
@@ -262,6 +274,7 @@ class _LocationInputsWidget extends StatelessWidget {
                 _NewPlaceTextField(
                   controller: latitudeController,
                   onClear: onLatitudeClear,
+                  keyboardType: TextInputType.number,
                 ),
               ],
             ),
@@ -279,6 +292,7 @@ class _LocationInputsWidget extends StatelessWidget {
                 _NewPlaceTextField(
                   controller: longitudeController,
                   onClear: onLongitudeClear,
+                  keyboardType: TextInputType.number,
                 ),
               ],
             ),
@@ -296,12 +310,15 @@ class _NewPlaceTextField extends StatelessWidget {
 
   final int? lines;
 
+  final TextInputType keyboardType;
+
   final _focus = FocusNode();
 
   _NewPlaceTextField({
     this.controller,
     this.onClear,
     this.lines,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -310,7 +327,11 @@ class _NewPlaceTextField extends StatelessWidget {
       height: lines == null ? 40 : lines! * 40,
       child: TextField(
         controller: controller,
-        style: ThemeHelper.textTheme(context).bodyMedium,
+        focusNode: _focus,
+        keyboardType: keyboardType,
+        style: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
+              color: ThemeHelper.mainTextColor(context),
+            ),
         cursorColor: Theme.of(context).primaryColor,
         decoration: InputDecoration(
           filled: true,
@@ -322,29 +343,31 @@ class _NewPlaceTextField extends StatelessWidget {
               width: 2,
             ),
           ),
-          border: OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(
               color: Theme.of(context).primaryColor.withOpacity(0.4),
             ),
           ),
-          suffixIcon: AnimatedBuilder(
-            animation: _focus,
-            builder: (context, child) {
-              return _focus.hasFocus ? child! : const SizedBox();
-            },
-            child: IconButton(
-              onPressed: onClear,
-              icon: Icon(
-                Icons.cancel,
-                size: 20,
-                color: AppTheme.of(context).thirdColor,
-              ),
-            ),
-          ),
+          suffixIcon: lines != null
+              ? const SizedBox()
+              : AnimatedBuilder(
+                  animation: _focus,
+                  builder: (context, child) {
+                    return _focus.hasFocus ? child! : const SizedBox();
+                  },
+                  child: IconButton(
+                    onPressed: onClear,
+                    icon: Icon(
+                      Icons.cancel,
+                      size: 20,
+                      color: AppTheme.of(context).thirdColor,
+                    ),
+                  ),
+                ),
         ),
         minLines: lines,
-        maxLines: lines == null ? null : 4,
+        maxLines: lines == null ? 1 : 4,
       ),
     );
   }
@@ -362,32 +385,36 @@ class _PlaceTypePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              placeType == null
-                  ? AppTranslations.of(context).notChosen
-                  : placeType!.translate(context),
-              style: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
-                    color: placeType == null
-                        ? AppTheme.of(context).thirdColor
-                        : ThemeHelper.mainTextColor(context),
-                  ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              size: 18,
-              color: ThemeHelper.mainColor(context),
-            ),
-          ],
-        ),
-        const Gap(dimension: 14),
-        const AppDivider(),
-      ],
+    return GestureDetector(
+      onTap: onSelect,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                placeType == null
+                    ? AppTranslations.of(context).notChosen
+                    : placeType!.translate(context),
+                style: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
+                      color: placeType == null
+                          ? AppTheme.of(context).thirdColor
+                          : ThemeHelper.mainTextColor(context),
+                    ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                size: 18,
+                color: ThemeHelper.mainColor(context),
+              ),
+            ],
+          ),
+          const Gap(dimension: 14),
+          const AppDivider(),
+        ],
+      ),
     );
   }
 }

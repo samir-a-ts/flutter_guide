@@ -429,6 +429,36 @@ class AppTranslations {
       args: [],
     );
   }
+
+  /// `Камера`
+  String get camera {
+    return Intl.message(
+      'Камера',
+      name: 'camera',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Галерея`
+  String get gallery {
+    return Intl.message(
+      'Галерея',
+      name: 'gallery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Сохранить`
+  String get save {
+    return Intl.message(
+      'Сохранить',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppTranslations> {

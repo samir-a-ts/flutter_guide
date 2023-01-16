@@ -25,6 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "cafe": MessageLookupByLibrary.simpleMessage("Кафе"),
+        "camera": MessageLookupByLibrary.simpleMessage("Камера"),
         "cancel": MessageLookupByLibrary.simpleMessage("Отмена"),
         "categories": MessageLookupByLibrary.simpleMessage("Категории"),
         "category": MessageLookupByLibrary.simpleMessage("Категория"),
@@ -40,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ничего не найдено."),
         "error": MessageLookupByLibrary.simpleMessage("Ошибка"),
         "fromToDistance": m0,
+        "gallery": MessageLookupByLibrary.simpleMessage("Галерея"),
         "hotel": MessageLookupByLibrary.simpleMessage("Отель"),
         "latitude": MessageLookupByLibrary.simpleMessage("Широта"),
         "letsGo": MessageLookupByLibrary.simpleMessage("На старт"),
@@ -53,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "placesListTitle":
             MessageLookupByLibrary.simpleMessage("Список интересных мест"),
         "restaurant": MessageLookupByLibrary.simpleMessage("Ресторан"),
+        "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
         "searchOnMap": MessageLookupByLibrary.simpleMessage("Указать на карте"),
         "showFiltered": MessageLookupByLibrary.simpleMessage("Показать"),
