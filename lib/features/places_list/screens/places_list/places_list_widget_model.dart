@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
-import 'package:flutter_guide/features/places_list/screens/places_list/model/places_list_page_model.dart';
-import 'package:flutter_guide/features/places_list/screens/places_list/widget/places_list_page.dart';
+import 'package:flutter_guide/features/places_list/domain/entity/places_filter_parameters.dart';
+import 'package:flutter_guide/features/places_list/screens/places_list/places_list_page.dart';
+import 'package:flutter_guide/features/places_list/screens/places_list/places_list_page_model.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';
@@ -17,9 +18,15 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
   /// State of list of places viewed on a screen.
   ListenableState<EntityState<Iterable<Place>>> get placesListState;
 
+  /// State of list of places viewed on a screen.
+  ListenableState<EntityState<Iterable<Place>>> get filteredPlacesListState;
+
   /// Whether places are being loaded initially.
   /// (to determine whether show `new place` button or not)
   ListenableState<bool> get arePlacesLoaded;
+
+  /// Whether to show places loaded in [filteredPlacesListState].
+  ListenableState<PlacesFilterParameters> get placesFilterState;
 
   /// Translated app bar title.
   String get appBarTitle;
@@ -30,6 +37,13 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
 
   /// Translated error widget message.
   String get errorMessage;
+
+  /// Translated string in case of any error
+  /// ocurred.
+  String get emptyText;
+
+  /// Translated error widget message.
+  String get emptyMessage;
 
   /// Color, in which the filter button
   /// on search input will be painted.
@@ -57,6 +71,10 @@ abstract class IPlacesListPageWidgetModel extends IWidgetModel {
 
   /// Navigates to places search page.
   void onSearchInputTap();
+
+  /// Handle tap on filter icon
+  /// in search input.
+  void onFilterIconTap();
 }
 
 /// Widget Model for [PlacesListPage]
@@ -72,6 +90,10 @@ class PlacesListPageWidgetModel
       model.placesListState;
 
   @override
+  ListenableState<EntityState<Iterable<Place>>> get filteredPlacesListState =>
+      model.filteredPlacesListState;
+
+  @override
   String get appBarTitle => AppTranslations.of(context).placesListTitle;
 
   @override
@@ -79,6 +101,10 @@ class PlacesListPageWidgetModel
 
   @override
   ListenableState<bool> get arePlacesReloading => model.arePlacesReloading;
+
+  @override
+  ListenableState<PlacesFilterParameters> get placesFilterState =>
+      model.placesFilterState;
 
   @override
   Stream<SwipeRefreshState> get refreshStream => model.refreshStream;
@@ -91,6 +117,12 @@ class PlacesListPageWidgetModel
 
   @override
   String get errorMessage => AppTranslations.of(context).somethingWrong;
+
+  @override
+  String get emptyMessage => AppTranslations.of(context).emptyMessage;
+
+  @override
+  String get emptyText => AppTranslations.of(context).emptyTitle;
 
   @override
   Color get inputTrailingFilterIconColor => Theme.of(context).primaryColor;
@@ -106,7 +138,19 @@ class PlacesListPageWidgetModel
   Future<void> refresh() => model.refresh();
 
   @override
-  void onSearchInputTap() => AutoRouter.of(context).push(PlacesSearchRoute());
+  void onSearchInputTap() =>
+      AutoRouter.of(context).push(const PlacesSearchRoute());
+
+  @override
+  Future<void> onFilterIconTap() async {
+    final result = await AutoRouter.of(context).push<PlacesFilterParameters>(
+      PlacesFilterRoute(
+        initialParams: placesFilterState.value,
+      ),
+    );
+
+    return model.applyFilter(result!);
+  }
 
   @override
   void initWidgetModel() {
@@ -129,7 +173,8 @@ class PlacesListPageWidgetModel
   }
 
   void _loadMore() {
-    if (_scrollController.position.extentAfter == 0) model.loadPlacesList();
+    if (_scrollController.position.extentAfter == 0 &&
+        placesFilterState.value == null) model.loadPlacesList();
   }
 
   void _errorListener() {

@@ -6,11 +6,12 @@ import 'package:flutter_guide/common/widgets/app_bar.dart';
 import 'package:flutter_guide/common/widgets/app_error.dart';
 import 'package:flutter_guide/common/widgets/app_progress_indicator.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
+import 'package:flutter_guide/common/widgets/label.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
-import 'package:flutter_guide/features/places_list/screens/places_list/widget/places_list_page.dart';
+import 'package:flutter_guide/features/places_list/screens/places_list/places_list_page.dart';
 import 'package:flutter_guide/features/places_list/screens/search/search_model.dart';
 import 'package:flutter_guide/features/places_list/screens/search/search_wm.dart';
-import 'package:flutter_guide/features/places_list/widgets/places_list_text_field.dart';
+import 'package:flutter_guide/features/places_list/widgets/places_search_text_field.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
@@ -31,8 +32,7 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
   /// Constructor for [PlacesSearchPage]
   const PlacesSearchPage({
     Key? key,
-    WidgetModelFactory wmFactory = defaultSearchWidgetModelFactory,
-  }) : super(wmFactory, key: key);
+  }) : super(defaultSearchWidgetModelFactory, key: key);
 
   @override
   Widget build(IPlacesSearchWidgetModel wm) {
@@ -44,7 +44,6 @@ class PlacesSearchPage extends ElementaryWidget<IPlacesSearchWidgetModel> {
           bottom: _SearchPageInput(
             controller: wm.searchTextController,
             focus: wm.searchInputFocus,
-            searchIconColor: wm.searchIconColor,
             clearInput: wm.clearInput,
           ),
         ),
@@ -169,11 +168,8 @@ class _SearchHistoryWidget extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
-          child: Text(
-            AppTranslations.of(context).youSearched.toUpperCase(),
-            style: ThemeHelper.textTheme(context).labelSmall!.copyWith(
-                  color: Theme.of(context).disabledColor,
-                ),
+          child: Label(
+            labelText: AppTranslations.of(context).youSearched.toUpperCase(),
           ),
         ),
         _HistoryList(
@@ -370,8 +366,6 @@ class _SearchPageInput extends StatelessWidget with PreferredSizeWidget {
 
   final FocusNode focus;
 
-  final Color searchIconColor;
-
   final void Function() clearInput;
 
   @override
@@ -380,7 +374,6 @@ class _SearchPageInput extends StatelessWidget with PreferredSizeWidget {
   const _SearchPageInput({
     required this.controller,
     required this.focus,
-    required this.searchIconColor,
     required this.clearInput,
   });
 
@@ -388,9 +381,7 @@ class _SearchPageInput extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: PlacesListTextField(
-        trailingIcon: Icons.cancel,
-        trailingIconColor: searchIconColor,
+      child: PlacesSearchTextField(
         controller: controller,
         focusNode: focus,
         onTapTrailing: clearInput,

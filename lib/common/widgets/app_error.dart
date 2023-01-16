@@ -26,30 +26,32 @@ class AppError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          size: 64,
-          color: Theme.of(context).disabledColor,
-        ),
-        const Gap(dimension: 24),
-        Text(
-          title,
-          style: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).disabledColor,
-              ),
-        ),
-        const Gap(dimension: 8),
-        Text(
-          message,
-          style: ThemeHelper.textTheme(context).labelMedium!.copyWith(
-                color: Theme.of(context).disabledColor,
-              ),
-        ),
-      ],
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 64,
+            color: Theme.of(context).disabledColor,
+          ),
+          const Gap(dimension: 24),
+          Text(
+            title,
+            style: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).disabledColor,
+                ),
+          ),
+          const Gap(dimension: 8),
+          Text(
+            message,
+            style: ThemeHelper.textTheme(context).labelMedium!.copyWith(
+                  color: Theme.of(context).disabledColor,
+                ),
+          ),
+        ],
+      ),
     );
   }
 }

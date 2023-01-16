@@ -35,21 +35,27 @@ class PlacesListApi {
   }
 
   /// Filters all places and returns them.
+  ///
+  /// Radius is in kilometers.
   Future<List<Place>> getFilteredPlaces({
     double? latitude,
     double? longitude,
     double? radius,
-    List<String>? types,
+    List<String> types = const [],
     String? name,
   }) async {
     final data = <String, dynamic>{};
 
-    if (latitude != null && longitude != null && radius != null) {
+    if (latitude != null &&
+        longitude != null &&
+        radius != null &&
+        types.isNotEmpty) {
       data.addAll(
         <String, dynamic>{
           'lat': latitude,
           'lng': longitude,
-          'radius': radius,
+          'radius': radius * 1000,
+          'typeFilter': types,
         },
       );
     }
@@ -59,7 +65,6 @@ class PlacesListApi {
       data: data
         ..addAll(
           <String, dynamic>{
-            'typeFilter': types,
             'nameFilter': name,
           },
         ),

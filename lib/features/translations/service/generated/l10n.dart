@@ -150,90 +150,60 @@ class AppTranslations {
     );
   }
 
-  /// `кафе`
+  /// `Кафе`
   String get cafe {
     return Intl.message(
-      'кафе',
+      'Кафе',
       name: 'cafe',
       desc: '',
       args: [],
     );
   }
 
-  /// `ресторан`
+  /// `Ресторан`
   String get restaurant {
     return Intl.message(
-      'ресторан',
+      'Ресторан',
       name: 'restaurant',
       desc: '',
       args: [],
     );
   }
 
-  /// `музей`
+  /// `Музей`
   String get museum {
     return Intl.message(
-      'музей',
+      'Музей',
       name: 'museum',
       desc: '',
       args: [],
     );
   }
 
-  /// `монумент`
-  String get monument {
-    return Intl.message(
-      'монумент',
-      name: 'monument',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `храм`
-  String get temple {
-    return Intl.message(
-      'храм',
-      name: 'temple',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `парк`
+  /// `Парк`
   String get park {
     return Intl.message(
-      'парк',
+      'Парк',
       name: 'park',
       desc: '',
       args: [],
     );
   }
 
-  /// `театр`
-  String get theatre {
-    return Intl.message(
-      'театр',
-      name: 'theatre',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `отель`
+  /// `Отель`
   String get hotel {
     return Intl.message(
-      'отель',
+      'Отель',
       name: 'hotel',
       desc: '',
       args: [],
     );
   }
 
-  /// `другое`
+  /// `Особое место`
   String get other {
     return Intl.message(
-      'другое',
+      'Особое место',
       name: 'other',
       desc: '',
       args: [],
@@ -305,6 +275,66 @@ class AppTranslations {
     return Intl.message(
       'Попробуйте изменить параметры поиска',
       name: 'emptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Категории`
+  String get categories {
+    return Intl.message(
+      'Категории',
+      name: 'categories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Очистить`
+  String get clear {
+    return Intl.message(
+      'Очистить',
+      name: 'clear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Расстояние`
+  String get distance {
+    return Intl.message(
+      'Расстояние',
+      name: 'distance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `до {to} км`
+  String fromToDistance(Object to) {
+    return Intl.message(
+      'до $to км',
+      name: 'fromToDistance',
+      desc: '',
+      args: [to],
+    );
+  }
+
+  /// `Загрузка...`
+  String get loading {
+    return Intl.message(
+      'Загрузка...',
+      name: 'loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Показать`
+  String get showFiltered {
+    return Intl.message(
+      'Показать',
+      name: 'showFiltered',
       desc: '',
       args: [],
     );

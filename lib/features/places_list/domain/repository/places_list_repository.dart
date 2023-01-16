@@ -17,7 +17,7 @@ abstract class IPlacesListRepository {
     double? latitude,
     double? longitude,
     double? radius,
-    List<String>? types,
+    List<String> types,
     String? name,
   });
 }
@@ -43,7 +43,7 @@ class PlacesListRepository implements IPlacesListRepository {
     double? latitude,
     double? longitude,
     double? radius,
-    List<String>? types,
+    List<String> types = const [],
     String? name,
   }) =>
       _api.getFilteredPlaces(

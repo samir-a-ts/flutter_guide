@@ -120,7 +120,7 @@ class PlacesSearchWidgetModel
 
   @override
   Future<bool> searchPopCallback() {
-    AutoRouter.of(context).removeLast();
+    AutoRouter.of(context).popForced();
 
     return Future.value(false);
   }

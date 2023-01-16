@@ -8,8 +8,8 @@ import 'package:flutter_guide/common/widgets/app_error.dart';
 import 'package:flutter_guide/common/widgets/app_progress_indicator.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope_widget.dart';
-import 'package:flutter_guide/features/places_list/screens/places_list/wm/places_list_widget_model.dart';
-import 'package:flutter_guide/features/places_list/widgets/places_list_text_field.dart';
+import 'package:flutter_guide/features/places_list/screens/places_list/places_list_widget_model.dart';
+import 'package:flutter_guide/features/places_list/widgets/places_search_text_field_placeholder.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';
 
@@ -48,13 +48,9 @@ class PlacesListContentWidget
             preferredSize: const Size(double.infinity, 40),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GestureDetector(
+              child: PlacesListTextFieldPlaceholder(
                 onTap: wm.onSearchInputTap,
-                child: PlacesListTextField(
-                  enabled: false,
-                  trailingIcon: Icons.settings,
-                  trailingIconColor: wm.inputTrailingFilterIconColor,
-                ),
+                onTrailingIconTap: wm.onFilterIconTap,
               ),
             ),
           ),
@@ -70,60 +66,93 @@ class PlacesListContentWidget
             horizontal: 16,
             vertical: 4,
           ),
-          child: EntityStateNotifierBuilder(
-            listenableEntityState: wm.placesListState,
-            loadingBuilder: (context, data) {
-              if (data?.isNotEmpty ?? false) {
-                return _PlacesList(
+          child: StateNotifierBuilder(
+            listenableState: wm.placesFilterState,
+            builder: (context, filter) {
+              if (filter != null) {
+                return EntityStateNotifierBuilder(
+                  listenableEntityState: wm.filteredPlacesListState,
+                  errorBuilder: (context, e, data) => AppError(
+                    title: wm.errorText,
+                    icon: Icons.cancel,
+                    message: wm.errorMessage,
+                  ),
+                  loadingBuilder: (context, data) => const _LoadingWidget(),
+                  builder: (context, filtered) {
+                    if (filtered!.isEmpty) {
+                      return AppError(
+                        title: wm.emptyText,
+                        icon: Icons.search,
+                        message: wm.emptyMessage,
+                      );
+                    }
+
+                    return _PlacesList(
+                      places: filtered,
+                      controller: wm.scrollController,
+                      onRefresh: wm.refresh,
+                      refreshStream: wm.refreshStream,
+                      arePlacesReloading: wm.arePlacesReloading,
+                    );
+                  },
+                );
+              }
+
+              return EntityStateNotifierBuilder(
+                listenableEntityState: wm.placesListState,
+                loadingBuilder: (context, data) {
+                  if (data?.isNotEmpty ?? false) {
+                    return _PlacesList(
+                      places: data!,
+                      controller: wm.scrollController,
+                      onRefresh: wm.refresh,
+                      refreshStream: wm.refreshStream,
+                      arePlacesReloading: wm.arePlacesReloading,
+                    );
+                  }
+
+                  return const _LoadingWidget();
+                },
+                errorBuilder: (context, e, data) {
+                  if (data!.isNotEmpty) {
+                    return _PlacesList(
+                      places: data,
+                      controller: wm.scrollController,
+                      onRefresh: wm.refresh,
+                      refreshStream: wm.refreshStream,
+                      arePlacesReloading: wm.arePlacesReloading,
+                    );
+                  }
+
+                  return AppError(
+                    title: wm.errorText,
+                    icon: Icons.cancel,
+                    message: wm.errorMessage,
+                  );
+                },
+                builder: (context, data) => _PlacesList(
                   places: data!,
                   controller: wm.scrollController,
                   onRefresh: wm.refresh,
                   refreshStream: wm.refreshStream,
                   arePlacesReloading: wm.arePlacesReloading,
-                );
-              }
-
-              return const SizedBox(
-                height: 88,
-                child: Center(
-                  child: AppProgressIndicator(),
                 ),
               );
             },
-            errorBuilder: (context, e, data) {
-              if (data!.isNotEmpty) {
-                return _PlacesList(
-                  places: data,
-                  controller: wm.scrollController,
-                  onRefresh: wm.refresh,
-                  refreshStream: wm.refreshStream,
-                  arePlacesReloading: wm.arePlacesReloading,
-                );
-              }
-
-              return SizedBox(
-                height: 150,
-                child: Center(
-                  child: AppError(
-                    title: wm.errorText,
-                    icon: Icons.cancel,
-                    message: 'Something wrong...',
-                  ),
-                ),
-              );
-            },
-            builder: (context, data) => _PlacesList(
-              places: data!,
-              controller: wm.scrollController,
-              onRefresh: wm.refresh,
-              refreshStream: wm.refreshStream,
-              arePlacesReloading: wm.arePlacesReloading,
-            ),
           ),
         ),
       ),
     );
   }
+}
+
+class _LoadingWidget extends StatelessWidget {
+  const _LoadingWidget();
+
+  @override
+  Widget build(BuildContext context) => const Center(
+        child: AppProgressIndicator(),
+      );
 }
 
 class _FloatingActionButton extends StatelessWidget {
@@ -195,13 +224,10 @@ class _PlacesList extends StatelessWidget {
       indicatorColor: Theme.of(context).primaryColor,
       childrenDelegate: SliverChildListDelegate(
         [
-          ...places
-              .map<Widget>(
-                (e) => _PlaceCard(
-                  place: e,
-                ),
-              )
-              .toList(),
+          for (final place in places)
+            _PlaceCard(
+              place: place,
+            ),
           StateNotifierBuilder(
             listenableState: arePlacesReloading,
             builder: (context, value) => value!
@@ -242,7 +268,7 @@ class _PlaceCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(
-                        place.images.first,
+                        place.images.isEmpty ? '' : place.images.first,
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -252,7 +278,7 @@ class _PlaceCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        place.placeType.translate(context),
+                        place.placeType.translate(context).toLowerCase(),
                         style: ThemeHelper.textTheme(context)
                             .labelMedium!
                             .copyWith(
@@ -314,14 +340,8 @@ extension PlaceTypeExt on PlaceType {
         return AppTranslations.of(context).restaurant;
       case PlaceType.museum:
         return AppTranslations.of(context).museum;
-      case PlaceType.monument:
-        return AppTranslations.of(context).monument;
-      case PlaceType.temple:
-        return AppTranslations.of(context).temple;
       case PlaceType.park:
         return AppTranslations.of(context).park;
-      case PlaceType.theatre:
-        return AppTranslations.of(context).theatre;
       case PlaceType.hotel:
         return AppTranslations.of(context).hotel;
       case PlaceType.other:

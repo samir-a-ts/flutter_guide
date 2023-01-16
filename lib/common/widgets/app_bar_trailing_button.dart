@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 
 /// Tappable colored text
-/// on the right of [AppBar]
+/// specially for the `MainAppBar`
 class AppBarTrailingButton extends StatelessWidget {
   /// What happens when user
   /// clicks this text
   final VoidCallback onTap;
 
+  /// What is going to be written
+  /// on this button.
+  final String title;
+
   /// Constructor for [AppBarTrailingButton].
   const AppBarTrailingButton({
     required this.onTap,
+    required this.title,
     super.key,
   });
 
@@ -21,7 +25,7 @@ class AppBarTrailingButton extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Text(
-          AppTranslations.of(context).skip,
+          title,
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 fontWeight: FontWeight.w500,
                 color: Theme.of(context).primaryColor,
