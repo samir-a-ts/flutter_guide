@@ -135,8 +135,10 @@ void main() {
     (wm, tester, context) async {
       when(
         () => repository.getAllPlaces(0),
-      ).thenThrow(
-        Exception('OH NOOOOO'),
+      ).thenAnswer(
+        (invocation) => Future.error(
+          Exception(),
+        ),
       );
 
       await wm.model.loadPlacesList();
@@ -204,8 +206,8 @@ void main() {
       when(() => repository.getAllPlaces(0))
           .thenAnswer((invocation) async => testPlaces);
 
-      when(() => repository.getAllPlaces(1)).thenThrow(
-        Exception('OH NOOOOO'),
+      when(() => repository.getAllPlaces(1)).thenAnswer(
+        (invocation) => Future.error(Exception()),
       );
 
       final future1 = wm.model.loadPlacesList();

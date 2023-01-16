@@ -5,10 +5,13 @@ import 'package:geolocator/geolocator.dart';
 // ignore: one_member_abstracts
 abstract class ILocationRepository {
   /// Gets current user location from phone.
-  ///
-  /// If permission is not granted
-  /// by the user, throws [LocationPermissionNotGrantedException].
+
   Future<Position> requestLocation();
+
+  /// Checks whether it is allowed
+  /// to access user's current location
+  /// or not.
+  Future<bool> requestPermission();
 }
 
 /// Implementation for [ILocationRepository]
@@ -17,25 +20,13 @@ class LocationRepository implements ILocationRepository {
   LocationRepository();
 
   @override
-  Future<Position> requestLocation() async {
-    final permission = await Geolocator.checkPermission();
+  Future<Position> requestLocation() => Geolocator.getCurrentPosition();
 
-    if (permission == LocationPermission.always ||
-        permission == LocationPermission.whileInUse) {
-      return Geolocator.getCurrentPosition();
-    }
+  @override
+  Future<bool> requestPermission() async {
+    final result = await Geolocator.requestPermission();
 
-    final permissionRequestResult = await Geolocator.requestPermission();
-
-    if (permissionRequestResult == LocationPermission.always ||
-        permissionRequestResult == LocationPermission.whileInUse) {
-      return Geolocator.getCurrentPosition();
-    }
-
-    throw LocationPermissionNotGrantedException();
+    return result == LocationPermission.always ||
+        result == LocationPermission.whileInUse;
   }
 }
-
-/// In case of user not granting
-/// the permission to it's location.
-class LocationPermissionNotGrantedException implements Exception {}

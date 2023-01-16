@@ -19,6 +19,7 @@ import '../../favorite/screens/favorite/widget/favorite_page.dart' as _i6;
 import '../../introduction/screens/splash/widget/splash_page.dart' as _i1;
 import '../../introduction/screens/tutorial/widget/tutorial_page.dart' as _i2;
 import '../../map/screens/map/widget/map_page.dart' as _i5;
+import '../../places_list/domain/entity/places_filter_parameters.dart' as _i14;
 import '../../places_list/screens/filter/places_filter_widget.dart' as _i9;
 import '../../places_list/screens/new_place/new_place/new_place_widget.dart'
     as _i10;
@@ -83,9 +84,14 @@ class AppRouter extends _i12.RootStackRouter {
       );
     },
     PlacesFilterRoute.name: (routeData) {
-      return _i12.MaterialPageX<_i9.PlacesFilterParameters>(
+      final args = routeData.argsAs<PlacesFilterRouteArgs>(
+          orElse: () => const PlacesFilterRouteArgs());
+      return _i12.MaterialPageX<_i14.PlacesFilterParameters>(
         routeData: routeData,
-        child: const _i9.PlacesFilterPage(),
+        child: _i9.PlacesFilterPage(
+          key: args.key,
+          initialParams: args.initialParams,
+        ),
       );
     },
     NewPlaceRoute.name: (routeData) {
@@ -276,14 +282,36 @@ class PlacesSearchRoute extends _i12.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i9.PlacesFilterPage]
-class PlacesFilterRoute extends _i12.PageRouteInfo<void> {
-  const PlacesFilterRoute()
-      : super(
+class PlacesFilterRoute extends _i12.PageRouteInfo<PlacesFilterRouteArgs> {
+  PlacesFilterRoute({
+    _i15.Key? key,
+    _i14.PlacesFilterParameters? initialParams,
+  }) : super(
           PlacesFilterRoute.name,
           path: 'filter',
+          args: PlacesFilterRouteArgs(
+            key: key,
+            initialParams: initialParams,
+          ),
         );
 
   static const String name = 'PlacesFilterRoute';
+}
+
+class PlacesFilterRouteArgs {
+  const PlacesFilterRouteArgs({
+    this.key,
+    this.initialParams,
+  });
+
+  final _i15.Key? key;
+
+  final _i14.PlacesFilterParameters? initialParams;
+
+  @override
+  String toString() {
+    return 'PlacesFilterRouteArgs{key: $key, initialParams: $initialParams}';
+  }
 }
 
 /// generated route for

@@ -1,6 +1,7 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/features/places_list/domain/entity/location.dart';
+import 'package:flutter_guide/features/places_list/domain/entity/places_filter_parameters.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/geolocation_repository.dart';
 import 'package:flutter_guide/util/default_error_handler.dart';
 
@@ -18,10 +19,18 @@ class PlacesFilterModel extends ElementaryModel {
   final ILocationRepository _locationRepository;
 
   /// Constructor for [PlacesFilterModel]
-  PlacesFilterModel(this._locationRepository)
+  PlacesFilterModel(this._locationRepository, {PlacesFilterParameters? initial})
       : super(
           errorHandler: DefaultErrorHandler(),
-        );
+        ) {
+    if (initial != null) {
+      userLocationState.content(initial.location);
+
+      filterPlacesTypesState.accept(initial.types.toSet());
+
+      rangeState.accept(initial.range);
+    }
+  }
 
   @override
   void init() {
@@ -57,6 +66,19 @@ class PlacesFilterModel extends ElementaryModel {
     userLocationState.loading();
 
     try {
+      final permissionGranted = await _locationRepository.requestPermission();
+
+      if (!permissionGranted) {
+        userLocationState.content(
+          const Location(
+            55.75222,
+            37.61556,
+          ),
+        );
+
+        return;
+      }
+
       final result = await _locationRepository.requestLocation();
 
       userLocationState.content(
