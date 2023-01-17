@@ -47,6 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "letsGo": MessageLookupByLibrary.simpleMessage("На старт"),
         "loading": MessageLookupByLibrary.simpleMessage("Загрузка..."),
         "longitude": MessageLookupByLibrary.simpleMessage("Долгота"),
+        "map": MessageLookupByLibrary.simpleMessage("Карта"),
         "museum": MessageLookupByLibrary.simpleMessage("Музей"),
         "newPlace": MessageLookupByLibrary.simpleMessage("Новое место"),
         "notChosen": MessageLookupByLibrary.simpleMessage("Не выбрано"),

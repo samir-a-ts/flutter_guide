@@ -1,5 +1,5 @@
 import 'package:flutter_guide/api/data/places_list/place.dart';
-import 'package:flutter_guide/features/places_list/domain/entity/location.dart';
+import 'package:flutter_guide/common/domain/entities/location.dart';
 
 /// Filter options, that will be
 /// returned from filter page and

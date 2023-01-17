@@ -1,8 +1,8 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
-import 'package:flutter_guide/features/places_list/domain/entity/location.dart';
+import 'package:flutter_guide/common/domain/entities/location.dart';
+import 'package:flutter_guide/common/domain/repository/location_repository.dart';
 import 'package:flutter_guide/features/places_list/domain/entity/places_filter_parameters.dart';
-import 'package:flutter_guide/features/places_list/domain/repository/geolocation_repository.dart';
 import 'package:flutter_guide/util/default_error_handler.dart';
 
 /// Model for `PlacesFilterPage`
@@ -86,10 +86,7 @@ class PlacesFilterModel extends ElementaryModel {
       );
     } on Exception catch (_) {
       userLocationState.content(
-        const Location(
-          55.75222,
-          37.61556,
-        ),
+        StaticLocations.moscow(),
       );
     }
   }

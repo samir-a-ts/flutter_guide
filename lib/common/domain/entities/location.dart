@@ -34,3 +34,13 @@ class Location {
         longitude ?? this.longitude,
       );
 }
+
+/// Pre-defined locations
+/// within the [Location].
+abstract class StaticLocations {
+  /// Location of the Moscow.
+  static Location moscow() => const Location(
+        55.75222,
+        37.61556,
+      );
+}

@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
-import 'package:flutter_guide/features/places_list/domain/entity/location.dart';
+import 'package:flutter_guide/common/domain/entities/location.dart';
 import 'package:flutter_guide/features/places_list/domain/entity/places_filter_parameters.dart';
 import 'package:flutter_guide/features/places_list/screens/filter/places_filter_model.dart';
 import 'package:flutter_guide/features/places_list/screens/filter/places_filter_widget.dart';
