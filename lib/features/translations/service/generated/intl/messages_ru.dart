@@ -62,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "skip": MessageLookupByLibrary.simpleMessage("Пропустить"),
         "somethingWrong":
             MessageLookupByLibrary.simpleMessage("Упс, что-то пошло не так..."),
+        "success": MessageLookupByLibrary.simpleMessage("Успех!"),
         "title": MessageLookupByLibrary.simpleMessage("Название"),
         "tutorialSubtitle1": MessageLookupByLibrary.simpleMessage(
             "Ищи новые локации и сохраняй самые любимые."),

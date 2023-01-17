@@ -336,6 +336,10 @@ class _NewPlaceTextField extends StatelessWidget {
         decoration: InputDecoration(
           filled: true,
           fillColor: Theme.of(context).backgroundColor,
+          contentPadding: EdgeInsets.only(
+            left: 16,
+            top: lines != null ? 16 : 0,
+          ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(

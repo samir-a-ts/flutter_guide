@@ -459,6 +459,16 @@ class AppTranslations {
       args: [],
     );
   }
+
+  /// `Успех!`
+  String get success {
+    return Intl.message(
+      'Успех!',
+      name: 'success',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppTranslations> {

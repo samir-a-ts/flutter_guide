@@ -5,7 +5,6 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
-import 'package:flutter_guide/common/widgets/app_error_snack_bar.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_guide/features/places_list/domain/entity/location.dart';
 import 'package:flutter_guide/features/places_list/screens/new_place/new_place/new_place_model.dart';
@@ -270,11 +269,25 @@ class NewPlaceWidgetModel extends WidgetModel<NewPlacePage, NewPlaceModel>
   }
 
   @override
-  void cancel() => AutoRouter.of(context).popForced();
+  void cancel() => _navigateBack();
 
   @override
-  void createPlace() {
-    model.createPlace();
+  Future<void> createPlace() async {
+    _showLoadingSnackbar();
+
+    final result = await model.createPlace();
+
+    _hideSnackBar();
+
+    if (!result) {
+      _showErrorSnackbar();
+
+      return;
+    }
+
+    _showSuccessSnackbar();
+
+    _navigateBack();
   }
 
   void _updateFields() => model
@@ -285,9 +298,53 @@ class NewPlaceWidgetModel extends WidgetModel<NewPlacePage, NewPlaceModel>
 
   void _errorHandler() {
     if (selectedImagesState.value!.hasError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const AppErrorSnackBar() as SnackBar,
-      );
+      _showErrorSnackbar();
     }
   }
+
+  void _showErrorSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).errorColor,
+        content: Text(
+          AppTranslations.of(context).error,
+          style: ThemeHelper.textTheme(context).labelMedium!.copyWith(
+                color: Theme.of(context).backgroundColor,
+              ),
+        ),
+      ),
+    );
+  }
+
+  void _showLoadingSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).disabledColor,
+        content: Text(
+          AppTranslations.of(context).loading,
+          style: ThemeHelper.textTheme(context).labelMedium!.copyWith(
+                color: Theme.of(context).backgroundColor,
+              ),
+        ),
+      ),
+    );
+  }
+
+  void _showSuccessSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(
+          AppTranslations.of(context).success,
+          style: ThemeHelper.textTheme(context).labelMedium!.copyWith(
+                color: Theme.of(context).backgroundColor,
+              ),
+        ),
+      ),
+    );
+  }
+
+  void _navigateBack() => AutoRouter.of(context).popForced();
+
+  void _hideSnackBar() => ScaffoldMessenger.of(context).hideCurrentSnackBar();
 }

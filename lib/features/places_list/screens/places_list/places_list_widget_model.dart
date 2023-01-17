@@ -4,7 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
-import 'package:flutter_guide/common/widgets/app_error_snack_bar.dart';
+import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope.dart';
 import 'package:flutter_guide/features/places_list/domain/entity/places_filter_parameters.dart';
@@ -191,7 +191,15 @@ class PlacesListPageWidgetModel
 
     if (state!.hasError && state.data!.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const AppErrorSnackBar() as SnackBar,
+        SnackBar(
+          backgroundColor: Theme.of(context).errorColor,
+          content: Text(
+            AppTranslations.of(context).error,
+            style: ThemeHelper.textTheme(context).labelMedium!.copyWith(
+                  color: Theme.of(context).backgroundColor,
+                ),
+          ),
+        ),
       );
     }
   }

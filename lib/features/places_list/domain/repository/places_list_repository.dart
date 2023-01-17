@@ -77,7 +77,7 @@ class PlacesListRepository implements IPlacesListRepository {
     required PlaceType placeType,
     required List<File> files,
   }) async {
-    final urls = _api.uploadFiles(files);
+    final urls = await _api.uploadFiles(files);
 
     return _api.createNewPlace(
       latitude: latitude,

@@ -45,6 +45,7 @@ class AppScope implements IAppScope {
       ..baseUrl = Environment<AppConfig>.instance().config.url
       ..connectTimeout = timeout.inMilliseconds
       ..receiveTimeout = timeout.inMilliseconds
+      ..contentType = 'application/json;charset=UTF-8'
       ..sendTimeout = timeout.inMilliseconds;
 
     dio.interceptors.addAll(additionalInterceptors);

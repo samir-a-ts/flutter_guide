@@ -302,8 +302,9 @@ class _SearchResultWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 12),
       height: 78,
       child: Row(
         children: [

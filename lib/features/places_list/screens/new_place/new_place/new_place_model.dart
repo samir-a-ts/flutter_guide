@@ -132,7 +132,12 @@ class NewPlaceModel extends ElementaryModel {
   /// Collects all data and sends
   /// it to backend in order
   /// to create new place.
-  Future<void> createPlace() async => _placesListRepository.createNewPlace(
+  ///
+  /// Returns [bool], indicating
+  /// success or failure.
+  Future<bool> createPlace() async {
+    try {
+      await _placesListRepository.createNewPlace(
         name: _title.value!,
         description: _description.value!,
         files: selectedImagesState.value!.data!,
@@ -140,6 +145,12 @@ class NewPlaceModel extends ElementaryModel {
         longitude: _longitude.value!,
         placeType: selectedPlaceTypeState.value!,
       );
+
+      return true;
+    } on Exception {
+      return false;
+    }
+  }
 
   void _validate() => creationEnabledState.accept(
         _title.value!.isNotEmpty &&

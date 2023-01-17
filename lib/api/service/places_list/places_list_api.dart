@@ -2,6 +2,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
+import 'package:flutter_guide/config/app_config.dart';
+import 'package:flutter_guide/config/environment/environment.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
 /// Endpoints for this particular API.
 abstract class _PlacesApiEndpoints {
@@ -82,21 +86,43 @@ class PlacesListApi {
   /// and returns a list of concrete file urls.
   Future<List<String>> uploadFiles(List<File> files) async {
     final multipartFiles = await Future.wait([
-      for (final file in files) MultipartFile.fromFile(file.path),
+      for (final file in files)
+        MultipartFile.fromFile(
+          file.path,
+          contentType: MediaType.parse(
+            lookupMimeType(file.path)!,
+          ),
+        ),
     ]);
 
     final formData = FormData.fromMap(<String, dynamic>{
-      'files': multipartFiles,
+      for (final file in multipartFiles) file.filename!: file,
     });
 
-    final request = await _dio.post<List>(
+    final request = await _dio.post<dynamic>(
       _PlacesApiEndpoints.uploadFile,
       data: formData,
+      options: Options(
+        contentType: 'multipart/form-data',
+      ),
     );
 
-    final result = request.data!.cast<String>();
+    final dynamic result = request.data;
 
-    return result;
+    if (result is String) {
+      return [
+        '${Environment<AppConfig>.instance().config.url}/$result',
+      ];
+    }
+
+    return ((result as Map<String, dynamic>)['urls'] as List).map(
+      // ignore: avoid_annotating_with_dynamic
+      (dynamic e) {
+        final apiPath = e as String;
+
+        return '${Environment<AppConfig>.instance().config.url}/$apiPath';
+      },
+    ).toList();
   }
 
   /// Creates new place on the backend
@@ -107,7 +133,7 @@ class PlacesListApi {
     required String name,
     required String description,
     required String placeType,
-    required Future<List<String>> urls,
+    required List<String> urls,
   }) =>
       _dio.post<dynamic>(
         _PlacesApiEndpoints.placesPagination,
