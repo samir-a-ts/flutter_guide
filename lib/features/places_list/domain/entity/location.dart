@@ -22,4 +22,15 @@ class Location {
   Location.fromPosition(Position position)
       : latitude = position.latitude,
         longitude = position.longitude;
+
+  /// Copy current instance
+  /// with replacing some fields.
+  Location copyWith({
+    double? latitude,
+    double? longitude,
+  }) =>
+      Location(
+        latitude ?? this.latitude,
+        longitude ?? this.longitude,
+      );
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/common/widgets/app_bar.dart';
+import 'package:flutter_guide/common/widgets/app_divider.dart';
 import 'package:flutter_guide/common/widgets/app_error.dart';
 import 'package:flutter_guide/common/widgets/app_progress_indicator.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
@@ -144,7 +145,7 @@ class _SearchBodyWidget extends StatelessWidget {
           highlightSearchText: highlightSearchText,
         ),
       ),
-      separatorBuilder: (context, index) => const Divider(),
+      separatorBuilder: (context, index) => const AppDivider(),
     );
   }
 }
@@ -233,12 +234,7 @@ class _HistoryList extends StatelessWidget {
             [
               for (var i = 0; i < (value.length * 2) - 1; i++)
                 i.isOdd
-                    ? Divider(
-                        color: Theme.of(context).disabledColor.withOpacity(.56),
-                        indent: 0,
-                        endIndent: 0,
-                        height: 0,
-                      )
+                    ? const AppDivider()
                     : _HistoryTile(
                         query: value[i ~/ 2],
                         onDelete: onDelete,
@@ -306,8 +302,9 @@ class _SearchResultWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 12),
       height: 78,
       child: Row(
         children: [

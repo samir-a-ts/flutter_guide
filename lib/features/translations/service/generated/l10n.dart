@@ -339,6 +339,136 @@ class AppTranslations {
       args: [],
     );
   }
+
+  /// `Отмена`
+  String get cancel {
+    return Intl.message(
+      'Отмена',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Категория`
+  String get category {
+    return Intl.message(
+      'Категория',
+      name: 'category',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Создать`
+  String get create {
+    return Intl.message(
+      'Создать',
+      name: 'create',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Описание`
+  String get description {
+    return Intl.message(
+      'Описание',
+      name: 'description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Указать на карте`
+  String get searchOnMap {
+    return Intl.message(
+      'Указать на карте',
+      name: 'searchOnMap',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Название`
+  String get title {
+    return Intl.message(
+      'Название',
+      name: 'title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Широта`
+  String get latitude {
+    return Intl.message(
+      'Широта',
+      name: 'latitude',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Долгота`
+  String get longitude {
+    return Intl.message(
+      'Долгота',
+      name: 'longitude',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Не выбрано`
+  String get notChosen {
+    return Intl.message(
+      'Не выбрано',
+      name: 'notChosen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Камера`
+  String get camera {
+    return Intl.message(
+      'Камера',
+      name: 'camera',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Галерея`
+  String get gallery {
+    return Intl.message(
+      'Галерея',
+      name: 'gallery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Сохранить`
+  String get save {
+    return Intl.message(
+      'Сохранить',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Успех!`
+  String get success {
+    return Intl.message(
+      'Успех!',
+      name: 'success',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppTranslations> {

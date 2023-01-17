@@ -110,15 +110,19 @@ final darkTheme = ThemeData(
 /// not presented in [ThemeData] directly,
 /// but in the [ColorScheme]
 abstract class ThemeHelper {
-  /// Primary container from [ColorScheme].
+  /// Primary color from [ColorScheme].
   static Color mainColor(BuildContext context) =>
       Theme.of(context).colorScheme.primaryContainer;
 
-  /// Secondary container from [ColorScheme].
+  /// Secondary color from [ColorScheme].
   static Color secondaryColor(BuildContext context) =>
       Theme.of(context).colorScheme.secondaryContainer;
 
-  /// Text theme from [TextTheme].
+  /// Text color of majority of widgets from [ColorScheme].
+  static Color mainTextColor(BuildContext context) =>
+      Theme.of(context).colorScheme.onPrimary;
+
+  /// Text theme from [Theme].
   static TextTheme textTheme(BuildContext context) =>
       Theme.of(context).textTheme;
 }

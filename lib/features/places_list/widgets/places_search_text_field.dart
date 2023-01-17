@@ -33,7 +33,7 @@ class PlacesSearchTextField extends StatelessWidget {
         textAlignVertical: TextAlignVertical.center,
         cursorColor: Theme.of(context).primaryColor,
         style: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
-              color: Theme.of(context).colorScheme.secondaryContainer,
+              color: ThemeHelper.secondaryColor(context),
             ),
         decoration: InputDecoration(
           prefixIcon: Icon(

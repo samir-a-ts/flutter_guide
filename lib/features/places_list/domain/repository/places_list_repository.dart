@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/api/service/places_list/places_list_api.dart';
 
@@ -17,8 +19,20 @@ abstract class IPlacesListRepository {
     double? latitude,
     double? longitude,
     double? radius,
-    List<String> types,
+    List<PlaceType> types,
     String? name,
+  });
+
+  /// Uploads given [files]
+  /// and creates new place on the backend
+  /// with given params.
+  Future<void> createNewPlace({
+    required double latitude,
+    required double longitude,
+    required String name,
+    required String description,
+    required PlaceType placeType,
+    required List<File> files,
   });
 }
 
@@ -43,7 +57,7 @@ class PlacesListRepository implements IPlacesListRepository {
     double? latitude,
     double? longitude,
     double? radius,
-    List<String> types = const [],
+    List<PlaceType> types = const [],
     String? name,
   }) =>
       _api.getFilteredPlaces(
@@ -51,6 +65,27 @@ class PlacesListRepository implements IPlacesListRepository {
         longitude: longitude,
         name: name,
         radius: radius,
-        types: types,
+        types: types.map((e) => e.toString()).toList(),
       );
+
+  @override
+  Future<void> createNewPlace({
+    required double latitude,
+    required double longitude,
+    required String name,
+    required String description,
+    required PlaceType placeType,
+    required List<File> files,
+  }) async {
+    final urls = await _api.uploadFiles(files);
+
+    return _api.createNewPlace(
+      latitude: latitude,
+      longitude: longitude,
+      name: name,
+      description: description,
+      placeType: placeType.toString(),
+      urls: urls,
+    );
+  }
 }

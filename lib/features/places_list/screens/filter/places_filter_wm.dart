@@ -39,9 +39,6 @@ abstract class IPlacesFilterWidgetModel extends IWidgetModel {
   /// Color of inactive line of the slider.
   Color get inactiveSliderPartColor;
 
-  /// Color of inactive line of the slider.
-  Color get disabledBottomButtonColor;
-
   /// If user suddenly wants to return
   /// to places list page, the
   /// [PlacesFilterParameters.empty] will be returned.
@@ -87,10 +84,6 @@ class PlacesFilterWidgetModel
 
   @override
   Color get inactiveSliderPartColor =>
-      Theme.of(context).disabledColor.withOpacity(0.56);
-
-  @override
-  Color get disabledBottomButtonColor =>
       Theme.of(context).disabledColor.withOpacity(0.56);
 
   @override

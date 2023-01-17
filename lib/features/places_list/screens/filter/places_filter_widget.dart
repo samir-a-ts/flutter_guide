@@ -2,11 +2,12 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
+import 'package:flutter_guide/common/widgets/app_back_button.dart';
 import 'package:flutter_guide/common/widgets/app_bar.dart';
-import 'package:flutter_guide/common/widgets/app_bar_trailing_button.dart';
+import 'package:flutter_guide/common/widgets/app_bottom_button.dart';
+import 'package:flutter_guide/common/widgets/app_text_button.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/common/widgets/label.dart';
-import 'package:flutter_guide/features/app/core/widgets/app_bottom_button.dart';
 import 'package:flutter_guide/features/places_list/domain/entity/places_filter_parameters.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/geolocation_repository.dart';
 import 'package:flutter_guide/features/places_list/screens/filter/places_filter_model.dart';
@@ -44,23 +45,34 @@ class PlacesFilterPage extends ElementaryWidget<IPlacesFilterWidgetModel> {
       child: Scaffold(
         appBar: MainAppBar(
           title: '',
-          leading: IconButton(
-            onPressed: wm.returnToListWithoutFilter,
-            icon: const Icon(
-              Icons.chevron_left,
-              color: Colors.black,
+          leading: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+              ),
+              child: AppBackButton(
+                onTap: wm.returnToListWithoutFilter,
+              ),
             ),
           ),
           trailing: [
-            AppBarTrailingButton(
-              onTap: wm.clearFilter,
-              title: wm.clearButtonText,
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 16,
+                top: 18,
+              ),
+              child: AppTextButton(
+                onTap: wm.clearFilter,
+                text: wm.clearButtonText,
+              ),
             ),
           ],
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Label(
                 labelText: wm.categoriesText,
@@ -107,9 +119,8 @@ class PlacesFilterPage extends ElementaryWidget<IPlacesFilterWidgetModel> {
                     listenableEntityState: wm.userLocationState,
                     loadingBuilder: (context, data) {
                       return AppBottomButton(
-                        onTap: () {},
                         text: wm.loadingText,
-                        color: wm.disabledBottomButtonColor,
+                        buttonType: AppBottomButtonType.disabled,
                       );
                     },
                     builder: (context, snapshot) {
@@ -143,7 +154,7 @@ class _FilterSliderLabel extends StatelessWidget {
         Text(
           AppTranslations.of(context).distance,
           style: ThemeHelper.textTheme(context).bodyMedium!.copyWith(
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: ThemeHelper.mainColor(context),
               ),
         ),
         StateNotifierBuilder(
@@ -238,7 +249,7 @@ class _PlaceTypeOption extends StatelessWidget {
                       height: 16,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Theme.of(context).colorScheme.primaryContainer,
+                        color: ThemeHelper.mainColor(context),
                       ),
                       child: Center(
                         child: Icon(
@@ -255,7 +266,7 @@ class _PlaceTypeOption extends StatelessWidget {
             Text(
               placeType.translate(context),
               style: ThemeHelper.textTheme(context).labelSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    color: ThemeHelper.secondaryColor(context),
                   ),
             ),
           ],

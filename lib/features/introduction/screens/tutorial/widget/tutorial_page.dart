@@ -2,9 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
-import 'package:flutter_guide/common/widgets/app_bar_trailing_button.dart';
+import 'package:flutter_guide/common/widgets/app_bottom_button.dart';
+import 'package:flutter_guide/common/widgets/app_text_button.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
-import 'package:flutter_guide/features/app/core/widgets/app_bottom_button.dart';
 import 'package:flutter_guide/features/introduction/widgets/app_tab_view.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
@@ -155,9 +155,12 @@ class _TutorialPageBodyState extends State<_TutorialPageBody> {
               if (_controller.index != _tabs.length - 1) {
                 return Align(
                   alignment: Alignment.topRight,
-                  child: AppBarTrailingButton(
-                    onTap: _skip,
-                    title: AppTranslations.of(context).skip,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0, top: 18),
+                    child: AppTextButton(
+                      onTap: _skip,
+                      text: AppTranslations.of(context).skip,
+                    ),
                   ),
                 );
               }
@@ -214,14 +217,14 @@ class _TabWidget extends StatelessWidget {
         SvgPicture.asset(
           tabData.assetsPath,
           height: 98,
-          color: Theme.of(context).colorScheme.onPrimary,
+          color: ThemeHelper.mainTextColor(context),
         ),
         const Gap(dimension: 40),
         Text(
           tabData.title,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.w700,
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: ThemeHelper.mainTextColor(context),
               ),
           textAlign: TextAlign.center,
         ),
