@@ -2,7 +2,6 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/common/widgets/app_bar.dart';
-import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/common/widgets/place_card.dart';
 import 'package:flutter_guide/features/map/di/map_scope_widget.dart';
 import 'package:flutter_guide/features/map/screens/map_wm.dart';
