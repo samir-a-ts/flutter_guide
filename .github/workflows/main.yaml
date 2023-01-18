@@ -23,6 +23,11 @@ jobs:
           flutter-version: '3.3.10'
           channel: 'stable'
           cache: true
+      - uses: dart-lang/setup-dart@v1
+      - name: Setup secrets in the project
+        run: dart run scripts/insert_secrets.dart $YANDEX_MAP_KIT_API_KEY
+        env:
+          YANDEX_MAP_KIT_API_KEY: ${{ secrets.YANDEX_MAP_KIT_API_KEY }}
       - name: Downloads all project dependencies
         run: flutter pub get
       - name: Finds all warnings and errors in project

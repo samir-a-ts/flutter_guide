@@ -7,6 +7,7 @@ import 'package:flutter_guide/common/widgets/app_bar.dart';
 import 'package:flutter_guide/common/widgets/app_error.dart';
 import 'package:flutter_guide/common/widgets/app_progress_indicator.dart';
 import 'package:flutter_guide/common/widgets/gap.dart';
+import 'package:flutter_guide/common/widgets/place_card.dart';
 import 'package:flutter_guide/features/places_list/di/places_list_scope_widget.dart';
 import 'package:flutter_guide/features/places_list/screens/places_list/places_list_widget_model.dart';
 import 'package:flutter_guide/features/places_list/widgets/places_search_text_field_placeholder.dart';
@@ -235,8 +236,13 @@ class _PlacesList extends StatelessWidget {
       childrenDelegate: SliverChildListDelegate(
         [
           for (final place in places)
-            _PlaceCard(
-              place: place,
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 12,
+              ),
+              child: PlaceCard(
+                place: place,
+              ),
             ),
           StateNotifierBuilder(
             listenableState: arePlacesReloading,
@@ -249,90 +255,6 @@ class _PlacesList extends StatelessWidget {
                 : const SizedBox(),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _PlaceCard extends StatelessWidget {
-  final Place place;
-
-  const _PlaceCard({
-    required this.place,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          height: 188,
-          width: double.infinity,
-          color: AppTheme.of(context).additionalColor,
-          child: Column(
-            children: [
-              Expanded(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        place.images.isEmpty ? '' : place.images.first,
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        place.placeType.translate(context).toLowerCase(),
-                        style: ThemeHelper.textTheme(context)
-                            .labelMedium!
-                            .copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: Theme.of(context).backgroundColor,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: RichText(
-                      maxLines: 3,
-                      overflow: TextOverflow.fade,
-                      text: TextSpan(
-                        text: '${place.name}\n',
-                        style:
-                            ThemeHelper.textTheme(context).bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: ThemeHelper.secondaryColor(context),
-                                ),
-                        children: [
-                          TextSpan(
-                            text: place.description,
-                            style: ThemeHelper.textTheme(context)
-                                .labelMedium!
-                                .copyWith(
-                                  color: AppTheme.of(context).thirdColor,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

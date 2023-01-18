@@ -1,3 +1,5 @@
+import 'package:yandex_mapkit/yandex_mapkit.dart';
+
 /// Types of places.
 enum PlaceType {
   /// Hotel.
@@ -68,6 +70,14 @@ class Place {
 
   /// Description of this place.
   final String description;
+
+  /// Returns [Point] with
+  /// instance's fields of
+  /// [latitude] and [longitude]
+  Point get point => Point(
+        latitude: latitude,
+        longitude: longitude,
+      );
 
   /// Constructor for [Place].
   const Place({

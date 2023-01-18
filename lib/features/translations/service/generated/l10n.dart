@@ -469,6 +469,16 @@ class AppTranslations {
       args: [],
     );
   }
+
+  /// `Карта`
+  String get map {
+    return Intl.message(
+      'Карта',
+      name: 'map',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppTranslations> {

@@ -14,14 +14,14 @@
 import 'package:auto_route/auto_route.dart' as _i13;
 import 'package:flutter/cupertino.dart' as _i18;
 import 'package:flutter/material.dart' as _i14;
+import 'package:yandex_mapkit/yandex_mapkit.dart' as _i17;
 
 import '../../../api/data/places_list/place.dart' as _i16;
 import '../../app/core/pages/main_page.dart' as _i3;
 import '../../favorite/screens/favorite/widget/favorite_page.dart' as _i6;
 import '../../introduction/screens/splash/widget/splash_page.dart' as _i1;
 import '../../introduction/screens/tutorial/widget/tutorial_page.dart' as _i2;
-import '../../map/screens/map/widget/map_page.dart' as _i5;
-import '../../places_list/domain/entity/location.dart' as _i17;
+import '../../map/screens/map_widget.dart' as _i5;
 import '../../places_list/domain/entity/places_filter_parameters.dart' as _i15;
 import '../../places_list/screens/filter/places_filter_widget.dart' as _i9;
 import '../../places_list/screens/new_place/categories/new_place_categories_page.dart'
@@ -117,7 +117,7 @@ class AppRouter extends _i13.RootStackRouter {
       );
     },
     NewPlaceMapRoute.name: (routeData) {
-      return _i13.MaterialPageX<_i17.Location>(
+      return _i13.MaterialPageX<_i17.Point>(
         routeData: routeData,
         child: const _i12.NewPlaceMapPage(),
       );

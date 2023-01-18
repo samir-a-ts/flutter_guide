@@ -12,8 +12,12 @@ class AppTheme extends ThemeExtension<AppTheme> {
   /// Additional color.
   final Color additionalColor;
 
+  /// Color of shadows.
+  final Color shadowColor;
+
   /// Constructor for [AppTheme].
   const AppTheme({
+    required this.shadowColor,
     required this.additionalColor,
     required this.thirdColor,
     required this.yellowColor,
@@ -32,6 +36,7 @@ class AppTheme extends ThemeExtension<AppTheme> {
       additionalColor: Color.lerp(additionalColor, other.additionalColor, t)!,
       thirdColor: Color.lerp(thirdColor, other.thirdColor, t)!,
       yellowColor: Color.lerp(yellowColor, other.yellowColor, t)!,
+      shadowColor: Color.lerp(shadowColor, other.shadowColor, t)!,
     );
   }
 
@@ -40,11 +45,13 @@ class AppTheme extends ThemeExtension<AppTheme> {
     Color? thirdColor,
     Color? yellowColor,
     Color? additionalColor,
+    Color? shadowColor,
   }) {
     return AppTheme(
       thirdColor: thirdColor ?? this.thirdColor,
       yellowColor: yellowColor ?? this.yellowColor,
       additionalColor: additionalColor ?? this.additionalColor,
+      shadowColor: shadowColor ?? this.shadowColor,
     );
   }
 
@@ -68,6 +75,7 @@ const _appTheme = AppTheme(
   additionalColor: Color(0xFFF5F5F5),
   thirdColor: Color(0xFF7C7E92),
   yellowColor: Color(0xFFFCDD3D),
+  shadowColor: Color.fromRGBO(26, 26, 32, .16),
 );
 
 /// Light [ThemeData] of app.

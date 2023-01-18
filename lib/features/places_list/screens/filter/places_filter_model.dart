@@ -1,14 +1,15 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
-import 'package:flutter_guide/features/places_list/domain/entity/location.dart';
+import 'package:flutter_guide/common/domain/entities/static_points.dart';
+import 'package:flutter_guide/common/domain/repository/location_repository.dart';
 import 'package:flutter_guide/features/places_list/domain/entity/places_filter_parameters.dart';
-import 'package:flutter_guide/features/places_list/domain/repository/geolocation_repository.dart';
 import 'package:flutter_guide/util/default_error_handler.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart' show Point;
 
 /// Model for `PlacesFilterPage`
 class PlacesFilterModel extends ElementaryModel {
   /// State of user current location.
-  final userLocationState = EntityStateNotifier<Location?>();
+  final userLocationState = EntityStateNotifier<Point?>();
 
   /// State of selected on filter places types.
   final filterPlacesTypesState = StateNotifier<Set<PlaceType>>(initValue: {});
@@ -70,10 +71,7 @@ class PlacesFilterModel extends ElementaryModel {
 
       if (!permissionGranted) {
         userLocationState.content(
-          const Location(
-            55.75222,
-            37.61556,
-          ),
+          PointHelper.moscow(),
         );
 
         return;
@@ -82,14 +80,11 @@ class PlacesFilterModel extends ElementaryModel {
       final result = await _locationRepository.requestLocation();
 
       userLocationState.content(
-        Location.fromPosition(result),
+        PointHelper.fromPosition(result),
       );
     } on Exception catch (_) {
       userLocationState.content(
-        const Location(
-          55.75222,
-          37.61556,
-        ),
+        PointHelper.moscow(),
       );
     }
   }

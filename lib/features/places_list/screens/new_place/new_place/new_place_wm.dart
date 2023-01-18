@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
 import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/features/navigation/service/app_router.gr.dart';
-import 'package:flutter_guide/features/places_list/domain/entity/location.dart';
 import 'package:flutter_guide/features/places_list/screens/new_place/new_place/new_place_model.dart';
 import 'package:flutter_guide/features/places_list/screens/new_place/new_place/new_place_widget.dart';
 import 'package:flutter_guide/features/places_list/widgets/image_source_pick_dialog.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart' show Point;
 
 /// Elementary widget model for [NewPlacePage]
 abstract class INewPlaceWidgetModel extends IWidgetModel {
@@ -225,7 +225,7 @@ class NewPlaceWidgetModel extends WidgetModel<NewPlacePage, NewPlaceModel>
 
   @override
   Future<void> findPlaceOnMap() async {
-    final location = await AutoRouter.of(context).push<Location>(
+    final location = await AutoRouter.of(context).push<Point>(
       const NewPlaceMapRoute(),
     );
 
