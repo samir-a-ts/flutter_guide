@@ -9,6 +9,6 @@ enum BuildType {
   /// Debug build type.
   debug,
 
-  /// Release build type.
-  release,
+  /// Production build type.
+  production,
 }

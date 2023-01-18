@@ -15,7 +15,7 @@ class Environment<T> implements Listenable {
   bool get isDebug => _currentBuildType == BuildType.debug;
 
   /// Is this application running in release mode.
-  bool get isRelease => _currentBuildType == BuildType.release;
+  bool get isProduction => _currentBuildType == BuildType.production;
 
   /// App build type.
   BuildType get buildType => _currentBuildType;
