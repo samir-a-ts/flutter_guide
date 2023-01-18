@@ -55,12 +55,16 @@ class PlacesListApi {
   }) async {
     final data = <String, dynamic>{};
 
-    if (latitude != null && longitude != null && radius != null) {
+    if (latitude != null &&
+        longitude != null &&
+        radius != null &&
+        types.isNotEmpty) {
       data.addAll(
         <String, dynamic>{
           'lat': latitude,
           'lng': longitude,
           'radius': radius * 1000,
+          'typeFilter': types,
         },
       );
     }
@@ -71,7 +75,6 @@ class PlacesListApi {
         ..addAll(
           <String, dynamic>{
             'nameFilter': name,
-            'typeFilter': types,
           },
         ),
     );

@@ -2,17 +2,17 @@ import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
-import 'package:flutter_guide/common/domain/entities/location.dart';
 import 'package:flutter_guide/features/places_list/domain/entity/places_filter_parameters.dart';
 import 'package:flutter_guide/features/places_list/screens/filter/places_filter_model.dart';
 import 'package:flutter_guide/features/places_list/screens/filter/places_filter_widget.dart';
 import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart' show Point;
 
 /// Widget model for [PlacesFilterPage].
 abstract class IPlacesFilterWidgetModel extends IWidgetModel {
   /// Whether the current user position on world
   /// map is loading or loaded.
-  EntityStateNotifier<Location?> get userLocationState;
+  EntityStateNotifier<Point?> get userLocationState;
 
   /// State of selected on filter places types.
   StateNotifier<Set<PlaceType>> get filterPlacesTypesState;
@@ -63,8 +63,7 @@ class PlacesFilterWidgetModel
     extends WidgetModel<PlacesFilterPage, PlacesFilterModel>
     implements IPlacesFilterWidgetModel {
   @override
-  EntityStateNotifier<Location?> get userLocationState =>
-      model.userLocationState;
+  EntityStateNotifier<Point?> get userLocationState => model.userLocationState;
 
   @override
   StateNotifier<Set<PlaceType>> get filterPlacesTypesState =>

@@ -1,9 +1,10 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter_guide/api/data/places_list/place.dart';
-import 'package:flutter_guide/common/domain/entities/location.dart';
+import 'package:flutter_guide/common/domain/entities/static_points.dart';
 import 'package:flutter_guide/common/domain/repository/location_repository.dart';
 import 'package:flutter_guide/features/places_list/domain/repository/places_list_repository.dart';
 import 'package:flutter_guide/util/default_error_handler.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart' show Point;
 
 /// Elementary model for Map module
 class MapModel extends ElementaryModel {
@@ -11,7 +12,7 @@ class MapModel extends ElementaryModel {
   final foundPlacesListState = EntityStateNotifier<List<Place>>.value(const []);
 
   /// State of current user's location.
-  final locationState = StateNotifier<Location?>();
+  final locationState = StateNotifier<Point?>();
 
   final IPlacesListRepository _placesListRepository;
 
@@ -27,7 +28,7 @@ class MapModel extends ElementaryModel {
 
   @override
   Future<void> init() async {
-    await _requestLocation();
+    await requestLocation();
 
     await requestPlaces();
   }
@@ -45,6 +46,7 @@ class MapModel extends ElementaryModel {
         latitude: locationState.value!.latitude,
         longitude: locationState.value!.longitude,
         radius: 30,
+        types: PlaceType.values,
       );
 
       foundPlacesListState.content(places);
@@ -53,24 +55,29 @@ class MapModel extends ElementaryModel {
     }
   }
 
-  Future<void> _requestLocation() async {
+  /// Requests permission for
+  /// accessing user's phone location,
+  /// and then, if granted, writes
+  /// current location to [locationState].
+  /// Else, returns[PointHelper.moscow].
+  Future<void> requestLocation() async {
     try {
       final permissionGranted = await _locationRepository.requestPermission();
 
       if (!permissionGranted) {
         return locationState.accept(
-          StaticLocations.moscow(),
+          PointHelper.moscow(),
         );
       }
 
       final position = await _locationRepository.requestLocation();
 
       locationState.accept(
-        Location.fromPosition(position),
+        PointHelper.fromPosition(position),
       );
     } on Exception {
       locationState.accept(
-        StaticLocations.moscow(),
+        PointHelper.moscow(),
       );
     }
   }

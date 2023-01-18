@@ -1,5 +1,5 @@
 import 'package:flutter_guide/api/data/places_list/place.dart';
-import 'package:flutter_guide/common/domain/entities/location.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart' show Point;
 
 /// Filter options, that will be
 /// returned from filter page and
@@ -14,7 +14,7 @@ class PlacesFilterParameters {
 
   /// Current user position
   /// on the world's map.
-  final Location location;
+  final Point location;
 
   /// Whether the filter is not
   /// filled up with any data.
@@ -30,7 +30,10 @@ class PlacesFilterParameters {
   /// Creates instance with guaranteed
   /// [isEmpty] true.
   PlacesFilterParameters.empty()
-      : location = const Location(0, 0),
+      : location = const Point(
+          latitude: 0,
+          longitude: 0,
+        ),
         range = 0,
         types = const [];
 }

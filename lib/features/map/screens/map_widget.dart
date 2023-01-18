@@ -1,10 +1,11 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_guide/assets/themes/theme.dart';
 import 'package:flutter_guide/common/widgets/app_bar.dart';
+import 'package:flutter_guide/common/widgets/gap.dart';
 import 'package:flutter_guide/common/widgets/place_card.dart';
 import 'package:flutter_guide/features/map/di/map_scope_widget.dart';
 import 'package:flutter_guide/features/map/screens/map_wm.dart';
-import 'package:flutter_guide/features/translations/service/generated/l10n.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 /// Widget that wraps [MapWidget]
@@ -39,10 +40,15 @@ class MapWidget extends ElementaryWidget<IMapWidgetModel> {
         children: [
           StateNotifierBuilder(
             listenableState: wm.mapObjectsState,
-            builder: (context, snapshot) {
+            builder: (context, mapObjects) {
               return YandexMap(
+                logoAlignment: const MapAlignment(
+                  horizontal: HorizontalAlignment.left,
+                  vertical: VerticalAlignment.top,
+                ),
+                mapType: MapType.hybrid,
                 onMapCreated: wm.onMapCreated,
-                mapObjects: [],
+                mapObjects: mapObjects!,
               );
             },
           ),
@@ -62,7 +68,7 @@ class MapWidget extends ElementaryWidget<IMapWidgetModel> {
                       ),
                       _MapFloatingButton(
                         icon: Icons.maps_ugc,
-                        onTap: wm.onRefreshButtonTap,
+                        onTap: wm.onRefreshPositionTap,
                       ),
                     ],
                   ),
@@ -71,8 +77,11 @@ class MapWidget extends ElementaryWidget<IMapWidgetModel> {
                     builder: (context, place) {
                       if (place == null) return const SizedBox();
 
-                      return PlaceCard(
-                        place: place,
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 16.0),
+                        child: PlaceCard(
+                          place: place,
+                        ),
                       );
                     },
                   ),
@@ -81,6 +90,44 @@ class MapWidget extends ElementaryWidget<IMapWidgetModel> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _MapFloatingButton extends StatelessWidget {
+  final IconData icon;
+
+  final VoidCallback onTap;
+
+  const _MapFloatingButton({
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          color: Theme.of(context).backgroundColor,
+          boxShadow: [
+            BoxShadow(
+              offset: const Offset(0, 4),
+              blurRadius: 32,
+              color: AppTheme.of(context).shadowColor,
+            ),
+          ],
+        ),
+        child: Icon(
+          icon,
+          color: ThemeHelper.mainTextColor(context),
+          size: 26,
+        ),
       ),
     );
   }
