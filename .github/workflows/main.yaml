@@ -35,4 +35,4 @@ jobs:
       - name: Runs tests for this project
         run: flutter test
       - name: Builds Android app file
-        run: flutter build apk --release
+        run: flutter build apk --flavor prod --target "lib/main_production.dart" 
