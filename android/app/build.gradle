@@ -54,13 +54,27 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
     }
-    namespace 'com.example.flutter_guide'
+
+    flavorDimensions "app"
+
+    productFlavors {
+        prod {
+            applicationIdSuffix ".prod"
+            versionNameSuffix "-prod"
+            resValue "string", "app_name", "Flutter Guide"
+        }
+        dev {
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+            resValue "string", "app_name", "Flutter Guide DEV"
+        }
+    }
 }
 
 flutter {
